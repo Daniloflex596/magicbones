@@ -1,5 +1,6 @@
 ---
 import ShopLayout from '../layouts/ShopLayout.astro';
+import { withBase } from '../lib/url';
 ---
 
 <ShopLayout
@@ -34,8 +35,8 @@ import ShopLayout from '../layouts/ShopLayout.astro';
     </div>
 
     <div class="cta-block">
-      <a class="cta" href="/negozio">Guarda i pezzi disponibili →</a>
-      <a class="cta cta--ghost" href="/contatti">Scrivi per una personalizzazione</a>
+      <a class="cta" href={withBase('/negozio')}>Guarda i pezzi disponibili →</a>
+      <a class="cta cta--ghost" href={withBase('/contatti')}>Scrivi per una personalizzazione</a>
     </div>
   </article>
 

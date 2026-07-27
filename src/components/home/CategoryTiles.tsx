@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { CATEGORY_LABELS } from '../../lib/types';
 import type { ProductData } from '../../lib/types';
 import { CategoryGlyph } from '../shop/CategoryGlyph';
+import { withBase } from '../../lib/url';
 
 const CATEGORIES = Object.keys(CATEGORY_LABELS) as ProductData['category'][];
 
@@ -20,7 +21,7 @@ export function CategoryTiles() {
       {CATEGORIES.map((cat, i) => (
         <motion.a
           key={cat}
-          href={`/negozio?categoria=${cat}`}
+          href={withBase(`/negozio?categoria=${cat}`)}
           data-astro-reload=""
           className="tile"
           style={{ background: TILE_GRADIENT[cat] }}

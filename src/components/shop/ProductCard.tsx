@@ -3,6 +3,7 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import type { Product } from '../../lib/types';
 import { CATEGORY_LABELS, formatPrice } from '../../lib/types';
 import { CategoryGlyph } from './CategoryGlyph';
+import { withBase } from '../../lib/url';
 
 const CATEGORY_GRADIENT: Record<string, string> = {
   'teschio-dipinto': 'linear-gradient(135deg, #1c1f2e, #3a2418)',
@@ -51,7 +52,7 @@ export function ProductCard({
 
   return (
     <motion.a
-      href={`/negozio/${product.id}`}
+      href={withBase(`/negozio/${product.id}`)}
       data-astro-reload={forceReload ? '' : undefined}
       className="product-card"
       initial={{ opacity: 0, y: 24 }}

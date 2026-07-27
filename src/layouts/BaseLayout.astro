@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import { ClientRouter } from 'astro:transitions';
+import { withBase } from '../lib/url';
 
 interface Props {
   title: string;
@@ -23,7 +24,7 @@ const organizationJsonLd = {
   '@type': 'Organization',
   name: 'Magic Bones',
   url: Astro.site?.toString(),
-  logo: new URL('/favicon.svg', Astro.site).toString(),
+  logo: new URL(withBase('/favicon.svg'), Astro.site).toString(),
   founder: { '@type': 'Person', name: 'Claudia Capitani' },
   areaServed: 'Roma, IT',
   sameAs: ['https://www.instagram.com/_magic_bones'],
@@ -45,7 +46,7 @@ const organizationJsonLd = {
     </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
     <link rel="canonical" href={canonicalURL} />
     {noIndex && <meta name="robots" content="noindex,nofollow" />}
 
@@ -55,12 +56,12 @@ const organizationJsonLd = {
     <meta property="og:type" content="website" />
     <meta property="og:title" content={`${title} · Magic Bones`} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={new URL(ogImage, Astro.site)} />
+    <meta property="og:image" content={new URL(withBase(ogImage), Astro.site)} />
     <meta property="og:url" content={canonicalURL} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={`${title} · Magic Bones`} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={new URL(ogImage, Astro.site)} />
+    <meta name="twitter:image" content={new URL(withBase(ogImage), Astro.site)} />
 
     <ClientRouter />
 

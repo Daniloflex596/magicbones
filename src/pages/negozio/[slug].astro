@@ -5,6 +5,7 @@ import { ProductGallery } from '../../components/shop/ProductGallery';
 import { ProductActions } from '../../components/shop/ProductActions';
 import { CATEGORY_LABELS, formatPrice, toPlainProduct } from '../../lib/types';
 import { buildProductJsonLd } from '../../lib/seo';
+import { withBase } from '../../lib/url';
 
 export async function getStaticPaths() {
   const entries = await getCollection('products');
@@ -24,7 +25,7 @@ const jsonLd = buildProductJsonLd(product, Astro.site);
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
   <nav class="breadcrumb">
-    <a href="/negozio">Negozio</a> · <a href={`/negozio?categoria=${category}`}>{CATEGORY_LABELS[category]}</a>
+    <a href={withBase('/negozio')}>Negozio</a> · <a href={withBase(`/negozio?categoria=${category}`)}>{CATEGORY_LABELS[category]}</a>
   </nav>
 
   <div class="product-page">

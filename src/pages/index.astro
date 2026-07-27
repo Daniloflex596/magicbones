@@ -7,6 +7,7 @@ import { CategoryTiles } from '../components/home/CategoryTiles';
 import { GalleryPreview } from '../components/home/GalleryPreview';
 import { FeaturedStrip } from '../components/home/FeaturedStrip';
 import { toPlainProduct } from '../lib/types';
+import { withBase } from '../lib/url';
 
 const entries = await getCollection('products');
 const featured = entries.filter((e) => e.data.featured).slice(0, 4).map(toPlainProduct);
@@ -17,11 +18,11 @@ const featured = entries.filter((e) => e.data.featured).slice(0, 4).map(toPlainP
   description="Magic Bones — Claudia Capitani, Roma. Teschi dipinti a mano, gioielli in osso, altari rituali. Pezzi unici, personalizzabili su richiesta."
 >
   <header class="site-header">
-    <a href="/" class="site-header__logo">Magic Bones</a>
+    <a href={withBase('/')} class="site-header__logo">Magic Bones</a>
     <nav class="site-header__nav">
-      <a href="/negozio" data-astro-reload>Negozio</a>
-      <a href="/chi-e-claudia" data-astro-reload>Chi è Claudia</a>
-      <a href="/contatti" data-astro-reload>Contatti</a>
+      <a href={withBase('/negozio')} data-astro-reload>Negozio</a>
+      <a href={withBase('/chi-e-claudia')} data-astro-reload>Chi è Claudia</a>
+      <a href={withBase('/contatti')} data-astro-reload>Contatti</a>
     </nav>
     <CartButton client:load />
     <CartDrawer client:load />
@@ -39,8 +40,8 @@ const featured = entries.filter((e) => e.data.featured).slice(0, 4).map(toPlainP
           uguali.
         </p>
         <div class="hero__cta">
-          <a class="btn btn--primary" href="/negozio" data-astro-reload>Entra nel negozio →</a>
-          <a class="btn btn--ghost" href="/chi-e-claudia" data-astro-reload>La storia di Claudia</a>
+          <a class="btn btn--primary" href={withBase('/negozio')} data-astro-reload>Entra nel negozio →</a>
+          <a class="btn btn--ghost" href={withBase('/chi-e-claudia')} data-astro-reload>La storia di Claudia</a>
         </div>
         <p class="hero__hint">Trascina per far ruotare il teschio →</p>
       </div>
@@ -80,7 +81,7 @@ const featured = entries.filter((e) => e.data.featured).slice(0, 4).map(toPlainP
             ritrovamento — mai un acquisto all'ingrosso — e diventa oggetto
             rituale, gioiello o pezzo d'arredo.
           </p>
-          <a class="btn btn--ghost-dark" href="/chi-e-claudia" data-astro-reload>Conosci Claudia →</a>
+          <a class="btn btn--ghost-dark" href={withBase('/chi-e-claudia')} data-astro-reload>Conosci Claudia →</a>
         </div>
         <div class="story__gallery">
           <p class="story__gallery-label">Dove arriveranno le foto e i video reali</p>
@@ -92,7 +93,7 @@ const featured = entries.filter((e) => e.data.featured).slice(0, 4).map(toPlainP
         <p class="block__eyebrow">Pezzi in evidenza</p>
         <h2 class="block__title">Dal negozio</h2>
         <FeaturedStrip client:visible products={featured} />
-        <a class="btn btn--ghost-dark btn--center" href="/negozio" data-astro-reload>Vedi tutto il negozio →</a>
+        <a class="btn btn--ghost-dark btn--center" href={withBase('/negozio')} data-astro-reload>Vedi tutto il negozio →</a>
       </section>
     </div>
 
@@ -100,7 +101,7 @@ const featured = entries.filter((e) => e.data.featured).slice(0, 4).map(toPlainP
       <p>Magic Bones · Claudia Capitani · Roma</p>
       <p>
         <a href="https://www.instagram.com/_magic_bones" target="_blank" rel="noopener noreferrer">@_magic_bones</a>
-        · <a href="/contatti" data-astro-reload>Contatti</a> · <a href="/privacy" data-astro-reload>Privacy</a> · <a href="/termini" data-astro-reload>Termini</a>
+        · <a href={withBase('/contatti')} data-astro-reload>Contatti</a> · <a href={withBase('/privacy')} data-astro-reload>Privacy</a> · <a href={withBase('/termini')} data-astro-reload>Termini</a>
       </p>
     </footer>
   </main>
