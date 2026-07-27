@@ -219,8 +219,9 @@ export function CartDrawer() {
           font-family: var(--font-body);
         }
         .item-qty button {
-          width: 1.6rem;
-          height: 1.6rem;
+          width: 2.25rem;
+          height: 2.25rem;
+          flex-shrink: 0;
           border-radius: 999px;
           border: 1px solid rgba(90, 30, 38, 0.25);
           background: transparent;

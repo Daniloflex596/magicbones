@@ -13,7 +13,7 @@ import { pixelRatioFor, tierSettings } from './engine/capability.js';
 import { makeMat } from './engine/material-factory.js';
 import { STATIONS, TIMELINE_SECTIONS, LAST_STATION } from './stations.js';
 
-import { createTrunkField, createDustField } from './objects/forest.js';
+import { createTrunkField, createDustField, createFoliageCluster } from './objects/forest.js';
 import { createHeroMushroom, createMushroomCluster } from './objects/mushroom.js';
 import { createSkullAltar } from './objects/skull.js';
 import { createPendantBranch } from './objects/pendant.js';
@@ -65,16 +65,19 @@ export function initWorld(canvas, { tier = 'high' } = {}) {
   const dust = createDustField({ count: Math.round(90 * scale), spread: 14 });
   dust.mesh.position.z = 5;
   scene.add(dust.mesh);
+  const foliage = createFoliageCluster({ count: Math.round(50 * scale), spread: 13, seed: 900 });
+  foliage.mesh.position.z = 5;
+  scene.add(foliage.mesh);
 
   // ---------------------------------------------------------------------
   // Stazione 1 — Radura dei Funghi
   // ---------------------------------------------------------------------
   const funghiGroup = new THREE.Group();
   funghiGroup.position.set(-0.5, 0, 2.2);
-  const heroA = createHeroMushroom({ capColor: 0xe8452b, scale: 1.3, seed: 10 });
-  heroA.group.position.set(-0.6, 0, 0);
-  const heroB = createHeroMushroom({ capColor: 0x8b5cf6, glowColor: 0xa78bfa, scale: 0.85, seed: 40 });
-  heroB.group.position.set(0.5, 0, -0.4);
+  const heroA = createHeroMushroom({ capColor: 0xe8452b, scale: 1.0, seed: 10 });
+  heroA.group.position.set(-0.7, 0, 0.1);
+  const heroB = createHeroMushroom({ capColor: 0x8b5cf6, glowColor: 0xa78bfa, scale: 0.68, seed: 40 });
+  heroB.group.position.set(0.55, 0, -0.5);
   const cluster1 = createMushroomCluster({ count: Math.round(60 * scale), seed: 20 });
   cluster1.position.set(0, 0, -0.2);
   funghiGroup.add(heroA.group, heroB.group, cluster1);
@@ -175,6 +178,7 @@ export function initWorld(canvas, { tier = 'high' } = {}) {
       lenis.raf(time * 1000);
 
       dust.update(time, tl.proximity('soglia'));
+      foliage.update(time, tl.proximity('soglia'));
 
       const pFunghi = tl.proximity('funghi');
       heroA.update(pFunghi);

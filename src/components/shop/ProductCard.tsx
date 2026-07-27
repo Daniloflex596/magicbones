@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion';
+import type { MouseEvent } from 'react';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import type { Product } from '../../lib/types';
 import { CATEGORY_LABELS, formatPrice } from '../../lib/types';
 import { CategoryGlyph } from './CategoryGlyph';
@@ -16,6 +17,27 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
   const { title, category, price, priceIsFrom, isUnique, isCustom, images } = product.data;
   const cover = images[0];
 
+  // Tilt 3D verso il puntatore — solo su hover reale (mouse), innocuo su touch:
+  // niente handler di move sul dito, la card resta piatta su mobile.
+  const rawRotateX = useMotionValue(0);
+  const rawRotateY = useMotionValue(0);
+  const rotateX = useSpring(rawRotateX, { stiffness: 260, damping: 22 });
+  const rotateY = useSpring(rawRotateY, { stiffness: 260, damping: 22 });
+  const glowX = useTransform(rawRotateY, [-9, 9], [0, 100]);
+  const glowY = useTransform(rawRotateX, [-9, 9], [100, 0]);
+
+  function handleMouseMove(e: MouseEvent<HTMLAnchorElement>) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width - 0.5;
+    const py = (e.clientY - rect.top) / rect.height - 0.5;
+    rawRotateY.set(px * 9);
+    rawRotateX.set(-py * 9);
+  }
+  function handleMouseLeave() {
+    rawRotateX.set(0);
+    rawRotateY.set(0);
+  }
+
   return (
     <motion.a
       href={`/negozio/${product.id}`}
@@ -26,8 +48,15 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
       transition={{ duration: 0.5, delay: Math.min(index * 0.05, 0.3), ease: 'easeOut' }}
       whileHover={{ y: -6 }}
       whileTap={{ scale: 0.98 }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{ rotateX, rotateY, transformPerspective: 900 }}
     >
       <div className="product-card__media" style={{ background: CATEGORY_GRADIENT[category] }}>
+        <motion.div
+          className="product-card__sheen"
+          style={{ background: useTransform([glowX, glowY], ([gx, gy]: number[]) => `radial-gradient(circle at ${gx}% ${gy}%, rgba(255,255,255,0.16), transparent 55%)`) }}
+        />
         {cover.placeholder ? (
           <>
             <CategoryGlyph category={category} className="product-card__glyph" />
@@ -64,6 +93,13 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
           align-items: center;
           justify-content: center;
           gap: 0.5rem;
+          overflow: hidden;
+        }
+        .product-card__sheen {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          z-index: 1;
         }
         .product-card__media img {
           width: 100%;

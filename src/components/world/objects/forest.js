@@ -81,3 +81,42 @@ export function createDustField({ count = 90, color = 0xff9d5c, spread = 12 } = 
 
   return { mesh: inst, update };
 }
+
+/**
+ * createFoliageCluster({ count, color }): foglie blu-notte sospese tra i
+ * tronchi — fedeltà al biglietto da visita "Magic Bones" (funghi Amanita +
+ * foglie blu sullo sfondo notturno). Piani a doppia faccia, leggermente
+ * emissivi, che oscillano piano (proximity, mai un timer autonomo).
+ */
+export function createFoliageCluster({ count = 50, color = 0x3a5a78, spread = 12, seed = 900 } = {}) {
+  const geo = new THREE.PlaneGeometry(0.16, 0.24);
+  const mat = makeMat(color, { r: 0.7, e: color, ei: 0.28, side: THREE.DoubleSide });
+  const inst = new THREE.InstancedMesh(geo, mat, count);
+  const dummy = new THREE.Object3D();
+  const base = [];
+
+  for (let i = 0; i < count; i++) {
+    const side = i % 2 === 0 ? -1 : 1;
+    const x = side * (1.6 + pseudo(seed + i * 3) * 2.6);
+    const y = 1.4 + pseudo(seed + i * 5) * 2.2;
+    const z = -pseudo(seed + i * 7) * spread;
+    base.push([x, y, z, pseudo(seed + i * 11) * Math.PI]);
+  }
+
+  function place(time, amt) {
+    for (let i = 0; i < count; i++) {
+      const [x, y, z, rot] = base[i];
+      const sway = Math.sin(time * 0.6 + i * 0.4) * 0.12 * (0.3 + amt * 0.7);
+      dummy.position.set(x, y, z);
+      dummy.rotation.set(0.2, rot + sway, sway * 0.5);
+      const s = 0.8 + pseudo(seed + i * 13) * 0.6;
+      dummy.scale.setScalar(s);
+      dummy.updateMatrix();
+      inst.setMatrixAt(i, dummy.matrix);
+    }
+    inst.instanceMatrix.needsUpdate = true;
+  }
+  place(0, 0);
+
+  return { mesh: inst, update: place };
+}

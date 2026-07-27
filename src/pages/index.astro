@@ -10,6 +10,15 @@ import StaticFallback from '../components/world/fallback/StaticFallback.astro';
   <StaticFallback />
 
   <div id="preloader" class="preloader" aria-hidden="true">
+    <svg class="preloader-glyph" viewBox="0 0 64 64" width="72" height="72">
+      <path
+        d="M32 14c-10 0-16 7-16 16 0 6 2.5 10 5 12.5V50h4.5v-4h3.5v4H33v-4h3.5v4H41v-7.5c2.5-2.5 5-6.5 5-12.5 0-9-6-16-16-16Z"
+        fill="none" stroke="#e4d9b8" stroke-width="2.2" stroke-linejoin="round"
+      />
+      <circle class="preloader-glyph-eye" cx="25.5" cy="27" r="3" fill="#2fb8c4" />
+      <circle class="preloader-glyph-eye" cx="38.5" cy="27" r="3" fill="#2fb8c4" />
+    </svg>
+    <p class="preloader-word">Magic Bones</p>
     <div class="preloader-track"><div data-fill class="preloader-fill"></div></div>
     <span data-pct class="preloader-pct">0%</span>
   </div>
@@ -47,7 +56,7 @@ import StaticFallback from '../components/world/fallback/StaticFallback.astro';
           Mandala, pietre turchesi, finiture oro: ogni cranio è un pezzo unico,
           mai una copia.
         </p>
-        <a class="cta" href="/negozio?categoria=teschio-dipinto">Scopri la collezione →</a>
+        <a class="cta" href="/negozio?categoria=teschio-dipinto" data-astro-reload>Scopri la collezione →</a>
       </div>
     </section>
 
@@ -59,7 +68,7 @@ import StaticFallback from '../components/world/fallback/StaticFallback.astro';
           Ciondoli, dischi dreamcatcher in pizzo nero: da indossare come un
           talismano.
         </p>
-        <a class="cta" href="/negozio?categoria=gioiello-osso">Scopri la collezione →</a>
+        <a class="cta" href="/negozio?categoria=gioiello-osso" data-astro-reload>Scopri la collezione →</a>
       </div>
     </section>
 
@@ -71,7 +80,7 @@ import StaticFallback from '../components/world/fallback/StaticFallback.astro';
           Oggetti per il rito quotidiano: dischi zodiacali, candele, fiori
           secchi su tessuto nero.
         </p>
-        <a class="cta" href="/negozio?categoria=arredo-rituale">Scopri la collezione →</a>
+        <a class="cta" href="/negozio?categoria=arredo-rituale" data-astro-reload>Scopri la collezione →</a>
       </div>
     </section>
 
@@ -91,7 +100,7 @@ import StaticFallback from '../components/world/fallback/StaticFallback.astro';
           Roma based. Ogni pezzo può nascere su misura: scrivi a Claudia per
           raccontarle la tua idea.
         </p>
-        <a class="cta" href="/chi-e-claudia">Conosci Claudia →</a>
+        <a class="cta" href="/chi-e-claudia" data-astro-reload>Conosci Claudia →</a>
       </div>
     </section>
 
@@ -100,10 +109,10 @@ import StaticFallback from '../components/world/fallback/StaticFallback.astro';
         <p class="eyebrow">Il viaggio continua</p>
         <h2 class="display-title">Entra nel negozio</h2>
         <p class="lede">Porta a casa un pezzo del bosco.</p>
-        <a class="cta cta--primary" href="/negozio">Entra nel negozio →</a>
+        <a class="cta cta--primary" href="/negozio" data-astro-reload>Entra nel negozio →</a>
         <p class="contact-line">
           <a href="https://www.instagram.com/_magic_bones" target="_blank" rel="noopener noreferrer">@_magic_bones</a>
-          · <a href="/contatti">contatti</a>
+          · <a href="/contatti" data-astro-reload>contatti</a>
         </p>
       </div>
     </section>
@@ -175,14 +184,41 @@ import StaticFallback from '../components/world/fallback/StaticFallback.astro';
     .preloader.is-done {
       opacity: 0;
     }
+    .preloader-glyph {
+      filter: drop-shadow(0 0 10px rgba(47, 184, 196, 0.45));
+      animation: preloader-breathe 2.4s ease-in-out infinite;
+    }
+    .preloader-glyph-eye {
+      animation: preloader-blink 2.4s ease-in-out infinite;
+    }
+    @keyframes preloader-breathe {
+      0%, 100% { transform: scale(1); opacity: 0.85; }
+      50% { transform: scale(1.08); opacity: 1; }
+    }
+    @keyframes preloader-blink {
+      0%, 40%, 100% { opacity: 1; }
+      50% { opacity: 0.25; }
+    }
+    .preloader-word {
+      font-family: var(--font-flash);
+      font-size: 1.1rem;
+      letter-spacing: 0.08em;
+      color: var(--amanita-glow);
+      opacity: 0;
+      animation: preloader-word-in 1.2s ease 0.3s forwards;
+    }
+    @keyframes preloader-word-in {
+      to { opacity: 0.85; }
+    }
     .preloader-track {
       width: 3px;
-      height: 120px;
+      height: 70px;
       background: rgba(228, 217, 184, 0.15);
       border-radius: 2px;
       overflow: hidden;
       display: flex;
       align-items: flex-end;
+      margin-top: 0.5rem;
     }
     .preloader-fill {
       width: 100%;
@@ -252,21 +288,48 @@ import StaticFallback from '../components/world/fallback/StaticFallback.astro';
       margin-bottom: 1.25rem;
     }
     .cta {
+      position: relative;
       display: inline-block;
       font-family: var(--font-body);
       font-weight: 500;
       color: var(--turquoise);
       text-decoration: none;
-      border-bottom: 1px solid currentColor;
-      padding-bottom: 0.1rem;
+      padding: 0.6rem 0.05rem;
+      margin: -0.6rem -0.05rem;
+      min-height: 44px;
+      box-sizing: border-box;
+    }
+    .cta::after {
+      content: '';
+      position: absolute;
+      left: 0.05rem;
+      right: 0.05rem;
+      bottom: 0.5rem;
+      height: 1px;
+      background: currentColor;
+      transform: scaleX(1);
+      transform-origin: left;
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .cta:hover::after {
+      transform: scaleX(0.35);
     }
     .cta--primary {
       color: var(--night-deep);
       background: var(--amanita-glow);
       border: none;
-      padding: 0.75rem 1.5rem;
+      padding: 0.85rem 1.5rem;
       border-radius: 999px;
-      margin-bottom: 1rem;
+      margin: 0 0 1rem;
+      min-height: 44px;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+    }
+    .cta--primary::after {
+      display: none;
+    }
+    .cta--primary:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 8px 24px rgba(255, 138, 77, 0.35);
     }
     .contact-line {
       font-family: var(--font-body);
@@ -275,6 +338,40 @@ import StaticFallback from '../components/world/fallback/StaticFallback.astro';
     }
     .contact-line a {
       color: var(--bone-cream);
+      padding: 0.6rem 0.3rem;
+      margin: -0.6rem -0.3rem;
+      display: inline-block;
+    }
+
+    /*
+     * Su schermi stretti il pannello di testo occupava quasi tutto il
+     * riquadro, lasciando vedere solo un'unghia del mondo 3D dietro: lo
+     * scrim si fa più compatto (meno padding, testo più piccolo) così la
+     * scena resta protagonista anche sul telefono, che è il device guida.
+     */
+    @media (max-width: 480px) {
+      .station {
+        padding: 2.75rem 5vw;
+      }
+      .scrim {
+        padding: 1.35rem 1.5rem;
+        max-width: min(20rem, 78vw);
+      }
+      .scrim--center {
+        max-width: min(22rem, 86vw);
+      }
+      .display-title {
+        font-size: clamp(1.5rem, 7vw, 2rem);
+        margin-bottom: 0.6rem;
+      }
+      .lede {
+        font-size: 0.9rem;
+        margin-bottom: 0.9rem;
+      }
+      .eyebrow {
+        font-size: 0.78rem;
+        margin-bottom: 0.35rem;
+      }
     }
   </style>
 </BaseLayout>

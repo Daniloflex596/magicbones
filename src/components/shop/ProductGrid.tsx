@@ -67,7 +67,7 @@ export function ProductGrid({ products, initialCategory }: { products: Product[]
         .chip {
           font-family: var(--font-body);
           font-size: 0.85rem;
-          padding: 0.5rem 1.1rem;
+          padding: 0.65rem 1.1rem;
           border-radius: 999px;
           border: 1px solid rgba(90, 30, 38, 0.2);
           background: transparent;

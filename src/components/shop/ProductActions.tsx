@@ -46,7 +46,7 @@ export function ProductActions({ product }: { product: Product }) {
           font-family: var(--font-body); color: var(--bordeaux);
         }
         .actions__qty button {
-          width: 2rem; height: 2rem; border-radius: 999px;
+          width: 2.75rem; height: 2.75rem; border-radius: 999px;
           border: 1px solid rgba(90, 30, 38, 0.25); background: transparent; color: var(--bordeaux); cursor: pointer;
         }
         .actions__add {

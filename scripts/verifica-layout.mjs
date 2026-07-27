@@ -23,6 +23,14 @@ for (const vp of VIEWPORTS) {
     deviceScaleFactor: vp.deviceScaleFactor ?? 1,
   });
   ctx.setDefaultTimeout(90000);
+  // In alcuni ambienti (sandbox headless) fonts.googleapis.com risulta
+  // irraggiungibile dal processo Chromium anche se lo shell ha un proxy
+  // funzionante: la richiesta pende fino al timeout e rallenta ogni nav.
+  // Abortiamo subito le richieste font esterne durante il collaudo — non
+  // altera il layout (i font hanno fallback), solo la velocità del test.
+  await ctx.route('https://fonts.googleapis.com/**', (route) => route.abort());
+  await ctx.route('https://fonts.gstatic.com/**', (route) => route.abort());
+
   const page = await ctx.newPage();
   const errors = [];
   const warnings = [];

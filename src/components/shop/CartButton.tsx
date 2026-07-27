@@ -1,3 +1,4 @@
+import { motion, AnimatePresence } from 'framer-motion';
 import { useCartStore, cartCount } from '../../stores/cartStore';
 
 export function CartButton() {
@@ -6,13 +7,31 @@ export function CartButton() {
   const count = cartCount(items);
 
   return (
-    <button className="cart-button" onClick={open} aria-label={`Apri il carrello (${count} articoli)`}>
+    <motion.button
+      className="cart-button"
+      onClick={open}
+      aria-label={`Apri il carrello (${count} articoli)`}
+      whileTap={{ scale: 0.9 }}
+    >
       <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6">
         <path d="M4 6h2l1.4 10.2A2 2 0 0 0 9.4 18h7.2a2 2 0 0 0 2-1.8L20 8H7" strokeLinecap="round" strokeLinejoin="round" />
         <circle cx="10" cy="21" r="1.2" />
         <circle cx="17" cy="21" r="1.2" />
       </svg>
-      {count > 0 && <span className="cart-button__badge">{count}</span>}
+      <AnimatePresence>
+        {count > 0 && (
+          <motion.span
+            key={count}
+            className="cart-button__badge"
+            initial={{ scale: 0.4, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.4, opacity: 0 }}
+            transition={{ type: 'spring', stiffness: 500, damping: 20 }}
+          >
+            {count}
+          </motion.span>
+        )}
+      </AnimatePresence>
 
       <style>{`
         .cart-button {
@@ -20,8 +39,8 @@ export function CartButton() {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          width: 2.5rem;
-          height: 2.5rem;
+          width: 2.75rem;
+          height: 2.75rem;
           border-radius: 999px;
           border: 1px solid rgba(90, 30, 38, 0.2);
           background: transparent;
@@ -45,6 +64,6 @@ export function CartButton() {
           justify-content: center;
         }
       `}</style>
-    </button>
+    </motion.button>
   );
 }

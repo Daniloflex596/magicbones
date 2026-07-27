@@ -52,3 +52,25 @@ body {
 .skip-link:focus {
   left: 0;
 }
+
+/*
+ * Transizioni pagina (Astro ClientRouter) SOLO tra le pagine del negozio:
+ * la home 3D forza sempre il reload pieno (data-astro-reload sui link che
+ * ne escono/rientrano) per non lasciare il render loop Three.js/Lenis
+ * orfano in background. Qui solo un dissolvenza morbida, non lo sfarfallio
+ * di default del browser.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root) {
+    animation: magicbones-fade-out 0.32s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+  ::view-transition-new(root) {
+    animation: magicbones-fade-in 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+}
+@keyframes magicbones-fade-out {
+  to { opacity: 0; transform: translateY(-6px); }
+}
+@keyframes magicbones-fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+}
