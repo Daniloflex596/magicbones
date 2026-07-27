@@ -1,8 +1,10 @@
 import { useMemo, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import type { Product, ProductData } from '../../lib/types';
 import { CATEGORY_LABELS } from '../../lib/types';
 import { ProductCard } from './ProductCard';
+import { pseudo } from '../../lib/pseudo';
+import { seedFromId } from '../../lib/sigil';
 
 const CATEGORIES = Object.keys(CATEGORY_LABELS) as ProductData['category'][];
 
@@ -11,6 +13,7 @@ export function ProductGrid({ products, initialCategory }: { products: Product[]
     ? (initialCategory as ProductData['category'])
     : null;
   const [active, setActive] = useState<ProductData['category'] | null>(validInitial);
+  const reducedMotion = useReducedMotion();
 
   const filtered = useMemo(
     () => (active ? products.filter((p) => p.data.category === active) : products),
@@ -40,12 +43,14 @@ export function ProductGrid({ products, initialCategory }: { products: Product[]
 
       <motion.div layout className="grid">
         <AnimatePresence mode="popLayout">
-          {filtered.map((product) => (
+          {filtered.map((product, i) => (
             <motion.div
               key={product.id}
               layout
+              initial={reducedMotion ? false : { opacity: 0, y: 42, rotate: (pseudo(seedFromId(product.id)) - 0.5) * 7, scale: 0.94 }}
+              animate={{ opacity: 1, y: 0, rotate: 0, scale: 1 }}
               exit={{ opacity: 0, scale: 0.94 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.55, delay: Math.min(i * 0.07, 0.56), ease: [0.22, 0.85, 0.32, 1] }}
             >
               <ProductCard product={product} />
             </motion.div>

@@ -1,9 +1,50 @@
 import { useEffect, useRef, useState } from 'react';
+import type { PointerEvent as ReactPointerEvent } from 'react';
 import type { Product } from '../../lib/types';
 import { CATEGORY_LABELS, formatPrice } from '../../lib/types';
-import { CATEGORY_ACCENT, drawSigil, seedFromId } from '../../lib/sigil';
+import { CATEGORY_ACCENT, drawSigil, mountSigil, seedFromId } from '../../lib/sigil';
 import { useCartStore } from '../../stores/cartStore';
 import { withBase } from '../../lib/url';
+
+import { pseudo } from '../../lib/pseudo';
+
+/** Rotazione deterministica dei badge: leggermente "storti", come applicati a mano. */
+function pseudoRot(key: string): number {
+  return pseudo(seedFromId(key));
+}
+
+/** "Il sigillo vola nel carrello": clone del sigillo animato via WAAPI dalla carta al bottone carrello. */
+function flySigilToCart(fromEl: HTMLElement, productId: string, accent: string): void {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const cartBtn = document.querySelector('button[aria-label*="carrello"]');
+  if (!cartBtn) return;
+  const fromRect = fromEl.getBoundingClientRect();
+  const toRect = cartBtn.getBoundingClientRect();
+
+  const flyer = document.createElement('canvas');
+  const SIZE = 72;
+  drawSigil(flyer, seedFromId(productId), accent, { size: SIZE, glow: 0.8 });
+  Object.assign(flyer.style, {
+    position: 'fixed',
+    zIndex: '95',
+    pointerEvents: 'none',
+    left: `${fromRect.left + fromRect.width / 2 - SIZE / 2}px`,
+    top: `${fromRect.top + fromRect.height / 2 - SIZE / 2}px`,
+  });
+  document.body.appendChild(flyer);
+
+  const dx = toRect.left + toRect.width / 2 - (fromRect.left + fromRect.width / 2);
+  const dy = toRect.top + toRect.height / 2 - (fromRect.top + fromRect.height / 2);
+  const anim = flyer.animate(
+    [
+      { transform: 'translate(0, 0) scale(1) rotate(0deg)', opacity: 1 },
+      { transform: `translate(${dx * 0.5}px, ${dy * 0.5 - 60}px) scale(0.7) rotate(180deg)`, opacity: 1, offset: 0.6 },
+      { transform: `translate(${dx}px, ${dy}px) scale(0.15) rotate(360deg)`, opacity: 0.4 },
+    ],
+    { duration: 650, easing: 'cubic-bezier(.3,.7,.4,1)' },
+  );
+  anim.onfinish = () => flyer.remove();
+}
 
 /**
  * Una carta del "Mazzo del Bosco": il fronte è un sigillo generato a runtime
@@ -17,19 +58,37 @@ export function ProductCard({ product }: { product: Product }) {
   const { title, category, price, priceIsFrom, isUnique, isCustom, description } = product.data;
   const [flipped, setFlipped] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const sceneRef = useRef<HTMLDivElement>(null);
   const add = useCartStore((s) => s.add);
 
   useEffect(() => {
-    if (canvasRef.current) drawSigil(canvasRef.current, seedFromId(product.id), CATEGORY_ACCENT[category], 180);
+    if (!canvasRef.current) return;
+    return mountSigil(canvasRef.current, seedFromId(product.id), CATEGORY_ACCENT[category], 180);
   }, [product.id, category]);
 
   function handleAdd() {
+    if (cardRef.current) flySigilToCart(cardRef.current, product.id, CATEGORY_ACCENT[category]);
     add({ id: product.id, title, price, priceIsFrom, isCustom });
   }
 
+  // Tilt verso il puntatore (solo pointer preciso): vive sull'elemento .card
+  // esterno, il flip su .card__inner — le due rotazioni si compongono.
+  function handlePointerMove(e: ReactPointerEvent<HTMLDivElement>) {
+    if (e.pointerType !== 'mouse' || !cardRef.current || !sceneRef.current) return;
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const rect = sceneRef.current.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width - 0.5;
+    const py = (e.clientY - rect.top) / rect.height - 0.5;
+    cardRef.current.style.transform = `rotateY(${px * 10}deg) rotateX(${-py * 10}deg)`;
+  }
+  function handlePointerLeave() {
+    if (cardRef.current) cardRef.current.style.transform = '';
+  }
+
   return (
-    <div className="card-scene">
-      <div className={`card ${flipped ? 'is-flipped' : ''}`}>
+    <div className="card-scene" ref={sceneRef} onPointerMove={handlePointerMove} onPointerLeave={handlePointerLeave}>
+      <div className={`card ${flipped ? 'is-flipped' : ''}`} ref={cardRef}>
         <div className="card__inner">
           <button
             type="button"
@@ -38,8 +97,18 @@ export function ProductCard({ product }: { product: Product }) {
             aria-label={`Gira per leggere ${title}`}
           >
             <div className="sigil-front__badges">
-              {isUnique ? <span className="badge">pezzo unico</span> : <span />}
-              {isCustom && <span className="badge badge--custom">personalizzabile</span>}
+              {isUnique ? (
+                <span className="badge" style={{ transform: `rotate(${((pseudoRot(product.id) - 0.5) * 5).toFixed(2)}deg)` }}>
+                  pezzo unico
+                </span>
+              ) : (
+                <span />
+              )}
+              {isCustom && (
+                <span className="badge badge--custom" style={{ transform: `rotate(${((0.5 - pseudoRot(product.id + 'c')) * 5).toFixed(2)}deg)` }}>
+                  personalizzabile
+                </span>
+              )}
             </div>
             <div className="sigil-front__canvas-wrap">
               <canvas ref={canvasRef} aria-hidden="true" />
@@ -73,7 +142,7 @@ export function ProductCard({ product }: { product: Product }) {
 
       <style>{`
         .card-scene { perspective: 1600px; aspect-ratio: 3/3.6; }
-        .card { position: relative; width: 100%; height: 100%; }
+        .card { position: relative; width: 100%; height: 100%; transition: transform 0.35s cubic-bezier(.16,1,.3,1); will-change: transform; }
         .card__inner {
           position: relative; width: 100%; height: 100%;
           transform-style: preserve-3d;
@@ -118,8 +187,11 @@ export function ProductCard({ product }: { product: Product }) {
         .sigil-back__add {
           background: var(--bordeaux); color: var(--paper-warm); border: none; border-radius: 999px;
           padding: 0.55rem 0.8rem; font-size: 0.8rem; font-weight: 500; min-height: 2.4rem; cursor: pointer;
+          box-shadow: 3px 3px 0 rgba(42, 14, 18, 0.55);
+          transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
         }
-        .sigil-back__add:hover { background: var(--bordeaux-light); }
+        .sigil-back__add:hover { background: var(--bordeaux-light); transform: translate(1.5px, 1.5px); box-shadow: 1.5px 1.5px 0 rgba(42, 14, 18, 0.55); }
+        .sigil-back__add:active { transform: translate(3px, 3px); box-shadow: 0 0 0 rgba(42, 14, 18, 0.55); }
         .sigil-back__row { display: flex; justify-content: space-between; align-items: center; margin-top: 0.4rem; gap: 0.5rem; flex-wrap: wrap; }
         .sigil-back__unflip { background: none; border: none; font-size: 0.72rem; text-decoration: underline; opacity: 0.6; padding: 0; cursor: pointer; }
         .sigil-back__full { font-size: 0.72rem; text-decoration: none; opacity: 0.75; color: var(--turquoise); }

@@ -66,6 +66,13 @@ const featured = entries.filter((e) => e.data.featured).slice(0, 4).map(toPlainP
       </div>
     </section>
 
+    <!-- Marquee: fascia di testo outline che scorre — energia da bottega, non da template -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track">
+        <span>Magic Bones · pezzi unici · Roma · dipinti a mano · personalizzazioni su richiesta · </span><span>Magic Bones · pezzi unici · Roma · dipinti a mano · personalizzazioni su richiesta · </span>
+      </div>
+    </div>
+
     <!-- ================= CONTENUTO EDITORIALE — DOM semplice ================= -->
     <div class="editorial">
       <section class="block">
@@ -115,14 +122,17 @@ const featured = entries.filter((e) => e.data.featured).slice(0, 4).map(toPlainP
     import { setupScrollRestoration } from '../components/world/engine/boot.js';
     import { setupReveal } from '../lib/reveal.js';
     import { pseudo } from '../lib/pseudo';
-    import { drawSigil, seedFromId } from '../lib/sigil';
+    import { mountSigil, seedFromId } from '../lib/sigil';
 
     setupScrollRestoration();
     setupReveal();
 
-    // --- La carta-firma dell'hero: sigillo generato + gira al tocco ---------
+    const prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // --- La carta-firma dell'hero: sigillo animato (si disegna da solo,
+    // poi deriva e pulsa) + gira al tocco --------------------------------
     const heroSigilCanvas = document.getElementById('hero-sigil') as HTMLCanvasElement | null;
-    if (heroSigilCanvas) drawSigil(heroSigilCanvas, seedFromId('magic-bones-brand'), '#2fb8c4', 220);
+    if (heroSigilCanvas) mountSigil(heroSigilCanvas, seedFromId('magic-bones-brand'), '#2fb8c4', 220);
 
     document.getElementById('hero-card')?.addEventListener('click', (e) => {
       if ((e.target as HTMLElement).closest('[data-action="flip"]')) {
@@ -130,15 +140,31 @@ const featured = entries.filter((e) => e.data.featured).slice(0, 4).map(toPlainP
       }
     });
 
-    // --- Fondale dell'hero: braci alla deriva, canvas 2D puro ---------------
-    // (nessun WebGL, nessun modello 3D in una teca — solo atmosfera dietro
-    // la carta. Deterministico via pseudo(), si ferma con reduced-motion o
-    // tab nascosta/sezione fuori viewport.)
+    // --- Wordmark: le lettere entrano una a una, come battute a timbro ------
+    const wordmark = document.querySelector('.hero-card__wordmark');
+    if (wordmark && !prefersReduced) {
+      const text = wordmark.textContent ?? '';
+      wordmark.textContent = '';
+      wordmark.setAttribute('aria-label', text);
+      [...text].forEach((ch, i) => {
+        const span = document.createElement('span');
+        span.className = 'wm-letter';
+        span.style.animationDelay = `${450 + i * 45}ms`;
+        span.textContent = ch;
+        span.setAttribute('aria-hidden', 'true');
+        wordmark.appendChild(span);
+      });
+    }
+
+    // --- Fondale dell'hero: braci alla deriva con parallasse sul puntatore --
+    // (canvas 2D puro, deterministico via pseudo(); le braci più grandi sono
+    // "più vicine" e reagiscono di più al mouse. Si ferma con reduced-motion
+    // o tab nascosta/sezione fuori viewport.)
     const embersCanvas = document.getElementById('embers') as HTMLCanvasElement | null;
     if (embersCanvas) {
       const ctx = embersCanvas.getContext('2d')!;
-      const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
       const narrow = matchMedia('(max-width: 820px)').matches;
+      const finePointer = matchMedia('(pointer: fine)').matches;
       const COUNT = narrow ? 26 : 44;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       let w = 0, h = 0;
@@ -157,12 +183,25 @@ const featured = entries.filter((e) => e.data.featured).slice(0, 4).map(toPlainP
       resize();
       window.addEventListener('resize', resize, { passive: true });
 
+      let targetPX = 0, targetPY = 0, smoothPX = 0, smoothPY = 0;
+      if (finePointer && !prefersReduced) {
+        embersCanvas.parentElement!.addEventListener('pointermove', (e) => {
+          const rect = embersCanvas!.parentElement!.getBoundingClientRect();
+          targetPX = (e.clientX - rect.left) / rect.width - 0.5;
+          targetPY = (e.clientY - rect.top) / rect.height - 0.5;
+        }, { passive: true });
+        embersCanvas.parentElement!.addEventListener('pointerleave', () => { targetPX = 0; targetPY = 0; }, { passive: true });
+      }
+
       function draw(time: number) {
+        smoothPX += (targetPX - smoothPX) * 0.04;
+        smoothPY += (targetPY - smoothPY) * 0.04;
         ctx.clearRect(0, 0, w, h);
         embers.forEach((e) => {
+          const depth = e.r / 3.4;
           const y = ((e.y - time * e.speed * 0.02) % 1 + 1) % 1;
           const x = e.x + Math.sin(time * 0.4 + e.phase) * 0.02;
-          const px = x * w, py = y * h;
+          const px = x * w - smoothPX * depth * 46, py = y * h - smoothPY * depth * 34;
           const glow = ctx.createRadialGradient(px, py, 0, px, py, e.r * 6);
           glow.addColorStop(0, 'rgba(255,138,77,0.55)');
           glow.addColorStop(1, 'rgba(255,138,77,0)');
@@ -173,7 +212,7 @@ const featured = entries.filter((e) => e.data.featured).slice(0, 4).map(toPlainP
         });
       }
 
-      if (reducedMotion) {
+      if (prefersReduced) {
         draw(0);
       } else {
         let raf = 0;
@@ -379,6 +418,49 @@ const featured = entries.filter((e) => e.data.featured).slice(0, 4).map(toPlainP
       opacity: 0.7;
     }
 
+    /* Ingresso dell'hero: la carta-firma sale con overshoot; le lettere del
+       wordmark entrano una a una come battute a timbro. */
+    @keyframes hero-card-rise {
+      0% { opacity: 0; transform: translateY(70px) rotate(-4deg) scale(0.92); }
+      60% { opacity: 1; transform: translateY(-8px) rotate(1deg) scale(1.015); }
+      100% { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+    }
+    .hero__stage .card { animation: hero-card-rise 0.9s cubic-bezier(0.22, 0.85, 0.32, 1) 0.15s both; }
+    @keyframes wm-pop {
+      0% { opacity: 0; transform: translateY(0.5em) rotate(6deg); }
+      100% { opacity: 1; transform: translateY(0) rotate(0deg); }
+    }
+    :global(.wm-letter) { display: inline-block; white-space: pre; animation: wm-pop 0.5s cubic-bezier(0.22, 0.85, 0.32, 1) both; }
+
+    /* Marquee di testo outline (principio "sticker kit", declinato dark):
+       corpo trasparente, contorno bone-cream, scorre piano — via CSS puro. */
+    .marquee {
+      background: var(--night-deep);
+      overflow: hidden;
+      padding: 0.9rem 0;
+      border-top: 1px solid rgba(228, 217, 184, 0.08);
+      border-bottom: 1px solid rgba(228, 217, 184, 0.08);
+    }
+    .marquee__track {
+      display: flex;
+      white-space: nowrap;
+      width: max-content;
+      animation: marquee-scroll 38s linear infinite;
+    }
+    .marquee__track span {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.6rem;
+      letter-spacing: 0.04em;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(228, 217, 184, 0.55);
+      paint-order: stroke fill;
+    }
+    @keyframes marquee-scroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       .card__inner { transition: opacity 0.25s ease; }
       .card.is-flipped .card__inner { transform: none; }
@@ -386,6 +468,9 @@ const featured = entries.filter((e) => e.data.featured).slice(0, 4).map(toPlainP
       .card.is-flipped .card__face--front { opacity: 0; pointer-events: none; }
       .card__face--back { transform: none; opacity: 0; transition: opacity 0.25s ease; }
       .card.is-flipped .card__face--back { opacity: 1; }
+      .hero__stage .card { animation: none; }
+      :global(.wm-letter) { animation: none; }
+      .marquee__track { animation: none; }
     }
 
     .btn {
@@ -398,13 +483,21 @@ const featured = entries.filter((e) => e.data.featured).slice(0, 4).map(toPlainP
       text-decoration: none;
       transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
     }
+    /* Bottone "sticker": ombra dura offset + si preme DENTRO la pagina
+       (principio playful-motion-brand, inchiostro = notte profonda). */
     .btn--primary {
       background: var(--amanita-glow);
       color: var(--night-deep);
+      box-shadow: 4px 4px 0 rgba(5, 6, 11, 0.85);
+      transition: transform 0.16s ease, box-shadow 0.16s ease;
     }
     .btn--primary:hover {
-      transform: translateY(-2px) scale(1.03);
-      box-shadow: 0 8px 24px rgba(255, 138, 77, 0.35);
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0 rgba(5, 6, 11, 0.85);
+    }
+    .btn--primary:active {
+      transform: translate(4px, 4px);
+      box-shadow: 0 0 0 rgba(5, 6, 11, 0.85);
     }
     .btn--ghost {
       color: var(--bone-cream);
