@@ -1,0 +1,20 @@
+{
+  "title": "Teschio d'uccello — punta d'ametista",
+  "category": "cristalli-muschio",
+  "animal": "uccello",
+  "price": 58,
+  "priceIsFrom": false,
+  "isCustom": false,
+  "isUnique": true,
+  "stock": 1,
+  "images": [
+    { "src": "/placeholders/teschio-uccello-ametista-1.jpg", "alt": "Piccolo teschio d'uccello con punta di cristallo ametista incastonata", "placeholder": true }
+  ],
+  "description": "Un piccolo teschio d'uccello con una punta di ametista grezza incastonata direttamente nella cavità cranica, su una base in legno con simboli dipinti a mano. Delicato e minerale insieme.",
+  "materials": ["osso naturale", "ametista grezza", "base in legno", "ceralacca"],
+  "dimensions": "14 × 10 × 8 cm",
+  "tags": ["ametista", "uccello", "cristalli", "delicato"],
+  "featured": false,
+  "availableSince": "2025-09-15",
+  "seoDescription": "Teschio d'uccello con punta di ametista incastonata, Magic Bones."
+}

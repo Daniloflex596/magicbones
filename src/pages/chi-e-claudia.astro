@@ -11,17 +11,19 @@ import ShopLayout from '../layouts/ShopLayout.astro';
     <h1>Claudia Capitani</h1>
     <p class="lede">Artista, Roma based. "I create with skeletons."</p>
 
+    <blockquote class="about-quote">"Nel fitto del bosco, la mia ricerca inizia. Non cerco, ma trovo."</blockquote>
+
     <div class="body">
       <p>
-        Claudia raccoglie, ripulisce e dipinge a mano teschi e ossa animali,
-        trasformandoli in oggetti che vivono a metà tra l'arredo, il rito e il
-        talismano. Ogni pezzo nasce da un materiale imperfetto e naturale — mai
-        due sono davvero uguali.
+        Claudia raccoglie, ripulisce e dipinge a mano teschi e ossa animali che
+        la natura ha già restituito al suo ciclo, trasformandoli in oggetti che
+        vivono a metà tra l'arredo, il rito e il talismano. Ogni pezzo nasce da
+        un materiale imperfetto e naturale — mai due sono davvero uguali.
       </p>
       <p>
-        Il lavoro nasce a Roma, tra mercatini, banchi da lavoro pieni di pietre
-        e pigmenti, e una lunga pratica di osservazione: cosa racconta un osso,
-        prima ancora di essere dipinto?
+        Il lavoro nasce a Roma: tra i banchi del mercatino dell'Ex Mattatoio,
+        pietre e pigmenti sul tavolo di casa, e una lunga pratica di
+        osservazione — cosa racconta un osso, prima ancora di essere dipinto?
       </p>
       <p>
         Oltre ai pezzi pronti, Claudia realizza <strong>personalizzazioni su
@@ -60,6 +62,16 @@ import ShopLayout from '../layouts/ShopLayout.astro';
       font-style: italic;
       color: rgba(90, 30, 38, 0.75);
       margin-bottom: 2rem;
+    }
+    .about-quote {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 1.4rem;
+      line-height: 1.35;
+      color: var(--bordeaux);
+      border-left: 2px solid var(--turquoise);
+      padding-left: 1rem;
+      margin: 0 0 2rem;
     }
     .body p {
       font-family: var(--font-body);

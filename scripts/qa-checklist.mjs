@@ -3,19 +3,28 @@ import { chromium } from 'playwright';
 const BASE = process.env.URL || 'http://localhost:4321/';
 const browser = await chromium.launch({ headless: true });
 
-// 1) reduced-motion fallback
+// 1) reduced-motion fallback: niente canvas 3D, fallback statico visibile,
+// nessun chunk hero-stage.js scaricato (progressive enhancement reale).
 {
   const ctx = await browser.newContext({ reducedMotion: 'reduce', viewport: { width: 1280, height: 800 } });
+  const requests = [];
+  ctx.on('request', (r) => requests.push(r.url()));
   const page = await ctx.newPage();
   await page.goto(BASE, { waitUntil: 'load' });
   await page.waitForTimeout(1000);
-  const hasNoEngine = await page.evaluate(() => document.body.classList.contains('no-engine'));
-  const canvasHidden = await page.evaluate(() => getComputedStyle(document.getElementById('world-canvas')).display === 'none');
+  const canvasHidden = await page.evaluate(() => getComputedStyle(document.getElementById('hero-canvas')).display === 'none');
+  const fallbackVisible = await page.evaluate(() => getComputedStyle(document.getElementById('stage-fallback')).display !== 'none');
+  const heroChunkLoaded = requests.some((u) => u.includes('hero-stage'));
   const heroVisible = await page.evaluate(() => {
-    const el = document.querySelector('#soglia [data-reveal]');
+    const el = document.querySelector('.hero [data-reveal]');
     return el ? getComputedStyle(el).opacity === '1' : false;
   });
-  console.log('[reduced-motion] no-engine class:', hasNoEngine, '| canvas hidden:', canvasHidden, '| hero content visible:', heroVisible);
+  console.log(
+    '[reduced-motion] canvas hidden:', canvasHidden,
+    '| static fallback visible:', fallbackVisible,
+    '| hero-stage chunk NOT fetched:', !heroChunkLoaded,
+    '| hero copy visible:', heroVisible,
+  );
   await ctx.close();
 }
 

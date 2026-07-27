@@ -13,7 +13,18 @@ const CATEGORY_GRADIENT: Record<string, string> = {
   'tarocchi-zodiaco': 'linear-gradient(135deg, #241830, #0c0f1a)',
 };
 
-export function ProductCard({ product, index = 0 }: { product: Product; index?: number }) {
+export function ProductCard({
+  product,
+  index = 0,
+  forceReload = false,
+}: {
+  product: Product;
+  index?: number;
+  /** true quando la card vive sulla home: forza un reload pieno in uscita
+   * così lo hero-stage 3D (con la sua timeline e i listener) non resta
+   * orfano in background durante una navigazione client-side. */
+  forceReload?: boolean;
+}) {
   const { title, category, price, priceIsFrom, isUnique, isCustom, images } = product.data;
   const cover = images[0];
 
@@ -41,6 +52,7 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
   return (
     <motion.a
       href={`/negozio/${product.id}`}
+      data-astro-reload={forceReload ? '' : undefined}
       className="product-card"
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}

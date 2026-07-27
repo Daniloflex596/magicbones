@@ -1,0 +1,19 @@
+{
+  "title": "Teschio di toro — pentagramma rosso",
+  "category": "teschio-dipinto",
+  "price": 195,
+  "priceIsFrom": false,
+  "isCustom": false,
+  "isUnique": true,
+  "stock": 1,
+  "images": [
+    { "src": "/placeholders/teschio-toro-pentagramma-1.jpg", "alt": "Teschio di toro laccato nero con pentagramma rosso e corna rivestite", "placeholder": true }
+  ],
+  "description": "Teschio di toro laccato nero opaco, con un pentagramma dipinto a mano in rosso lungo il muso e le corna rivestite in resina rossa lucida, legate con corda naturale. Un pezzo d'impatto, pensato per chi vuole un simbolo forte.",
+  "materials": ["osso naturale", "lacca nera", "resina rossa", "corda naturale"],
+  "dimensions": "46 × 60 × 24 cm",
+  "tags": ["pentagramma", "toro", "statement", "rituale"],
+  "featured": false,
+  "availableSince": "2025-12-18",
+  "seoDescription": "Teschio di toro laccato nero con pentagramma rosso, Magic Bones."
+}

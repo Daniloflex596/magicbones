@@ -1,3 +1,13 @@
+/**
+ * Collaudo screenshot multi-viewport (Livello A/C della skill
+ * immersive-web-engine + checklist di immersive-web-director): build di
+ * produzione -> preview server -> Playwright headless -> screenshot
+ * desktop e mobile -> guarda e giudica. Copre la home (hero-stage +
+ * sezioni editoriali) e le pagine del negozio.
+ *
+ * Uso: npm run build && npm run preview -- --port 4321 (in un altro terminale)
+ *      poi: node scripts/verifica-layout.mjs
+ */
 import { chromium } from 'playwright';
 import { mkdir } from 'node:fs/promises';
 
@@ -11,7 +21,6 @@ const VIEWPORTS = [
   { name: 'mobile-barpresent', width: 390, height: 784, deviceScaleFactor: 2 },
 ];
 
-const WORLD_SECTIONS = ['soglia', 'funghi', 'teschi', 'filoNero', 'focolare', 'panoramica', 'controAltare', 'chiusura'];
 const SHOP_PAGES = ['negozio', 'negozio/teschio-capra-mandala-turchese', 'chi-e-claudia', 'contatti'];
 
 const browser = await chromium.launch({ headless: true });
@@ -23,11 +32,10 @@ for (const vp of VIEWPORTS) {
     deviceScaleFactor: vp.deviceScaleFactor ?? 1,
   });
   ctx.setDefaultTimeout(90000);
+
   // In alcuni ambienti (sandbox headless) fonts.googleapis.com risulta
-  // irraggiungibile dal processo Chromium anche se lo shell ha un proxy
-  // funzionante: la richiesta pende fino al timeout e rallenta ogni nav.
-  // Abortiamo subito le richieste font esterne durante il collaudo — non
-  // altera il layout (i font hanno fallback), solo la velocità del test.
+  // irraggiungibile dal processo Chromium: abortiamo le richieste font
+  // esterne durante il collaudo per non rallentare ogni navigazione.
   await ctx.route('https://fonts.googleapis.com/**', (route) => route.abort());
   await ctx.route('https://fonts.gstatic.com/**', (route) => route.abort());
 
@@ -40,23 +48,29 @@ for (const vp of VIEWPORTS) {
     if (msg.type() === 'warning' && !msg.text().includes('GL Driver Message')) warnings.push(msg.text());
   });
 
-  // --- World (home) ---
+  // --- Home: hero (con lo hero-stage 3D) + scroll fino in fondo ---
   await page.goto(BASE, { waitUntil: 'load' });
-  await page.waitForTimeout(2500);
-  await page.screenshot({ path: `${OUT}/${vp.name}_home_top.png` });
+  await page.waitForTimeout(1800);
+  await page.screenshot({ path: `${OUT}/${vp.name}_home_hero.png` });
 
-  for (const sec of WORLD_SECTIONS) {
-    await page.evaluate((s) => {
-      document.getElementById(s)?.scrollIntoView({ behavior: 'instant', block: 'center' });
-    }, sec);
-    await page.waitForTimeout(1400);
-    await page.screenshot({ path: `${OUT}/${vp.name}_${sec}.png` });
-  }
+  await page.evaluate(async () => {
+    await new Promise((resolve) => {
+      let total = 0;
+      const step = () => {
+        window.scrollBy(0, 500);
+        total += 500;
+        if (total < document.body.scrollHeight) setTimeout(step, 120);
+        else resolve(null);
+      };
+      step();
+    });
+  });
+  await page.waitForTimeout(500);
+  await page.screenshot({ path: `${OUT}/${vp.name}_home_full.png`, fullPage: true });
 
-  // no horizontal overflow check
   const hasHOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1);
 
-  // --- Shop pages ---
+  // --- Pagine del negozio ---
   for (const p of SHOP_PAGES) {
     await page.goto(BASE + p, { waitUntil: 'load' });
     await page.waitForTimeout(700);

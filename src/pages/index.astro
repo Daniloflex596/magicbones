@@ -1,377 +1,388 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import StaticFallback from '../components/world/fallback/StaticFallback.astro';
+import { getCollection } from 'astro:content';
+import { CartButton } from '../components/shop/CartButton';
+import { CartDrawer } from '../components/shop/CartDrawer';
+import { CategoryTiles } from '../components/home/CategoryTiles';
+import { GalleryPreview } from '../components/home/GalleryPreview';
+import { FeaturedStrip } from '../components/home/FeaturedStrip';
+import { toPlainProduct } from '../lib/types';
+
+const entries = await getCollection('products');
+const featured = entries.filter((e) => e.data.featured).slice(0, 4).map(toPlainProduct);
 ---
 
 <BaseLayout
-  title="Un bosco notturno di ossa e magia"
-  description="Magic Bones — teschi dipinti a mano, gioielli in osso e altari rituali di Claudia Capitani. Addentrati nel bosco sacro, scrollando."
+  title="Teschi dipinti, gioielli in osso e altari rituali"
+  description="Magic Bones — Claudia Capitani, Roma. Teschi dipinti a mano, gioielli in osso, altari rituali. Pezzi unici, personalizzabili su richiesta."
 >
-  <StaticFallback />
-
-  <div id="preloader" class="preloader" aria-hidden="true">
-    <svg class="preloader-glyph" viewBox="0 0 64 64" width="72" height="72">
-      <path
-        d="M32 14c-10 0-16 7-16 16 0 6 2.5 10 5 12.5V50h4.5v-4h3.5v4H33v-4h3.5v4H41v-7.5c2.5-2.5 5-6.5 5-12.5 0-9-6-16-16-16Z"
-        fill="none" stroke="#e4d9b8" stroke-width="2.2" stroke-linejoin="round"
-      />
-      <circle class="preloader-glyph-eye" cx="25.5" cy="27" r="3" fill="#2fb8c4" />
-      <circle class="preloader-glyph-eye" cx="38.5" cy="27" r="3" fill="#2fb8c4" />
-    </svg>
-    <p class="preloader-word">Magic Bones</p>
-    <div class="preloader-track"><div data-fill class="preloader-fill"></div></div>
-    <span data-pct class="preloader-pct">0%</span>
-  </div>
-
-  <canvas id="world-canvas" aria-hidden="true"></canvas>
+  <header class="site-header">
+    <a href="/" class="site-header__logo">Magic Bones</a>
+    <nav class="site-header__nav">
+      <a href="/negozio" data-astro-reload>Negozio</a>
+      <a href="/chi-e-claudia" data-astro-reload>Chi è Claudia</a>
+      <a href="/contatti" data-astro-reload>Contatti</a>
+    </nav>
+    <CartButton client:load />
+    <CartDrawer client:load />
+  </header>
 
   <main id="contenuto">
-    <section id="soglia" class="station station--center">
-      <div class="scrim scrim--center" data-reveal>
-        <p class="eyebrow">Magic Bones</p>
-        <h1 class="display-title">Un bosco notturno<br />di ossa e magia</h1>
-        <p class="lede">
-          Ogni pezzo è raccolto, dipinto e incastonato a mano da Claudia Capitani,
-          artista esoterica di Roma. Scrolla per addentrarti.
+    <!-- ================= HERO — l'unico momento a effetto ================= -->
+    <section class="hero">
+      <div class="hero__copy" data-reveal>
+        <p class="eyebrow">Claudia Capitani · Artista esoterica · Roma</p>
+        <h1 class="hero__title">Ossa, funghi<br />e magia dal bosco</h1>
+        <p class="hero__lede">
+          Teschi dipinti a mano, gioielli in osso, altari rituali. Ogni pezzo
+          nasce da un materiale naturale e imperfetto — mai due sono davvero
+          uguali.
         </p>
+        <div class="hero__cta">
+          <a class="btn btn--primary" href="/negozio" data-astro-reload>Entra nel negozio →</a>
+          <a class="btn btn--ghost" href="/chi-e-claudia" data-astro-reload>La storia di Claudia</a>
+        </div>
+        <p class="hero__hint">Trascina per far ruotare il teschio →</p>
+      </div>
+
+      <div class="hero__stage">
+        <div id="stage-fallback" class="stage-fallback" aria-hidden="true">
+          <svg viewBox="0 0 64 64" width="96" height="96">
+            <path
+              d="M32 14c-10 0-16 7-16 16 0 6 2.5 10 5 12.5V50h4.5v-4h3.5v4H33v-4h3.5v4H41v-7.5c2.5-2.5 5-6.5 5-12.5 0-9-6-16-16-16Z"
+              fill="none" stroke="#e4d9b8" stroke-width="1.6" stroke-linejoin="round" opacity="0.55"
+            />
+            <circle cx="25.5" cy="27" r="2.6" fill="#2fb8c4" opacity="0.7" />
+            <circle cx="38.5" cy="27" r="2.6" fill="#2fb8c4" opacity="0.7" />
+          </svg>
+        </div>
+        <canvas id="hero-canvas" aria-hidden="true"></canvas>
       </div>
     </section>
 
-    <section id="funghi" class="station station--left">
-      <div class="scrim" data-reveal>
-        <p class="eyebrow">La Radura dei Funghi</p>
-        <h2 class="display-title">Nasce nel buio,<br />come dopo la pioggia</h2>
-        <p class="lede">
-          "I create with skeletons" — ogni creazione di Magic Bones cresce lenta,
-          tra muschio e bioluminescenza, prima di raggiungere l'altare.
-        </p>
-      </div>
-    </section>
+    <!-- ================= CONTENUTO EDITORIALE — DOM semplice ================= -->
+    <div class="editorial">
+      <section class="block">
+        <p class="block__eyebrow">Il bosco in vetrina</p>
+        <h2 class="block__title">Scegli per categoria</h2>
+        <CategoryTiles client:visible />
+      </section>
 
-    <section id="teschi" class="station station--right">
-      <div class="scrim" data-reveal>
-        <p class="eyebrow">L'Altare dei Teschi</p>
-        <h2 class="display-title">Teschi dipinti<br />a mano</h2>
-        <p class="lede">
-          Mandala, pietre turchesi, finiture oro: ogni cranio è un pezzo unico,
-          mai una copia.
-        </p>
-        <a class="cta" href="/negozio?categoria=teschio-dipinto" data-astro-reload>Scopri la collezione →</a>
-      </div>
-    </section>
+      <section class="block block--story">
+        <div class="story__text">
+          <p class="block__eyebrow">La sua ricerca</p>
+          <blockquote class="story__quote">
+            "Nel fitto del bosco, la mia ricerca inizia. Non cerco, ma trovo."
+          </blockquote>
+          <p class="story__body">
+            Claudia raccoglie, ripulisce e dipinge a mano teschi e ossa
+            animali restituiti dal ciclo naturale. Ogni pezzo racconta un
+            ritrovamento — mai un acquisto all'ingrosso — e diventa oggetto
+            rituale, gioiello o pezzo d'arredo.
+          </p>
+          <a class="btn btn--ghost-dark" href="/chi-e-claudia" data-astro-reload>Conosci Claudia →</a>
+        </div>
+        <div class="story__gallery">
+          <p class="story__gallery-label">Dove arriveranno le foto e i video reali</p>
+          <GalleryPreview client:visible />
+        </div>
+      </section>
 
-    <section id="filoNero" class="station station--left">
-      <div class="scrim" data-reveal>
-        <p class="eyebrow">Il Filo Nero</p>
-        <h2 class="display-title">Gioielli in osso,<br />appesi al buio</h2>
-        <p class="lede">
-          Ciondoli, dischi dreamcatcher in pizzo nero: da indossare come un
-          talismano.
-        </p>
-        <a class="cta" href="/negozio?categoria=gioiello-osso" data-astro-reload>Scopri la collezione →</a>
-      </div>
-    </section>
+      <section class="block">
+        <p class="block__eyebrow">Pezzi in evidenza</p>
+        <h2 class="block__title">Dal negozio</h2>
+        <FeaturedStrip client:visible products={featured} />
+        <a class="btn btn--ghost-dark btn--center" href="/negozio" data-astro-reload>Vedi tutto il negozio →</a>
+      </section>
+    </div>
 
-    <section id="focolare" class="station station--right">
-      <div class="scrim" data-reveal>
-        <p class="eyebrow">Il Focolare Rituale</p>
-        <h2 class="display-title">Candele, tarocchi<br />e altari</h2>
-        <p class="lede">
-          Oggetti per il rito quotidiano: dischi zodiacali, candele, fiori
-          secchi su tessuto nero.
-        </p>
-        <a class="cta" href="/negozio?categoria=arredo-rituale" data-astro-reload>Scopri la collezione →</a>
-      </div>
-    </section>
-
-    <section id="panoramica" class="station station--center">
-      <div class="scrim scrim--center" data-reveal>
-        <p class="eyebrow">Ti volti indietro</p>
-        <h2 class="display-title">Hai attraversato<br />il bosco intero</h2>
-        <p class="lede">Ogni radura resta accesa alle tue spalle, nel buio.</p>
-      </div>
-    </section>
-
-    <section id="controAltare" class="station station--left">
-      <div class="scrim" data-reveal>
-        <p class="eyebrow">L'Altare di Claudia</p>
-        <h2 class="display-title">Personalizzazioni<br />su richiesta</h2>
-        <p class="lede">
-          Roma based. Ogni pezzo può nascere su misura: scrivi a Claudia per
-          raccontarle la tua idea.
-        </p>
-        <a class="cta" href="/chi-e-claudia" data-astro-reload>Conosci Claudia →</a>
-      </div>
-    </section>
-
-    <section id="chiusura" class="station station--center station--closing">
-      <div class="scrim scrim--center" data-reveal>
-        <p class="eyebrow">Il viaggio continua</p>
-        <h2 class="display-title">Entra nel negozio</h2>
-        <p class="lede">Porta a casa un pezzo del bosco.</p>
-        <a class="cta cta--primary" href="/negozio" data-astro-reload>Entra nel negozio →</a>
-        <p class="contact-line">
-          <a href="https://www.instagram.com/_magic_bones" target="_blank" rel="noopener noreferrer">@_magic_bones</a>
-          · <a href="/contatti" data-astro-reload>contatti</a>
-        </p>
-      </div>
-    </section>
+    <footer class="site-footer">
+      <p>Magic Bones · Claudia Capitani · Roma</p>
+      <p>
+        <a href="https://www.instagram.com/_magic_bones" target="_blank" rel="noopener noreferrer">@_magic_bones</a>
+        · <a href="/contatti" data-astro-reload>Contatti</a> · <a href="/privacy" data-astro-reload>Privacy</a> · <a href="/termini" data-astro-reload>Termini</a>
+      </p>
+    </footer>
   </main>
 
   <script>
-    import { setupScrollRestoration, createPreloader, bootImmersive } from '../components/world/engine/boot.js';
+    import { setupScrollRestoration } from '../components/world/engine/boot.js';
     import { detectTier } from '../components/world/engine/capability.js';
     import { setupReveal } from '../lib/reveal.js';
 
     setupScrollRestoration();
     setupReveal();
 
-    const preloaderEl = document.getElementById('preloader');
-    const preloader = createPreloader(preloaderEl);
-    const canvas = document.getElementById('world-canvas');
+    const canvas = document.getElementById('hero-canvas');
+    const fallback = document.getElementById('stage-fallback');
     const tier = detectTier();
+    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    if (tier === 'none') {
-      document.body.classList.add('no-engine');
+    if (tier === 'none' || !canvas) {
+      // Nessun canvas creato, nessun chunk 3D scaricato: il fallback statico
+      // resta l'unica cosa visibile nello stage (progressive enhancement).
+    } else {
+      canvas.style.display = 'block';
+      fallback?.style.setProperty('display', 'none');
+
+      import('../components/world/hero-stage.js').then(({ initHeroStage }) => {
+        const stage = initHeroStage(canvas, { tier, reducedMotion });
+        const container = canvas.parentElement;
+
+        function resizeStage() {
+          const rect = container.getBoundingClientRect();
+          stage.resize(rect.width, rect.height);
+        }
+        resizeStage();
+        window.addEventListener('resize', resizeStage, { passive: true });
+
+        stage.ready.then(() => stage.start());
+
+        // Pausa il loop quando lo stage esce dal viewport (batteria/GPU).
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) stage.resume();
+              else stage.pause();
+            });
+          },
+          { threshold: 0.05 },
+        );
+        io.observe(container);
+
+        document.addEventListener('visibilitychange', () => {
+          if (document.hidden) stage.pause();
+          else if (container.getBoundingClientRect().top < window.innerHeight) stage.resume();
+        });
+      });
     }
-
-    bootImmersive({
-      canvas,
-      tier,
-      loadEngine: async (canvasEl, t) => {
-        const { initWorld } = await import('../components/world/world.js');
-        return initWorld(canvasEl, { tier: t });
-      },
-      loadFallback: async () => {
-        document.body.classList.add('no-engine');
-        return null;
-      },
-      onProgress: (p) => preloader.setProgress(p),
-    }).then(({ mode }) => {
-      preloader.done();
-      if (mode === 'fallback') document.body.classList.add('no-engine');
-    });
   </script>
 
   <style>
-    #world-canvas {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      display: block;
-    }
-
-    main {
+    .site-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      padding: 1.25rem 6vw;
+      background: var(--paper-warm);
+      border-bottom: 1px solid rgba(90, 30, 38, 0.12);
       position: relative;
-      z-index: 1;
+      z-index: 5;
     }
-
-    .preloader {
-      position: fixed;
-      inset: 0;
-      z-index: 50;
+    .site-header__logo {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--bordeaux);
+      text-decoration: none;
+    }
+    .site-header__nav {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 0.75rem;
-      background: var(--night-deep);
-      transition: opacity 0.6s ease;
-      pointer-events: none;
-    }
-    .preloader.is-done {
-      opacity: 0;
-    }
-    .preloader-glyph {
-      filter: drop-shadow(0 0 10px rgba(47, 184, 196, 0.45));
-      animation: preloader-breathe 2.4s ease-in-out infinite;
-    }
-    .preloader-glyph-eye {
-      animation: preloader-blink 2.4s ease-in-out infinite;
-    }
-    @keyframes preloader-breathe {
-      0%, 100% { transform: scale(1); opacity: 0.85; }
-      50% { transform: scale(1.08); opacity: 1; }
-    }
-    @keyframes preloader-blink {
-      0%, 40%, 100% { opacity: 1; }
-      50% { opacity: 0.25; }
-    }
-    .preloader-word {
-      font-family: var(--font-flash);
-      font-size: 1.1rem;
-      letter-spacing: 0.08em;
-      color: var(--amanita-glow);
-      opacity: 0;
-      animation: preloader-word-in 1.2s ease 0.3s forwards;
-    }
-    @keyframes preloader-word-in {
-      to { opacity: 0.85; }
-    }
-    .preloader-track {
-      width: 3px;
-      height: 70px;
-      background: rgba(228, 217, 184, 0.15);
-      border-radius: 2px;
-      overflow: hidden;
-      display: flex;
-      align-items: flex-end;
-      margin-top: 0.5rem;
-    }
-    .preloader-fill {
-      width: 100%;
-      height: 0%;
-      background: var(--amanita-glow);
-      transition: height 0.3s ease;
-    }
-    .preloader-pct {
+      gap: 1.5rem;
       font-family: var(--font-body);
-      font-size: 0.75rem;
-      letter-spacing: 0.08em;
+      font-size: 0.9rem;
+    }
+    .site-header__nav a {
+      color: var(--bordeaux);
+      text-decoration: none;
+      opacity: 0.8;
+    }
+    .site-header__nav a:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+
+    .hero {
+      background: var(--bg-night);
       color: var(--bone-cream);
-      opacity: 0.7;
-    }
-
-    .station {
-      min-height: 100lvh;
-      display: flex;
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
       align-items: center;
+      gap: 2rem;
       padding: 4rem 6vw;
+      min-height: 640px;
     }
-    .station--center {
-      justify-content: center;
-      text-align: center;
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+        padding: 3rem 6vw 2.5rem;
+        min-height: 0;
+      }
     }
-    .station--left {
-      justify-content: flex-start;
-    }
-    .station--right {
-      justify-content: flex-end;
-    }
-    .station--closing {
-      min-height: 100lvh;
-    }
-
-    .scrim {
-      max-width: 30rem;
-      background: linear-gradient(135deg, rgba(12, 15, 26, 0.82), rgba(12, 15, 26, 0.55));
-      border: 1px solid rgba(228, 217, 184, 0.12);
-      border-radius: var(--radius-lg);
-      padding: 2rem 2.25rem;
-      backdrop-filter: blur(2px);
-    }
-    .scrim--center {
-      max-width: 36rem;
-    }
-
     .eyebrow {
       font-family: var(--font-flash);
       color: var(--amanita-glow);
-      font-size: 0.9rem;
-      letter-spacing: 0.06em;
-      margin-bottom: 0.5rem;
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.6rem;
     }
-    .display-title {
+    .hero__title {
       font-family: var(--font-display);
-      font-size: clamp(1.9rem, 4vw, 3rem);
-      line-height: 1.15;
-      color: var(--bone-cream);
-      margin-bottom: 0.9rem;
+      font-size: clamp(2.2rem, 4.2vw, 3.4rem);
+      line-height: 1.12;
+      margin-bottom: 1rem;
     }
-    .lede {
+    .hero__lede {
       font-family: var(--font-body);
-      font-size: 1rem;
-      line-height: 1.6;
+      font-size: 1.02rem;
+      line-height: 1.65;
       color: rgba(228, 217, 184, 0.85);
-      margin-bottom: 1.25rem;
+      max-width: 34rem;
+      margin-bottom: 1.6rem;
     }
-    .cta {
+    .hero__cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .hero__hint {
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      color: rgba(228, 217, 184, 0.5);
+    }
+    @media (max-width: 900px) {
+      .hero__hint { display: none; }
+    }
+
+    .hero__stage {
       position: relative;
+      aspect-ratio: 4 / 3.4;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background: radial-gradient(ellipse at 50% 30%, #1c1f2e 0%, #05060b 75%);
+      border: 1px solid rgba(228, 217, 184, 0.1);
+    }
+    @media (max-width: 900px) {
+      .hero__stage { aspect-ratio: 4 / 3.2; }
+    }
+    #hero-canvas {
+      width: 100%;
+      height: 100%;
+      display: none;
+      touch-action: none;
+      cursor: grab;
+    }
+    #hero-canvas:active {
+      cursor: grabbing;
+    }
+    .stage-fallback {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn {
       display: inline-block;
       font-family: var(--font-body);
       font-weight: 500;
-      color: var(--turquoise);
-      text-decoration: none;
-      padding: 0.6rem 0.05rem;
-      margin: -0.6rem -0.05rem;
-      min-height: 44px;
-      box-sizing: border-box;
-    }
-    .cta::after {
-      content: '';
-      position: absolute;
-      left: 0.05rem;
-      right: 0.05rem;
-      bottom: 0.5rem;
-      height: 1px;
-      background: currentColor;
-      transform: scaleX(1);
-      transform-origin: left;
-      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .cta:hover::after {
-      transform: scaleX(0.35);
-    }
-    .cta--primary {
-      color: var(--night-deep);
-      background: var(--amanita-glow);
-      border: none;
-      padding: 0.85rem 1.5rem;
+      font-size: 0.95rem;
+      padding: 0.8rem 1.5rem;
       border-radius: 999px;
-      margin: 0 0 1rem;
-      min-height: 44px;
+      text-decoration: none;
       transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
     }
-    .cta--primary::after {
-      display: none;
+    .btn--primary {
+      background: var(--amanita-glow);
+      color: var(--night-deep);
     }
-    .cta--primary:hover {
+    .btn--primary:hover {
       transform: translateY(-2px) scale(1.03);
       box-shadow: 0 8px 24px rgba(255, 138, 77, 0.35);
     }
-    .contact-line {
-      font-family: var(--font-body);
-      font-size: 0.85rem;
-      color: rgba(228, 217, 184, 0.7);
-    }
-    .contact-line a {
+    .btn--ghost {
       color: var(--bone-cream);
-      padding: 0.6rem 0.3rem;
-      margin: -0.6rem -0.3rem;
-      display: inline-block;
+      border: 1px solid rgba(228, 217, 184, 0.3);
+    }
+    .btn--ghost:hover {
+      border-color: var(--turquoise);
+      color: var(--turquoise);
+    }
+    .btn--ghost-dark {
+      color: var(--bordeaux);
+      border: 1px solid rgba(90, 30, 38, 0.25);
+    }
+    .btn--ghost-dark:hover {
+      border-color: var(--bordeaux);
+      background: rgba(90, 30, 38, 0.05);
+    }
+    .btn--center {
+      display: block;
+      width: fit-content;
+      margin: 2rem auto 0;
     }
 
-    /*
-     * Su schermi stretti il pannello di testo occupava quasi tutto il
-     * riquadro, lasciando vedere solo un'unghia del mondo 3D dietro: lo
-     * scrim si fa più compatto (meno padding, testo più piccolo) così la
-     * scena resta protagonista anche sul telefono, che è il device guida.
-     */
-    @media (max-width: 480px) {
-      .station {
-        padding: 2.75rem 5vw;
-      }
-      .scrim {
-        padding: 1.35rem 1.5rem;
-        max-width: min(20rem, 78vw);
-      }
-      .scrim--center {
-        max-width: min(22rem, 86vw);
-      }
-      .display-title {
-        font-size: clamp(1.5rem, 7vw, 2rem);
-        margin-bottom: 0.6rem;
-      }
-      .lede {
-        font-size: 0.9rem;
-        margin-bottom: 0.9rem;
-      }
-      .eyebrow {
-        font-size: 0.78rem;
-        margin-bottom: 0.35rem;
-      }
+    .editorial {
+      background: var(--paper-warm);
+      color: var(--bordeaux);
+    }
+    .block {
+      max-width: 72rem;
+      margin: 0 auto;
+      padding: 4.5rem 6vw;
+    }
+    .block__eyebrow {
+      font-family: var(--font-flash);
+      color: var(--bordeaux);
+      opacity: 0.7;
+      font-size: 0.85rem;
+      margin-bottom: 0.5rem;
+    }
+    .block__title {
+      font-family: var(--font-display);
+      font-size: clamp(1.7rem, 3vw, 2.3rem);
+      margin-bottom: 2rem;
+    }
+
+    .block--story {
+      display: grid;
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 3rem;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .block--story { grid-template-columns: 1fr; gap: 2.5rem; }
+    }
+    .story__quote {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 1.5rem;
+      line-height: 1.35;
+      color: var(--bordeaux);
+      margin: 0.5rem 0 1.25rem;
+      border-left: 2px solid var(--turquoise);
+      padding-left: 1rem;
+    }
+    .story__body {
+      font-family: var(--font-body);
+      line-height: 1.7;
+      color: rgba(90, 30, 38, 0.9);
+      margin-bottom: 1.5rem;
+    }
+    .story__gallery-label {
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      color: rgba(90, 30, 38, 0.6);
+      margin-bottom: 1rem;
+    }
+
+    .site-footer {
+      background: var(--paper-warm);
+      border-top: 1px solid rgba(90, 30, 38, 0.12);
+      padding: 2rem 6vw;
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      color: rgba(90, 30, 38, 0.75);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .site-footer a {
+      color: inherit;
     }
   </style>
 </BaseLayout>
