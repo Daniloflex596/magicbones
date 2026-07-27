@@ -3,27 +3,34 @@ import { chromium } from 'playwright';
 const BASE = process.env.URL || 'http://localhost:4321/';
 const browser = await chromium.launch({ headless: true });
 
-// 1) reduced-motion fallback: niente canvas 3D, fallback statico visibile,
-// nessun chunk hero-stage.js scaricato (progressive enhancement reale).
+// 1) reduced-motion: la carta-firma non ruota in 3D (crossfade istantaneo
+// invece di rotateY), il fondale di braci disegna un solo frame statico
+// (nessun requestAnimationFrame continuo), il copy dell'hero resta visibile.
 {
   const ctx = await browser.newContext({ reducedMotion: 'reduce', viewport: { width: 1280, height: 800 } });
-  const requests = [];
-  ctx.on('request', (r) => requests.push(r.url()));
   const page = await ctx.newPage();
   await page.goto(BASE, { waitUntil: 'load' });
   await page.waitForTimeout(1000);
-  const canvasHidden = await page.evaluate(() => getComputedStyle(document.getElementById('hero-canvas')).display === 'none');
-  const fallbackVisible = await page.evaluate(() => getComputedStyle(document.getElementById('stage-fallback')).display !== 'none');
-  const heroChunkLoaded = requests.some((u) => u.includes('hero-stage'));
   const heroVisible = await page.evaluate(() => {
     const el = document.querySelector('.hero [data-reveal]');
     return el ? getComputedStyle(el).opacity === '1' : false;
   });
+  const flipIsInstant = await page.evaluate(() => {
+    const inner = document.querySelector('#hero-card .card__inner');
+    return inner ? parseFloat(getComputedStyle(inner).transitionDuration) <= 0.3 : false;
+  });
+  // Il canvas delle braci deve aver disegnato un frame reale (non essere
+  // rimasto vuoto) ma senza continuare ad animare sotto reduced-motion.
+  const embersDrawnOnce = await page.evaluate(() => {
+    const c = document.getElementById('embers');
+    if (!c) return false;
+    const data = c.getContext('2d').getImageData(0, 0, c.width, c.height).data;
+    return data.some((v) => v !== 0);
+  });
   console.log(
-    '[reduced-motion] canvas hidden:', canvasHidden,
-    '| static fallback visible:', fallbackVisible,
-    '| hero-stage chunk NOT fetched:', !heroChunkLoaded,
-    '| hero copy visible:', heroVisible,
+    '[reduced-motion] hero copy visible:', heroVisible,
+    '| card flip is instant (no 3D rotation):', flipIsInstant,
+    '| embers drew a static frame:', embersDrawnOnce,
   );
   await ctx.close();
 }

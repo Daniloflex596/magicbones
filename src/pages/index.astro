@@ -31,6 +31,7 @@ const featured = entries.filter((e) => e.data.featured).slice(0, 4).map(toPlainP
   <main id="contenuto">
     <!-- ================= HERO — l'unico momento a effetto ================= -->
     <section class="hero">
+      <canvas id="embers" aria-hidden="true"></canvas>
       <div class="hero__copy" data-reveal>
         <p class="eyebrow">Claudia Capitani · Artista esoterica · Roma</p>
         <h1 class="hero__title">Ossa, funghi<br />e magia dal bosco</h1>
@@ -43,21 +44,25 @@ const featured = entries.filter((e) => e.data.featured).slice(0, 4).map(toPlainP
           <a class="btn btn--primary" href={withBase('/negozio')} data-astro-reload>Entra nel negozio →</a>
           <a class="btn btn--ghost" href={withBase('/chi-e-claudia')} data-astro-reload>La storia di Claudia</a>
         </div>
-        <p class="hero__hint">Trascina per far ruotare il teschio →</p>
+        <p class="hero__hint">Gira la carta per leggere la sua storia →</p>
       </div>
 
       <div class="hero__stage">
-        <div id="stage-fallback" class="stage-fallback" aria-hidden="true">
-          <svg viewBox="0 0 64 64" width="96" height="96">
-            <path
-              d="M32 14c-10 0-16 7-16 16 0 6 2.5 10 5 12.5V50h4.5v-4h3.5v4H33v-4h3.5v4H41v-7.5c2.5-2.5 5-6.5 5-12.5 0-9-6-16-16-16Z"
-              fill="none" stroke="#e4d9b8" stroke-width="1.6" stroke-linejoin="round" opacity="0.55"
-            />
-            <circle cx="25.5" cy="27" r="2.6" fill="#2fb8c4" opacity="0.7" />
-            <circle cx="38.5" cy="27" r="2.6" fill="#2fb8c4" opacity="0.7" />
-          </svg>
+        <div class="card-scene">
+          <div class="card" id="hero-card">
+            <div class="card__inner">
+              <button type="button" class="card__face card__face--front hero-card__face" data-action="flip" aria-label="Gira la carta per leggere la storia di Claudia">
+                <canvas id="hero-sigil" aria-hidden="true"></canvas>
+                <p class="hero-card__wordmark">Magic Bones</p>
+                <p class="hero-card__hint">tocca per girare</p>
+              </button>
+              <button type="button" class="card__face card__face--back hero-card__back" data-action="flip" aria-label="Torna al sigillo">
+                <blockquote class="hero-card__quote">"Nel fitto del bosco, la mia ricerca inizia. Non cerco, ma trovo."</blockquote>
+                <p class="hero-card__by">— Claudia Capitani</p>
+              </button>
+            </div>
+          </div>
         </div>
-        <canvas id="hero-canvas" aria-hidden="true"></canvas>
       </div>
     </section>
 
@@ -108,54 +113,89 @@ const featured = entries.filter((e) => e.data.featured).slice(0, 4).map(toPlainP
 
   <script>
     import { setupScrollRestoration } from '../components/world/engine/boot.js';
-    import { detectTier } from '../components/world/engine/capability.js';
     import { setupReveal } from '../lib/reveal.js';
+    import { pseudo } from '../lib/pseudo';
+    import { drawSigil, seedFromId } from '../lib/sigil';
 
     setupScrollRestoration();
     setupReveal();
 
-    const canvas = document.getElementById('hero-canvas');
-    const fallback = document.getElementById('stage-fallback');
-    const tier = detectTier();
-    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // --- La carta-firma dell'hero: sigillo generato + gira al tocco ---------
+    const heroSigilCanvas = document.getElementById('hero-sigil') as HTMLCanvasElement | null;
+    if (heroSigilCanvas) drawSigil(heroSigilCanvas, seedFromId('magic-bones-brand'), '#2fb8c4', 220);
 
-    if (tier === 'none' || !canvas) {
-      // Nessun canvas creato, nessun chunk 3D scaricato: il fallback statico
-      // resta l'unica cosa visibile nello stage (progressive enhancement).
-    } else {
-      canvas.style.display = 'block';
-      fallback?.style.setProperty('display', 'none');
+    document.getElementById('hero-card')?.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('[data-action="flip"]')) {
+        document.getElementById('hero-card')?.classList.toggle('is-flipped');
+      }
+    });
 
-      import('../components/world/hero-stage.js').then(({ initHeroStage }) => {
-        const stage = initHeroStage(canvas, { tier, reducedMotion });
-        const container = canvas.parentElement;
+    // --- Fondale dell'hero: braci alla deriva, canvas 2D puro ---------------
+    // (nessun WebGL, nessun modello 3D in una teca — solo atmosfera dietro
+    // la carta. Deterministico via pseudo(), si ferma con reduced-motion o
+    // tab nascosta/sezione fuori viewport.)
+    const embersCanvas = document.getElementById('embers') as HTMLCanvasElement | null;
+    if (embersCanvas) {
+      const ctx = embersCanvas.getContext('2d')!;
+      const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const narrow = matchMedia('(max-width: 820px)').matches;
+      const COUNT = narrow ? 26 : 44;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      let w = 0, h = 0;
+      const embers = Array.from({ length: COUNT }, (_, i) => ({
+        x: pseudo(i * 3), y: pseudo(i * 5), r: 1 + pseudo(i * 7) * 2.4,
+        phase: pseudo(i * 11) * Math.PI * 2, speed: 0.15 + pseudo(i * 13) * 0.25,
+      }));
 
-        function resizeStage() {
-          const rect = container.getBoundingClientRect();
-          stage.resize(rect.width, rect.height);
+      function resize() {
+        const rect = embersCanvas!.parentElement!.getBoundingClientRect();
+        w = rect.width; h = rect.height;
+        embersCanvas!.width = w * dpr; embersCanvas!.height = h * dpr;
+        embersCanvas!.style.width = w + 'px'; embersCanvas!.style.height = h + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      resize();
+      window.addEventListener('resize', resize, { passive: true });
+
+      function draw(time: number) {
+        ctx.clearRect(0, 0, w, h);
+        embers.forEach((e) => {
+          const y = ((e.y - time * e.speed * 0.02) % 1 + 1) % 1;
+          const x = e.x + Math.sin(time * 0.4 + e.phase) * 0.02;
+          const px = x * w, py = y * h;
+          const glow = ctx.createRadialGradient(px, py, 0, px, py, e.r * 6);
+          glow.addColorStop(0, 'rgba(255,138,77,0.55)');
+          glow.addColorStop(1, 'rgba(255,138,77,0)');
+          ctx.fillStyle = glow;
+          ctx.beginPath(); ctx.arc(px, py, e.r * 6, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = 'rgba(255,205,160,0.9)';
+          ctx.beginPath(); ctx.arc(px, py, e.r, 0, Math.PI * 2); ctx.fill();
+        });
+      }
+
+      if (reducedMotion) {
+        draw(0);
+      } else {
+        let raf = 0;
+        const start = performance.now();
+        function frame(now: number) {
+          raf = requestAnimationFrame(frame);
+          if (document.hidden) return;
+          draw((now - start) / 1000);
         }
-        resizeStage();
-        window.addEventListener('resize', resizeStage, { passive: true });
+        raf = requestAnimationFrame(frame);
 
-        stage.ready.then(() => stage.start());
-
-        // Pausa il loop quando lo stage esce dal viewport (batteria/GPU).
         const io = new IntersectionObserver(
           (entries) => {
             entries.forEach((entry) => {
-              if (entry.isIntersecting) stage.resume();
-              else stage.pause();
+              if (entry.isIntersecting) { if (!raf) raf = requestAnimationFrame(frame); }
+              else { cancelAnimationFrame(raf); raf = 0; }
             });
           },
           { threshold: 0.05 },
         );
-        io.observe(container);
-
-        document.addEventListener('visibilitychange', () => {
-          if (document.hidden) stage.pause();
-          else if (container.getBoundingClientRect().top < window.innerHeight) stage.resume();
-        });
-      });
+        io.observe(embersCanvas.parentElement!);
+      }
     }
   </script>
 
@@ -195,6 +235,8 @@ const featured = entries.filter((e) => e.data.featured).slice(0, 4).map(toPlainP
     }
 
     .hero {
+      position: relative;
+      overflow: hidden;
       background: var(--bg-night);
       color: var(--bone-cream);
       display: grid;
@@ -203,6 +245,16 @@ const featured = entries.filter((e) => e.data.featured).slice(0, 4).map(toPlainP
       gap: 2rem;
       padding: 4rem 6vw;
       min-height: 640px;
+    }
+    #embers {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      opacity: 0.75;
+    }
+    .hero__copy, .hero__stage {
+      position: relative;
+      z-index: 1;
     }
     @media (max-width: 900px) {
       .hero {
@@ -247,33 +299,93 @@ const featured = entries.filter((e) => e.data.featured).slice(0, 4).map(toPlainP
       .hero__hint { display: none; }
     }
 
-    .hero__stage {
+    .card-scene {
       position: relative;
+      z-index: 1;
+      perspective: 1600px;
       aspect-ratio: 4 / 3.4;
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      background: radial-gradient(ellipse at 50% 30%, #1c1f2e 0%, #05060b 75%);
-      border: 1px solid rgba(228, 217, 184, 0.1);
     }
     @media (max-width: 900px) {
-      .hero__stage { aspect-ratio: 4 / 3.2; }
+      .card-scene { aspect-ratio: 4 / 3.1; }
     }
-    #hero-canvas {
+    .card { position: relative; width: 100%; height: 100%; }
+    .card__inner {
+      position: relative;
       width: 100%;
       height: 100%;
-      display: none;
-      touch-action: none;
-      cursor: grab;
+      transform-style: preserve-3d;
+      transition: transform 0.7s cubic-bezier(0.22, 0.85, 0.32, 1);
     }
-    #hero-canvas:active {
-      cursor: grabbing;
-    }
-    .stage-fallback {
+    .card.is-flipped .card__inner { transform: rotateY(180deg); }
+    .card__face {
       position: absolute;
       inset: 0;
+      backface-visibility: hidden;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
       display: flex;
+      flex-direction: column;
+    }
+    .card__face--back { transform: rotateY(180deg); pointer-events: none; }
+    .card.is-flipped .card__face--front { pointer-events: none; }
+    .card.is-flipped .card__face--back { pointer-events: auto; }
+
+    .hero-card__face {
+      background: radial-gradient(ellipse at 50% 32%, #171b2a 0%, #05060b 78%);
+      border: 1px solid rgba(228, 217, 184, 0.12);
       align-items: center;
       justify-content: center;
+      text-align: center;
+      padding: 2rem;
+      cursor: pointer;
+      font: inherit;
+      color: inherit;
+    }
+    #hero-sigil { width: min(220px, 55%); height: auto; }
+    .hero-card__wordmark {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(1.6rem, 3.4vw, 2.3rem);
+      color: var(--bone-cream);
+      margin-top: 1rem;
+    }
+    .hero-card__hint {
+      font-size: 0.76rem;
+      color: rgba(228, 217, 184, 0.45);
+      margin-top: 0.6rem;
+    }
+    .hero-card__back {
+      background: var(--paper-warm);
+      justify-content: center;
+      padding: clamp(1.5rem, 4vw, 3rem);
+      border: none;
+      text-align: left;
+      font: inherit;
+      color: inherit;
+      cursor: pointer;
+    }
+    .hero-card__quote {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: clamp(1.15rem, 2.2vw, 1.55rem);
+      line-height: 1.35;
+      color: var(--bordeaux);
+      border-left: 2px solid var(--turquoise);
+      padding-left: 1rem;
+      margin-bottom: 1.25rem;
+    }
+    .hero-card__by {
+      font-size: 0.85rem;
+      opacity: 0.7;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .card__inner { transition: opacity 0.25s ease; }
+      .card.is-flipped .card__inner { transform: none; }
+      .card__face--front { transition: opacity 0.25s ease; }
+      .card.is-flipped .card__face--front { opacity: 0; pointer-events: none; }
+      .card__face--back { transform: none; opacity: 0; transition: opacity 0.25s ease; }
+      .card.is-flipped .card__face--back { opacity: 1; }
     }
 
     .btn {

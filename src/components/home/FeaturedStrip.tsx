@@ -4,8 +4,8 @@ import type { Product } from '../../lib/types';
 export function FeaturedStrip({ products }: { products: Product[] }) {
   return (
     <div className="featured-grid">
-      {products.map((p, i) => (
-        <ProductCard key={p.id} product={p} index={i} forceReload />
+      {products.map((p) => (
+        <ProductCard key={p.id} product={p} />
       ))}
       <style>{`
         .featured-grid {

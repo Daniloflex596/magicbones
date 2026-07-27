@@ -40,14 +40,14 @@ export function ProductGrid({ products, initialCategory }: { products: Product[]
 
       <motion.div layout className="grid">
         <AnimatePresence mode="popLayout">
-          {filtered.map((product, i) => (
+          {filtered.map((product) => (
             <motion.div
               key={product.id}
               layout
               exit={{ opacity: 0, scale: 0.94 }}
               transition={{ duration: 0.3 }}
             >
-              <ProductCard product={product} index={i} />
+              <ProductCard product={product} />
             </motion.div>
           ))}
         </AnimatePresence>

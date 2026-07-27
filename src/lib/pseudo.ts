@@ -1,9 +1,10 @@
 /**
- * Unica fonte di pseudo(): re-esporta la stessa funzione usata dal motore 3D
- * (src/components/world/engine/canvas-textures.js) così qualunque jitter
- * deterministico nel layer shop (es. micro-rotazione delle card) condivide
- * la stessa fonte di "casualità" riproducibile — mai due implementazioni
- * che divergono, mai Math.random().
+ * pseudo(i): rumore deterministico fract(sin(i · 12.9898) · 43758.5453).
+ * Unica fonte di "casualità" riproducibile del sito — mai Math.random() —
+ * così ogni layout generato (sigilli delle carte, pulviscolo dell'hero)
+ * torna sempre identico a ogni build e ad ogni render.
  */
-// @ts-expect-error — asset JS della skill, copiato verbatim, senza tipi propri.
-export { pseudo } from '../components/world/engine/canvas-textures.js';
+export function pseudo(i: number): number {
+  const x = Math.sin(i * 12.9898) * 43758.5453;
+  return x - Math.floor(x);
+}
