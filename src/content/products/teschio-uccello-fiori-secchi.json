@@ -1,0 +1,20 @@
+{
+  "title": "Teschio d'uccello con fiori secchi",
+  "category": "arredo-rituale",
+  "animal": "uccello",
+  "price": 75,
+  "priceIsFrom": false,
+  "isCustom": false,
+  "isUnique": true,
+  "stock": 1,
+  "images": [
+    { "src": "/placeholders/teschio-uccello-fiori-secchi-1.jpg", "alt": "Piccolo teschio d'uccello circondato da fiori secchi su base in legno", "placeholder": true }
+  ],
+  "description": "Un piccolo teschio d'uccello, delicato, composto con fiori secchi e bacche su una base in legno grezzo. Perfetto per un piccolo altare o una mensola.",
+  "materials": ["osso naturale", "fiori secchi", "base in legno"],
+  "dimensions": "18 × 14 × 10 cm",
+  "tags": ["fiori secchi", "uccello", "delicato"],
+  "featured": false,
+  "availableSince": "2026-03-15",
+  "seoDescription": "Teschio d'uccello con fiori secchi su base in legno, Magic Bones."
+}

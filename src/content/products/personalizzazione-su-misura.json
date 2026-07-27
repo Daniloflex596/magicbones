@@ -1,0 +1,18 @@
+{
+  "title": "Personalizzazione su misura",
+  "category": "arredo-rituale",
+  "price": 60,
+  "priceIsFrom": true,
+  "isCustom": true,
+  "isUnique": false,
+  "stock": 99,
+  "images": [
+    { "src": "/placeholders/personalizzazione-su-misura-1.jpg", "alt": "Mani di Claudia al lavoro su un teschio a metà decorazione", "placeholder": true }
+  ],
+  "description": "Racconta a Claudia la tua idea: animale, colori, simboli. Ogni pezzo su misura nasce da una conversazione, non da un catalogo. Il prezzo indicato è un punto di partenza, il preventivo finale arriva dopo aver parlato del progetto.",
+  "materials": ["a scelta in base al progetto"],
+  "tags": ["personalizzato", "su misura", "commissione"],
+  "featured": true,
+  "availableSince": "2026-01-01",
+  "seoDescription": "Richiedi un pezzo Magic Bones su misura: teschi, gioielli e altari personalizzati."
+}

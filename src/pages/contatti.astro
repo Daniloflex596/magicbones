@@ -1,0 +1,103 @@
+---
+import ShopLayout from '../layouts/ShopLayout.astro';
+
+const WHATSAPP = 'https://wa.me/393283632440';
+const EMAIL = 'magicbones111@gmail.com';
+---
+
+<ShopLayout
+  title="Contatti"
+  description="Scrivi a Claudia Capitani (Magic Bones) su WhatsApp, email o Instagram per informazioni e personalizzazioni."
+>
+  <div class="contact">
+    <p class="eyebrow">Parliamone</p>
+    <h1>Contatti</h1>
+    <p class="lede">
+      Per ordini, disponibilità o una personalizzazione su misura, il modo più
+      rapido è scrivere direttamente a Claudia.
+    </p>
+
+    <ul class="channels">
+      <li>
+        <span class="channel-label">WhatsApp</span>
+        <a href={WHATSAPP} target="_blank" rel="noopener noreferrer">+39 328 363 2440</a>
+      </li>
+      <li>
+        <span class="channel-label">Email</span>
+        <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+      </li>
+      <li>
+        <span class="channel-label">Instagram</span>
+        <a href="https://www.instagram.com/_magic_bones" target="_blank" rel="noopener noreferrer">@_magic_bones</a>
+      </li>
+      <li>
+        <span class="channel-label">Vinted</span>
+        <span>magicbones777</span>
+      </li>
+    </ul>
+
+    <p class="note">Roma based · risposta entro qualche giorno, con pazienza da bosco.</p>
+  </div>
+
+  <style>
+    .contact {
+      max-width: 34rem;
+      margin: 0 auto;
+    }
+    .eyebrow {
+      font-family: var(--font-flash);
+      color: var(--bordeaux);
+      opacity: 0.7;
+      font-size: 0.9rem;
+      margin-bottom: 0.4rem;
+    }
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 2.75rem);
+      color: var(--bordeaux);
+      margin-bottom: 0.8rem;
+    }
+    .lede {
+      font-family: var(--font-body);
+      color: rgba(90, 30, 38, 0.85);
+      line-height: 1.6;
+      margin-bottom: 2.5rem;
+    }
+    .channels {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .channels li {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 1px solid rgba(90, 30, 38, 0.12);
+      padding-bottom: 1rem;
+      font-family: var(--font-body);
+    }
+    .channel-label {
+      color: rgba(90, 30, 38, 0.6);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .channels a {
+      color: var(--bordeaux);
+      font-weight: 500;
+      text-decoration: none;
+    }
+    .channels a:hover {
+      text-decoration: underline;
+    }
+    .note {
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      color: rgba(90, 30, 38, 0.6);
+      margin-top: 2rem;
+      font-style: italic;
+    }
+  </style>
+</ShopLayout>

@@ -1,0 +1,91 @@
+---
+import ShopLayout from '../layouts/ShopLayout.astro';
+---
+
+<ShopLayout
+  title="Chi è Claudia"
+  description="Claudia Capitani, artista esoterica di Roma: teschi dipinti a mano, gioielli in osso e altari rituali. Personalizzazioni su richiesta."
+>
+  <article class="about">
+    <p class="eyebrow">Magic Bones</p>
+    <h1>Claudia Capitani</h1>
+    <p class="lede">Artista, Roma based. "I create with skeletons."</p>
+
+    <div class="body">
+      <p>
+        Claudia raccoglie, ripulisce e dipinge a mano teschi e ossa animali,
+        trasformandoli in oggetti che vivono a metà tra l'arredo, il rito e il
+        talismano. Ogni pezzo nasce da un materiale imperfetto e naturale — mai
+        due sono davvero uguali.
+      </p>
+      <p>
+        Il lavoro nasce a Roma, tra mercatini, banchi da lavoro pieni di pietre
+        e pigmenti, e una lunga pratica di osservazione: cosa racconta un osso,
+        prima ancora di essere dipinto?
+      </p>
+      <p>
+        Oltre ai pezzi pronti, Claudia realizza <strong>personalizzazioni su
+        richiesta</strong>: un animale specifico, una palette di colori, un
+        simbolo che ha un significato per chi lo riceve. Ogni commissione parte
+        da una conversazione, non da un modulo.
+      </p>
+    </div>
+
+    <div class="cta-block">
+      <a class="cta" href="/negozio">Guarda i pezzi disponibili →</a>
+      <a class="cta cta--ghost" href="/contatti">Scrivi per una personalizzazione</a>
+    </div>
+  </article>
+
+  <style>
+    .about {
+      max-width: 40rem;
+      margin: 0 auto;
+    }
+    .eyebrow {
+      font-family: var(--font-flash);
+      color: var(--bordeaux);
+      opacity: 0.7;
+      font-size: 0.9rem;
+      margin-bottom: 0.4rem;
+    }
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 2.75rem);
+      color: var(--bordeaux);
+      margin-bottom: 0.5rem;
+    }
+    .lede {
+      font-family: var(--font-body);
+      font-style: italic;
+      color: rgba(90, 30, 38, 0.75);
+      margin-bottom: 2rem;
+    }
+    .body p {
+      font-family: var(--font-body);
+      line-height: 1.75;
+      color: rgba(90, 30, 38, 0.9);
+      margin-bottom: 1.2rem;
+    }
+    .cta-block {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2.5rem;
+    }
+    .cta {
+      font-family: var(--font-body);
+      font-weight: 500;
+      text-decoration: none;
+      padding: 0.75rem 1.4rem;
+      border-radius: 999px;
+      background: var(--bordeaux);
+      color: var(--paper-warm);
+    }
+    .cta--ghost {
+      background: transparent;
+      color: var(--bordeaux);
+      border: 1px solid rgba(90, 30, 38, 0.3);
+    }
+  </style>
+</ShopLayout>

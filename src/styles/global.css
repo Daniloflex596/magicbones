@@ -1,0 +1,54 @@
+@import './tokens.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: auto; /* Lenis gestisce lo smooth scroll, non il browser */
+  overflow-x: clip;
+  overscroll-behavior: none;
+}
+
+body {
+  background: var(--bg-night);
+  color: var(--bone-cream);
+  font-family: var(--font-body);
+  overflow-x: clip;
+}
+
+/*
+ * Progressive enhancement: gli elementi "da rivelare" allo scroll partono
+ * invisibili SOLO perché contiamo su JS per animarli. Il fallback per chi
+ * naviga senza JS è un tag <noscript><style>...!important</style></noscript>
+ * iniettato in BaseLayout.astro (forza opacity:1), non qui: qui vive solo lo
+ * stato di default "in attesa di reveal".
+ */
+[data-reveal],
+[data-stagger] > * {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+[data-reveal].is-visible,
+[data-stagger] > *.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.split-inner {
+  transform: translateY(150%);
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  background: var(--bordeaux);
+  color: var(--paper-warm);
+  padding: 0.75rem 1.25rem;
+  border-radius: 0 0 var(--radius-md) 0;
+}
+.skip-link:focus {
+  left: 0;
+}

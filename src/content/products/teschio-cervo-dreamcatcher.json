@@ -1,0 +1,20 @@
+{
+  "title": "Teschio di cervo — dreamcatcher inciso",
+  "category": "teschio-dipinto",
+  "animal": "cervo",
+  "price": 210,
+  "priceIsFrom": false,
+  "isCustom": false,
+  "isUnique": true,
+  "stock": 1,
+  "images": [
+    { "src": "/placeholders/teschio-cervo-dreamcatcher-1.jpg", "alt": "Teschio di cervo con disegno dreamcatcher inciso a china", "placeholder": true }
+  ],
+  "description": "Disegno a china stile dreamcatcher inciso a mano sulla fronte, corna naturali intere. Un pezzo delicato, quasi grafico, per chi cerca una linea più sottile del solito.",
+  "materials": ["osso naturale", "inchiostro di china", "sigillante"],
+  "dimensions": "44 × 40 × 26 cm",
+  "tags": ["dreamcatcher", "china", "cervo", "boho"],
+  "featured": false,
+  "availableSince": "2026-04-18",
+  "seoDescription": "Teschio di cervo con dreamcatcher inciso a china, pezzo unico Magic Bones."
+}

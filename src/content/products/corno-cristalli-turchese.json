@@ -1,0 +1,20 @@
+{
+  "title": "Teschio di capra — tempesta di turchesi",
+  "category": "teschio-dipinto",
+  "animal": "capra",
+  "price": 260,
+  "priceIsFrom": false,
+  "isCustom": false,
+  "isUnique": true,
+  "stock": 1,
+  "images": [
+    { "src": "/placeholders/corno-cristalli-turchese-1.jpg", "alt": "Teschio con corna interamente ricoperte di pietre turchesi", "placeholder": true }
+  ],
+  "description": "Corna interamente rivestite da centinaia di frammenti di turchese applicati a mano, uno per uno, su una base laccata nera. Il pezzo più elaborato della collezione.",
+  "materials": ["osso naturale", "turchese", "lacca nera"],
+  "dimensions": "50 × 46 × 28 cm",
+  "tags": ["turchese", "statement", "capra"],
+  "featured": true,
+  "availableSince": "2026-01-08",
+  "seoDescription": "Teschio con corna rivestite di turchese, pezzo statement Magic Bones."
+}

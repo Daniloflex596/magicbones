@@ -1,0 +1,75 @@
+---
+import ShopLayout from '../layouts/ShopLayout.astro';
+---
+
+<ShopLayout title="Privacy" description="Informativa sulla privacy di Magic Bones." noIndex>
+  <article class="legal">
+    <h1>Informativa sulla privacy</h1>
+    <p class="disclaimer">
+      Bozza generica, da far verificare a un consulente legale/privacy prima
+      della pubblicazione: non sostituisce una consulenza professionale.
+    </p>
+
+    <h2>Titolare del trattamento</h2>
+    <p>Claudia Capitani — Magic Bones, Roma. Contatto: magicbones111@gmail.com</p>
+
+    <h2>Dati raccolti</h2>
+    <p>
+      Attraverso il modulo di richiesta ordine e i link diretti a WhatsApp/email,
+      vengono condivisi con la titolare: nome, contatto (email o telefono),
+      eventuali note sulla personalizzazione e il contenuto del carrello al
+      momento dell'invio. Questo sito non elabora pagamenti online e non
+      memorizza dati di carte di credito.
+    </p>
+
+    <h2>Finalità</h2>
+    <p>
+      I dati sono usati esclusivamente per rispondere alla richiesta, definire
+      l'ordine e organizzare la spedizione o la consegna.
+    </p>
+
+    <h2>Conservazione</h2>
+    <p>
+      Il contenuto del carrello resta salvato solo nel browser dell'utente
+      (localStorage), non su un server. I messaggi inviati via WhatsApp o email
+      restano nelle rispettive piattaforme secondo le loro policy.
+    </p>
+
+    <h2>Diritti dell'utente</h2>
+    <p>
+      È possibile richiedere in qualsiasi momento accesso, rettifica o
+      cancellazione dei propri dati scrivendo a magicbones111@gmail.com.
+    </p>
+  </article>
+
+  <style>
+    .legal {
+      max-width: 38rem;
+      margin: 0 auto;
+      font-family: var(--font-body);
+      color: rgba(90, 30, 38, 0.9);
+      line-height: 1.7;
+    }
+    h1 {
+      font-family: var(--font-display);
+      color: var(--bordeaux);
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    h2 {
+      font-family: var(--font-display);
+      color: var(--bordeaux);
+      font-size: 1.3rem;
+      margin-top: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .disclaimer {
+      font-size: 0.85rem;
+      font-style: italic;
+      opacity: 0.75;
+      border-left: 2px solid var(--turquoise);
+      padding-left: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+  </style>
+</ShopLayout>

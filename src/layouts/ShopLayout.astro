@@ -1,0 +1,102 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import { CartButton } from '../components/shop/CartButton';
+import { CartDrawer } from '../components/shop/CartDrawer';
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  noIndex?: boolean;
+}
+
+const { title, description, ogImage, noIndex } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} ogImage={ogImage} noIndex={noIndex}>
+  <div class="shop-shell">
+    <header class="shop-header">
+      <a href="/" class="shop-logo">Magic Bones</a>
+      <nav class="shop-nav">
+        <a href="/negozio">Negozio</a>
+        <a href="/chi-e-claudia">Chi è Claudia</a>
+        <a href="/contatti">Contatti</a>
+      </nav>
+      <CartButton client:load />
+      <CartDrawer client:load />
+    </header>
+
+    <main id="contenuto" class="shop-main">
+      <slot />
+    </main>
+
+    <footer class="shop-footer">
+      <p>Magic Bones · Claudia Capitani · Roma</p>
+      <p>
+        <a href="https://www.instagram.com/_magic_bones" target="_blank" rel="noopener noreferrer">@_magic_bones</a>
+        · <a href="/privacy">Privacy</a> · <a href="/termini">Termini</a>
+      </p>
+    </footer>
+  </div>
+
+  <style>
+    .shop-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: var(--paper-warm);
+      color: var(--bordeaux);
+    }
+    .shop-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      padding: 1.25rem 6vw;
+      border-bottom: 1px solid rgba(90, 30, 38, 0.12);
+    }
+    .shop-logo {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--bordeaux);
+      text-decoration: none;
+    }
+    .shop-nav {
+      display: flex;
+      gap: 1.5rem;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+    }
+    .shop-nav a {
+      color: var(--bordeaux);
+      text-decoration: none;
+      opacity: 0.8;
+    }
+    .shop-nav a:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+    .shop-main {
+      flex: 1;
+      padding: 3rem 6vw 6rem;
+      max-width: 88rem;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .shop-footer {
+      padding: 2rem 6vw;
+      border-top: 1px solid rgba(90, 30, 38, 0.12);
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      color: rgba(90, 30, 38, 0.75);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .shop-footer a {
+      color: inherit;
+    }
+  </style>
+</BaseLayout>

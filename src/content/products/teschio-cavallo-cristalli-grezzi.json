@@ -1,0 +1,20 @@
+{
+  "title": "Teschio di cavallo — cristalli grezzi",
+  "category": "cristalli-muschio",
+  "animal": "cavallo",
+  "price": 320,
+  "priceIsFrom": false,
+  "isCustom": false,
+  "isUnique": true,
+  "stock": 1,
+  "images": [
+    { "src": "/placeholders/teschio-cavallo-cristalli-grezzi-1.jpg", "alt": "Teschio di cavallo con cristalli di ametista grezzi incastonati", "placeholder": true }
+  ],
+  "description": "Un teschio di cavallo imponente, con cristalli di ametista grezza incastonati lungo il muso e muschio stabilizzato alla base delle orbite. Il pezzo più grande della collezione.",
+  "materials": ["osso naturale", "ametista grezza", "muschio stabilizzato"],
+  "dimensions": "58 × 24 × 30 cm",
+  "tags": ["cavallo", "ametista", "cristalli", "statement"],
+  "featured": true,
+  "availableSince": "2025-12-12",
+  "seoDescription": "Teschio di cavallo con cristalli di ametista grezza, pezzo statement Magic Bones."
+}

@@ -1,0 +1,74 @@
+---
+import ShopLayout from '../layouts/ShopLayout.astro';
+---
+
+<ShopLayout title="Termini" description="Termini e condizioni di Magic Bones." noIndex>
+  <article class="legal">
+    <h1>Termini e condizioni</h1>
+    <p class="disclaimer">
+      Bozza generica, da far verificare a un consulente legale prima della
+      pubblicazione: non sostituisce una consulenza professionale.
+    </p>
+
+    <h2>Natura degli ordini</h2>
+    <p>
+      Il carrello di questo sito è una <strong>richiesta d'ordine</strong>, non
+      un acquisto immediato: molti pezzi sono unici o personalizzabili, quindi
+      disponibilità, misure esatte e tempi di realizzazione vengono confermati
+      da Claudia direttamente via WhatsApp o email dopo l'invio della
+      richiesta. Il pagamento avviene con le modalità concordate in quella
+      conversazione.
+    </p>
+
+    <h2>Pezzi unici</h2>
+    <p>
+      Molti oggetti sono realizzati con materiali naturali (ossa, corna,
+      pietre) e sono quindi pezzi unici: piccole variazioni rispetto alle
+      immagini sono normali e fanno parte del carattere dell'oggetto.
+    </p>
+
+    <h2>Personalizzazioni</h2>
+    <p>
+      Le personalizzazioni vengono confermate solo dopo un accordo scritto su
+      dettagli, tempi e prezzo finale.
+    </p>
+
+    <h2>Spedizione e reso</h2>
+    <p>
+      Le condizioni di spedizione e reso vengono comunicate caso per caso al
+      momento della conferma dell'ordine, in base al tipo di oggetto e alla
+      destinazione.
+    </p>
+  </article>
+
+  <style>
+    .legal {
+      max-width: 38rem;
+      margin: 0 auto;
+      font-family: var(--font-body);
+      color: rgba(90, 30, 38, 0.9);
+      line-height: 1.7;
+    }
+    h1 {
+      font-family: var(--font-display);
+      color: var(--bordeaux);
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    h2 {
+      font-family: var(--font-display);
+      color: var(--bordeaux);
+      font-size: 1.3rem;
+      margin-top: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .disclaimer {
+      font-size: 0.85rem;
+      font-style: italic;
+      opacity: 0.75;
+      border-left: 2px solid var(--turquoise);
+      padding-left: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+  </style>
+</ShopLayout>

@@ -1,0 +1,88 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  noIndex?: boolean;
+}
+
+const {
+  title,
+  description,
+  ogImage = '/og-default.png',
+  noIndex = false,
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Magic Bones',
+  url: Astro.site?.toString(),
+  logo: new URL('/favicon.svg', Astro.site).toString(),
+  founder: { '@type': 'Person', name: 'Claudia Capitani' },
+  areaServed: 'Roma, IT',
+  sameAs: ['https://www.instagram.com/_magic_bones'],
+  contactPoint: {
+    '@type': 'ContactPoint',
+    telephone: '+39-328-363-2440',
+    email: 'magicbones111@gmail.com',
+    contactType: 'customer service',
+  },
+};
+---
+
+<!doctype html>
+<html lang="it">
+  <head>
+    <script is:inline>
+      // Batte sul tempo il browser: refresh riparte sempre dall'alto.
+      if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonicalURL} />
+    {noIndex && <meta name="robots" content="noindex,nofollow" />}
+
+    <title>{title} · Magic Bones</title>
+    <meta name="description" content={description} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={`${title} · Magic Bones`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(ogImage, Astro.site)} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={`${title} · Magic Bones`} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(ogImage, Astro.site)} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,500&family=Jost:wght@400;500;600&family=Pirata+One&display=swap"
+      rel="stylesheet"
+    />
+
+    <script type="application/ld+json" set:html={JSON.stringify(organizationJsonLd)} />
+
+    <noscript>
+      <style>
+        [data-reveal],
+        [data-stagger] > *,
+        .split-inner {
+          opacity: 1 !important;
+          transform: none !important;
+        }
+      </style>
+    </noscript>
+  </head>
+  <body>
+    <a href="#contenuto" class="skip-link">Salta al contenuto</a>
+    <slot />
+  </body>
+</html>

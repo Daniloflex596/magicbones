@@ -1,0 +1,174 @@
+---
+import { getCollection, render } from 'astro:content';
+import ShopLayout from '../../layouts/ShopLayout.astro';
+import { ProductGallery } from '../../components/shop/ProductGallery';
+import { ProductActions } from '../../components/shop/ProductActions';
+import { CATEGORY_LABELS, formatPrice, toPlainProduct } from '../../lib/types';
+import { buildProductJsonLd } from '../../lib/seo';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('products');
+  return entries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const product = toPlainProduct(entry);
+const { title, category, price, priceIsFrom, images, description, materials, dimensions, tags, careNotes, isCustom, isUnique } =
+  product.data;
+
+const jsonLd = buildProductJsonLd(product, Astro.site);
+---
+
+<ShopLayout title={title} description={product.data.seoDescription ?? description} ogImage={images[0]?.placeholder ? undefined : images[0]?.src}>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+  <nav class="breadcrumb">
+    <a href="/negozio">Negozio</a> · <a href={`/negozio?categoria=${category}`}>{CATEGORY_LABELS[category]}</a>
+  </nav>
+
+  <div class="product-page">
+    <ProductGallery client:load images={images} category={category} />
+
+    <div class="product-info">
+      <p class="eyebrow">{CATEGORY_LABELS[category]}</p>
+      <h1>{title}</h1>
+      <p class="price">{formatPrice(price, priceIsFrom)}</p>
+
+      <div class="badges">
+        {isUnique && <span class="badge">Pezzo unico</span>}
+        {isCustom && <span class="badge badge--custom">Personalizzabile</span>}
+      </div>
+
+      <div class="description">
+        <Content />
+      </div>
+
+      {materials.length > 0 && (
+        <dl class="meta">
+          <dt>Materiali</dt>
+          <dd>{materials.join(', ')}</dd>
+          {dimensions && (
+            <>
+              <dt>Dimensioni</dt>
+              <dd>{dimensions}</dd>
+            </>
+          )}
+        </dl>
+      )}
+
+      <ProductActions client:load product={product} />
+
+      {careNotes && <p class="care">{careNotes}</p>}
+
+      {tags.length > 0 && (
+        <ul class="tags">
+          {tags.map((tag) => (
+            <li>{tag}</li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </div>
+
+  <style>
+    .breadcrumb {
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      color: rgba(90, 30, 38, 0.7);
+      margin-bottom: 2rem;
+    }
+    .breadcrumb a {
+      color: inherit;
+    }
+    .product-page {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3.5rem;
+    }
+    @media (max-width: 780px) {
+      .product-page {
+        grid-template-columns: 1fr;
+      }
+    }
+    .eyebrow {
+      font-family: var(--font-flash);
+      color: var(--bordeaux);
+      opacity: 0.7;
+      font-size: 0.9rem;
+      margin-bottom: 0.4rem;
+    }
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+      color: var(--bordeaux);
+      margin-bottom: 0.6rem;
+    }
+    .price {
+      font-family: var(--font-body);
+      font-size: 1.3rem;
+      font-weight: 500;
+      color: var(--bordeaux-light);
+      margin-bottom: 1rem;
+    }
+    .badges {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .badge {
+      font-family: var(--font-flash);
+      font-size: 0.75rem;
+      padding: 0.25rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(90, 30, 38, 0.25);
+      color: var(--bordeaux);
+    }
+    .badge--custom {
+      border-color: var(--turquoise);
+      color: var(--turquoise);
+    }
+    .description {
+      font-family: var(--font-body);
+      color: rgba(90, 30, 38, 0.9);
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+    }
+    .meta {
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+    .meta dt {
+      color: rgba(90, 30, 38, 0.6);
+      margin-top: 0.5rem;
+    }
+    .meta dd {
+      color: var(--bordeaux);
+      margin-left: 0;
+    }
+    .care {
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      color: rgba(90, 30, 38, 0.6);
+      margin-top: 1.5rem;
+      font-style: italic;
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      list-style: none;
+      padding: 0;
+      margin-top: 1.5rem;
+    }
+    .tags li {
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      color: rgba(90, 30, 38, 0.65);
+      background: rgba(90, 30, 38, 0.06);
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+    }
+  </style>
+</ShopLayout>

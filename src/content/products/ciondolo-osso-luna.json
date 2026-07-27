@@ -1,0 +1,20 @@
+{
+  "title": "Ciondolo in osso — fase lunare",
+  "category": "gioiello-osso",
+  "price": 42,
+  "priceIsFrom": false,
+  "isCustom": true,
+  "isUnique": false,
+  "stock": 4,
+  "images": [
+    { "src": "/placeholders/ciondolo-osso-luna-1.jpg", "alt": "Ciondolo in osso a forma di falce di luna su cordino nero", "placeholder": true }
+  ],
+  "description": "Piccolo ciondolo scolpito a mano a forma di falce di luna, su cordino regolabile in cotone cerato nero. Disponibile anche in versione personalizzata con incisione.",
+  "materials": ["osso naturale", "cotone cerato"],
+  "dimensions": "4 × 2 cm (ciondolo)",
+  "tags": ["luna", "ciondolo", "talismano"],
+  "careNotes": "Evitare il contatto prolungato con l'acqua.",
+  "featured": true,
+  "availableSince": "2026-01-20",
+  "seoDescription": "Ciondolo in osso a forma di luna, fatto a mano, personalizzabile — Magic Bones."
+}

@@ -1,0 +1,19 @@
+{
+  "title": "Disco zodiacale in resina",
+  "category": "tarocchi-zodiaco",
+  "price": 55,
+  "priceIsFrom": false,
+  "isCustom": true,
+  "isUnique": false,
+  "stock": 3,
+  "images": [
+    { "src": "/placeholders/disco-zodiacale-resina-1.jpg", "alt": "Disco zodiacale in resina con incisioni dorate", "placeholder": true }
+  ],
+  "description": "Disco in resina colata a mano, con le dodici case zodiacali incise e rifinite in oro. Può essere personalizzato con il segno o la data di nascita al centro.",
+  "materials": ["resina", "pigmento dorato"],
+  "dimensions": "20 cm di diametro",
+  "tags": ["zodiaco", "resina", "personalizzabile"],
+  "featured": false,
+  "availableSince": "2026-04-02",
+  "seoDescription": "Disco zodiacale in resina fatto a mano, personalizzabile — Magic Bones."
+}

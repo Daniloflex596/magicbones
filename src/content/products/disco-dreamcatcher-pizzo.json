@@ -1,0 +1,19 @@
+{
+  "title": "Disco dreamcatcher in pizzo nero",
+  "category": "gioiello-osso",
+  "price": 65,
+  "priceIsFrom": false,
+  "isCustom": false,
+  "isUnique": true,
+  "stock": 2,
+  "images": [
+    { "src": "/placeholders/disco-dreamcatcher-pizzo-1.jpg", "alt": "Disco dreamcatcher in pizzo nero con piccole ossa e perline", "placeholder": true }
+  ],
+  "description": "Disco tessuto a mano in pizzo nero, impreziosito da piccole ossa e perline. Da appendere vicino al letto o su una parete d'altare.",
+  "materials": ["pizzo", "ossa piccole", "perline in vetro"],
+  "dimensions": "22 cm di diametro",
+  "tags": ["dreamcatcher", "pizzo", "arredo"],
+  "featured": false,
+  "availableSince": "2026-03-28",
+  "seoDescription": "Disco dreamcatcher in pizzo nero con ossa e perline, fatto a mano — Magic Bones."
+}

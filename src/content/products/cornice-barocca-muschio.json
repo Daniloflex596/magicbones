@@ -1,0 +1,19 @@
+{
+  "title": "Cornice barocca con muschio e ossa",
+  "category": "arredo-rituale",
+  "price": 95,
+  "priceIsFrom": false,
+  "isCustom": true,
+  "isUnique": true,
+  "stock": 1,
+  "images": [
+    { "src": "/placeholders/cornice-barocca-muschio-1.jpg", "alt": "Cornice barocca nera con muschio verde e piccole ossa incrociate", "placeholder": true }
+  ],
+  "description": "Cornice in resina stile barocco, laccata nera, composta con muschio stabilizzato e piccole ossa incrociate su fondo bordeaux. Da appendere come un piccolo reliquiario.",
+  "materials": ["cornice in resina", "muschio stabilizzato", "ossa piccole", "tessuto bordeaux"],
+  "dimensions": "24 × 30 cm",
+  "tags": ["cornice", "muschio", "reliquiario"],
+  "featured": true,
+  "availableSince": "2026-02-20",
+  "seoDescription": "Cornice barocca con muschio e ossa, piccolo reliquiario Magic Bones."
+}

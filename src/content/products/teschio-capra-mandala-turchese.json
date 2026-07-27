@@ -1,0 +1,22 @@
+{
+  "title": "Teschio di capra — mandala turchese",
+  "category": "teschio-dipinto",
+  "animal": "capra",
+  "price": 180,
+  "priceIsFrom": false,
+  "isCustom": false,
+  "isUnique": true,
+  "stock": 1,
+  "images": [
+    { "src": "/placeholders/teschio-capra-mandala-turchese-1.jpg", "alt": "Teschio di capra dipinto con mandala e pietre turchesi", "placeholder": true },
+    { "src": "/placeholders/teschio-capra-mandala-turchese-2.jpg", "alt": "Dettaglio delle pietre incastonate sulla volta cranica", "placeholder": true }
+  ],
+  "description": "Un teschio di capra ripulito, sigillato e dipinto a mano con un mandala radiale sulla fronte. Pietre turchesi incastonate una a una lungo la volta cranica, corna naturali lasciate grezze per contrasto.",
+  "materials": ["osso naturale", "pietre turchesi", "vernice acrilica", "sigillante opaco"],
+  "dimensions": "32 × 18 × 24 cm",
+  "tags": ["mandala", "turchese", "capra", "esoterico"],
+  "careNotes": "Non esporre alla luce diretta del sole prolungata. Spolverare con panno morbido.",
+  "featured": true,
+  "availableSince": "2026-03-10",
+  "seoDescription": "Teschio di capra dipinto a mano con mandala e pietre turchesi, pezzo unico Magic Bones."
+}

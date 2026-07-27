@@ -1,0 +1,280 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import StaticFallback from '../components/world/fallback/StaticFallback.astro';
+---
+
+<BaseLayout
+  title="Un bosco notturno di ossa e magia"
+  description="Magic Bones — teschi dipinti a mano, gioielli in osso e altari rituali di Claudia Capitani. Addentrati nel bosco sacro, scrollando."
+>
+  <StaticFallback />
+
+  <div id="preloader" class="preloader" aria-hidden="true">
+    <div class="preloader-track"><div data-fill class="preloader-fill"></div></div>
+    <span data-pct class="preloader-pct">0%</span>
+  </div>
+
+  <canvas id="world-canvas" aria-hidden="true"></canvas>
+
+  <main id="contenuto">
+    <section id="soglia" class="station station--center">
+      <div class="scrim scrim--center" data-reveal>
+        <p class="eyebrow">Magic Bones</p>
+        <h1 class="display-title">Un bosco notturno<br />di ossa e magia</h1>
+        <p class="lede">
+          Ogni pezzo è raccolto, dipinto e incastonato a mano da Claudia Capitani,
+          artista esoterica di Roma. Scrolla per addentrarti.
+        </p>
+      </div>
+    </section>
+
+    <section id="funghi" class="station station--left">
+      <div class="scrim" data-reveal>
+        <p class="eyebrow">La Radura dei Funghi</p>
+        <h2 class="display-title">Nasce nel buio,<br />come dopo la pioggia</h2>
+        <p class="lede">
+          "I create with skeletons" — ogni creazione di Magic Bones cresce lenta,
+          tra muschio e bioluminescenza, prima di raggiungere l'altare.
+        </p>
+      </div>
+    </section>
+
+    <section id="teschi" class="station station--right">
+      <div class="scrim" data-reveal>
+        <p class="eyebrow">L'Altare dei Teschi</p>
+        <h2 class="display-title">Teschi dipinti<br />a mano</h2>
+        <p class="lede">
+          Mandala, pietre turchesi, finiture oro: ogni cranio è un pezzo unico,
+          mai una copia.
+        </p>
+        <a class="cta" href="/negozio?categoria=teschio-dipinto">Scopri la collezione →</a>
+      </div>
+    </section>
+
+    <section id="filoNero" class="station station--left">
+      <div class="scrim" data-reveal>
+        <p class="eyebrow">Il Filo Nero</p>
+        <h2 class="display-title">Gioielli in osso,<br />appesi al buio</h2>
+        <p class="lede">
+          Ciondoli, dischi dreamcatcher in pizzo nero: da indossare come un
+          talismano.
+        </p>
+        <a class="cta" href="/negozio?categoria=gioiello-osso">Scopri la collezione →</a>
+      </div>
+    </section>
+
+    <section id="focolare" class="station station--right">
+      <div class="scrim" data-reveal>
+        <p class="eyebrow">Il Focolare Rituale</p>
+        <h2 class="display-title">Candele, tarocchi<br />e altari</h2>
+        <p class="lede">
+          Oggetti per il rito quotidiano: dischi zodiacali, candele, fiori
+          secchi su tessuto nero.
+        </p>
+        <a class="cta" href="/negozio?categoria=arredo-rituale">Scopri la collezione →</a>
+      </div>
+    </section>
+
+    <section id="panoramica" class="station station--center">
+      <div class="scrim scrim--center" data-reveal>
+        <p class="eyebrow">Ti volti indietro</p>
+        <h2 class="display-title">Hai attraversato<br />il bosco intero</h2>
+        <p class="lede">Ogni radura resta accesa alle tue spalle, nel buio.</p>
+      </div>
+    </section>
+
+    <section id="controAltare" class="station station--left">
+      <div class="scrim" data-reveal>
+        <p class="eyebrow">L'Altare di Claudia</p>
+        <h2 class="display-title">Personalizzazioni<br />su richiesta</h2>
+        <p class="lede">
+          Roma based. Ogni pezzo può nascere su misura: scrivi a Claudia per
+          raccontarle la tua idea.
+        </p>
+        <a class="cta" href="/chi-e-claudia">Conosci Claudia →</a>
+      </div>
+    </section>
+
+    <section id="chiusura" class="station station--center station--closing">
+      <div class="scrim scrim--center" data-reveal>
+        <p class="eyebrow">Il viaggio continua</p>
+        <h2 class="display-title">Entra nel negozio</h2>
+        <p class="lede">Porta a casa un pezzo del bosco.</p>
+        <a class="cta cta--primary" href="/negozio">Entra nel negozio →</a>
+        <p class="contact-line">
+          <a href="https://www.instagram.com/_magic_bones" target="_blank" rel="noopener noreferrer">@_magic_bones</a>
+          · <a href="/contatti">contatti</a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    import { setupScrollRestoration, createPreloader, bootImmersive } from '../components/world/engine/boot.js';
+    import { detectTier } from '../components/world/engine/capability.js';
+    import { setupReveal } from '../lib/reveal.js';
+
+    setupScrollRestoration();
+    setupReveal();
+
+    const preloaderEl = document.getElementById('preloader');
+    const preloader = createPreloader(preloaderEl);
+    const canvas = document.getElementById('world-canvas');
+    const tier = detectTier();
+
+    if (tier === 'none') {
+      document.body.classList.add('no-engine');
+    }
+
+    bootImmersive({
+      canvas,
+      tier,
+      loadEngine: async (canvasEl, t) => {
+        const { initWorld } = await import('../components/world/world.js');
+        return initWorld(canvasEl, { tier: t });
+      },
+      loadFallback: async () => {
+        document.body.classList.add('no-engine');
+        return null;
+      },
+      onProgress: (p) => preloader.setProgress(p),
+    }).then(({ mode }) => {
+      preloader.done();
+      if (mode === 'fallback') document.body.classList.add('no-engine');
+    });
+  </script>
+
+  <style>
+    #world-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      display: block;
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+    }
+
+    .preloader {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      background: var(--night-deep);
+      transition: opacity 0.6s ease;
+      pointer-events: none;
+    }
+    .preloader.is-done {
+      opacity: 0;
+    }
+    .preloader-track {
+      width: 3px;
+      height: 120px;
+      background: rgba(228, 217, 184, 0.15);
+      border-radius: 2px;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+    }
+    .preloader-fill {
+      width: 100%;
+      height: 0%;
+      background: var(--amanita-glow);
+      transition: height 0.3s ease;
+    }
+    .preloader-pct {
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      color: var(--bone-cream);
+      opacity: 0.7;
+    }
+
+    .station {
+      min-height: 100lvh;
+      display: flex;
+      align-items: center;
+      padding: 4rem 6vw;
+    }
+    .station--center {
+      justify-content: center;
+      text-align: center;
+    }
+    .station--left {
+      justify-content: flex-start;
+    }
+    .station--right {
+      justify-content: flex-end;
+    }
+    .station--closing {
+      min-height: 100lvh;
+    }
+
+    .scrim {
+      max-width: 30rem;
+      background: linear-gradient(135deg, rgba(12, 15, 26, 0.82), rgba(12, 15, 26, 0.55));
+      border: 1px solid rgba(228, 217, 184, 0.12);
+      border-radius: var(--radius-lg);
+      padding: 2rem 2.25rem;
+      backdrop-filter: blur(2px);
+    }
+    .scrim--center {
+      max-width: 36rem;
+    }
+
+    .eyebrow {
+      font-family: var(--font-flash);
+      color: var(--amanita-glow);
+      font-size: 0.9rem;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.5rem;
+    }
+    .display-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.9rem, 4vw, 3rem);
+      line-height: 1.15;
+      color: var(--bone-cream);
+      margin-bottom: 0.9rem;
+    }
+    .lede {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      line-height: 1.6;
+      color: rgba(228, 217, 184, 0.85);
+      margin-bottom: 1.25rem;
+    }
+    .cta {
+      display: inline-block;
+      font-family: var(--font-body);
+      font-weight: 500;
+      color: var(--turquoise);
+      text-decoration: none;
+      border-bottom: 1px solid currentColor;
+      padding-bottom: 0.1rem;
+    }
+    .cta--primary {
+      color: var(--night-deep);
+      background: var(--amanita-glow);
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 999px;
+      margin-bottom: 1rem;
+    }
+    .contact-line {
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      color: rgba(228, 217, 184, 0.7);
+    }
+    .contact-line a {
+      color: var(--bone-cream);
+    }
+  </style>
+</BaseLayout>

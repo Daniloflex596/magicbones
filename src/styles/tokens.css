@@ -1,0 +1,28 @@
+:root {
+  /* Notte / mondo 3D */
+  --bg-night: #0c0f1a;
+  --night-deep: #05060b;
+  --amanita-red: #e8452b;
+  --amanita-glow: #ff8a4d;
+  --mushroom-violet: #8b5cf6;
+  --moss-green: #3f5d3a;
+  --turquoise: #2fb8c4;
+  --bone-cream: #e4d9b8;
+
+  /* Negozio / giorno */
+  --bordeaux: #5a1e26;
+  --bordeaux-light: #7a323c;
+  --paper-warm: #f2ece1;
+  --paper-warm-dim: #e8e0d2;
+
+  /* Tipografia */
+  --font-display: 'Cormorant Garamond', serif;
+  --font-body: 'Jost', sans-serif;
+  --font-flash: 'Pirata One', cursive;
+
+  /* Ritmo */
+  --radius-md: 0.5rem;
+  --radius-lg: 1rem;
+  --shadow-glow-amanita: 0 0 24px rgba(232, 69, 43, 0.35);
+  --shadow-glow-turquoise: 0 0 20px rgba(47, 184, 196, 0.3);
+}
