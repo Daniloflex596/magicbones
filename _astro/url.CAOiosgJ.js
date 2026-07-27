@@ -1,0 +1,1 @@
+var e=`/magicbones`.replace(/\/$/,``);function t(t){return/^https?:\/\//.test(t)||t.startsWith(`mailto:`)||t.startsWith(`#`)?t:`${e}${t.startsWith(`/`)?t:`/${t}`}`}export{t};
