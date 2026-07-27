@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { CATEGORY_LABELS } from '../../lib/types';
 import type { ProductData } from '../../lib/types';
 import { CategoryGlyph } from '../shop/CategoryGlyph';
@@ -16,6 +16,7 @@ const TILE_GRADIENT: Record<string, string> = {
 };
 
 export function CategoryTiles() {
+  const reducedMotion = useReducedMotion();
   return (
     <div className="tiles">
       {CATEGORIES.map((cat, i) => (
@@ -25,7 +26,7 @@ export function CategoryTiles() {
           data-astro-reload=""
           className="tile"
           style={{ background: TILE_GRADIENT[cat] }}
-          initial={{ opacity: 0, y: 20 }}
+          initial={reducedMotion ? false : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-40px' }}
           transition={{ duration: 0.5, delay: i * 0.06, ease: 'easeOut' }}

@@ -8,12 +8,30 @@
   "isUnique": true,
   "stock": 1,
   "images": [
-    { "src": "/placeholders/teschio-mucca-oro-floreale-1.jpg", "alt": "Teschio di mucca con finitura in foglia oro e motivo floreale dipinto", "placeholder": true }
+    {
+      "src": "/foto/teschio-floreale-cristalli.jpg",
+      "alt": "Teschio di mucca con decoro floreale, farfalla e cristalli di ametista dipinti a mano, muso rifinito in turchese",
+      "placeholder": false
+    },
+    {
+      "src": "/placeholders/teschio-mucca-oro-floreale-1.jpg",
+      "alt": "Teschio di mucca con finitura in foglia oro e motivo floreale dipinto",
+      "placeholder": true
+    }
   ],
   "description": "Corna intere, finiture in foglia oro applicate a mano lungo i bordi e un motivo floreale dipinto che scende lungo il muso. Un pezzo scenografico, pensato per un altare o una parete d'ingresso.",
-  "materials": ["osso naturale", "foglia oro", "vernice acrilica"],
+  "materials": [
+    "osso naturale",
+    "foglia oro",
+    "vernice acrilica"
+  ],
   "dimensions": "48 × 52 × 30 cm",
-  "tags": ["oro", "floreale", "mucca", "statement"],
+  "tags": [
+    "oro",
+    "floreale",
+    "mucca",
+    "statement"
+  ],
   "featured": true,
   "availableSince": "2026-02-02",
   "seoDescription": "Teschio di mucca con foglia oro e motivo floreale dipinto a mano, Magic Bones."

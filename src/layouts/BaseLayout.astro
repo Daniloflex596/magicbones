@@ -88,5 +88,28 @@ const organizationJsonLd = {
   <body>
     <a href="#contenuto" class="skip-link">Salta al contenuto</a>
     <slot />
+
+    <script>
+      // Smooth scroll (Lenis) — l'inerzia su cui si innestano i reveal e la
+      // parallasse. Mai sotto reduced-motion: lì lo scroll resta quello
+      // nativo del browser, che è esattamente ciò che l'utente ha chiesto.
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const { default: Lenis } = await import('lenis');
+        const lenis = new Lenis({ duration: 1.05, smoothWheel: true, touchMultiplier: 1.6 });
+        let raf = 0;
+        const loop = (time: number) => {
+          lenis.raf(time);
+          raf = requestAnimationFrame(loop);
+        };
+        raf = requestAnimationFrame(loop);
+
+        // Astro ClientRouter: smonta prima di una navigazione soft, così non
+        // resta un secondo loop orfano sulla pagina successiva.
+        document.addEventListener('astro:before-swap', () => {
+          cancelAnimationFrame(raf);
+          lenis.destroy();
+        }, { once: true });
+      }
+    </script>
   </body>
 </html>

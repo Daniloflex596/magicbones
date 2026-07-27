@@ -103,12 +103,29 @@ export function drawSigil(
 }
 
 // ---------------------------------------------------------------------------
-// Animatore condiviso: un solo rAF per TUTTI i sigilli della pagina. Ogni
-// canvas registrato entra "disegnandosi" (~1.3s), poi resta in idle con
-// deriva di rotazione lenta e respiro di glow. L'IntersectionObserver
-// sospende ciò che è fuori viewport; reduced-motion = un frame statico.
+// Animatore condiviso: un solo rAF per TUTTI i sigilli della pagina.
+//
+// Ciclo di vita a stati, non un loop perpetuo: ogni sigillo si DISEGNA
+// (~1.3s), respira ancora un paio di cicli e poi si POSA — il rAF si spegne
+// quando tutti sono posati. Il respiro torna solo quando l'utente mostra
+// interesse (hover/focus sulla carta): così il glow diventa una risposta,
+// non rumore di fondo, e in idle il costo CPU/batteria è zero.
 // ---------------------------------------------------------------------------
-interface SigilState { seed: number; accent: string; size: number; start: number; visible: boolean }
+type SigilPhase = 'drawing' | 'breathing' | 'settled';
+
+interface SigilState {
+  seed: number;
+  accent: string;
+  size: number;
+  start: number;
+  visible: boolean;
+  phase: SigilPhase;
+  /** quanto respiro resta prima di posarsi (secondi di elapsed) */
+  breatheUntil: number;
+}
+
+const DRAW_SECONDS = 1.3;
+const BREATHE_SECONDS = 3.2;
 
 const registry = new Map<HTMLCanvasElement, SigilState>();
 let raf = 0;
@@ -120,27 +137,60 @@ function reducedMotion(): boolean {
 
 function easeOutCubic(t: number): number { return 1 - Math.pow(1 - t, 3); }
 
+/** Posa statica: sigillo completo, glow fermo. È lo stato di riposo. */
+function drawSettled(canvas: HTMLCanvasElement, s: SigilState): void {
+  drawSigil(canvas, s.seed, s.accent, { size: s.size, progress: 1, rotation: 0, glow: 0.4 });
+}
+
 function frame(now: number): void {
   raf = 0;
-  let anyVisible = false;
+  let anyActive = false;
   const rm = reducedMotion();
+
   registry.forEach((s, canvas) => {
     if (!canvas.isConnected) { registry.delete(canvas); io?.unobserve(canvas); return; }
-    if (!s.visible) return;
-    anyVisible = true;
+    if (!s.visible || s.phase === 'settled') return;
+
+    if (rm) { drawSettled(canvas, s); s.phase = 'settled'; return; }
+
     if (s.start === 0) s.start = now;
     const elapsed = (now - s.start) / 1000;
-    const drawT = rm ? 1 : Math.min(1, elapsed / 1.3);
-    const progress = easeOutCubic(drawT);
-    const rotation = rm ? 0 : drawT >= 1 ? (elapsed - 1.3) * 0.08 : 0;
-    const glow = rm ? 0.35 : drawT >= 1 ? 0.5 + Math.sin(elapsed * 1.4 + s.seed) * 0.35 : drawT * 0.5;
-    drawSigil(canvas, s.seed, s.accent, { size: s.size, progress, rotation, glow });
+
+    if (elapsed < DRAW_SECONDS) {
+      const progress = easeOutCubic(elapsed / DRAW_SECONDS);
+      drawSigil(canvas, s.seed, s.accent, { size: s.size, progress, rotation: 0, glow: progress * 0.5 });
+      anyActive = true;
+      return;
+    }
+
+    s.phase = 'breathing';
+    if (elapsed >= s.breatheUntil) { drawSettled(canvas, s); s.phase = 'settled'; return; }
+
+    const t = elapsed - DRAW_SECONDS;
+    drawSigil(canvas, s.seed, s.accent, {
+      size: s.size,
+      progress: 1,
+      rotation: t * 0.08,
+      glow: 0.5 + Math.sin(t * 1.4 + s.seed) * 0.35,
+    });
+    anyActive = true;
   });
-  if (anyVisible && !rm) raf = requestAnimationFrame(frame);
+
+  if (anyActive) raf = requestAnimationFrame(frame);
 }
 
 function ensureLoop(): void {
   if (!raf) raf = requestAnimationFrame(frame);
+}
+
+/** Risveglia un sigillo: torna a respirare per un ciclo (hover/focus). */
+export function wakeSigil(canvas: HTMLCanvasElement): void {
+  const s = registry.get(canvas);
+  if (!s || reducedMotion()) return;
+  s.start = performance.now() - DRAW_SECONDS * 1000; // salta il draw-on: è già disegnato
+  s.breatheUntil = DRAW_SECONDS + BREATHE_SECONDS;
+  s.phase = 'breathing';
+  ensureLoop();
 }
 
 /**
@@ -157,12 +207,38 @@ export function mountSigil(canvas: HTMLCanvasElement, seed: number, accent: stri
       ensureLoop();
     }, { threshold: 0.1 });
   }
-  registry.set(canvas, { seed, accent, size, start: 0, visible: false });
+
+  const state: SigilState = {
+    seed, accent, size, start: 0, visible: false,
+    phase: 'drawing',
+    breatheUntil: DRAW_SECONDS + BREATHE_SECONDS,
+  };
+  registry.set(canvas, state);
   io.observe(canvas);
-  drawSigil(canvas, seed, accent, { size, progress: reducedMotion() ? 1 : 0 });
-  ensureLoop();
+
+  if (reducedMotion()) {
+    drawSettled(canvas, state);
+    state.phase = 'settled';
+  } else {
+    drawSigil(canvas, seed, accent, { size, progress: 0 });
+    ensureLoop();
+  }
+
+  // Se la preferenza di movimento cambia a sessione aperta, adeguati subito:
+  // reduce → posa immediata; ritorno a no-preference → nessun risveglio forzato
+  // (il movimento riparte solo su interazione, com'è giusto).
+  const mq = matchMedia('(prefers-reduced-motion: reduce)');
+  const onPrefChange = () => {
+    if (mq.matches && canvas.isConnected) {
+      drawSettled(canvas, state);
+      state.phase = 'settled';
+    }
+  };
+  mq.addEventListener('change', onPrefChange);
+
   return () => {
     registry.delete(canvas);
     io?.unobserve(canvas);
+    mq.removeEventListener('change', onPrefChange);
   };
 }

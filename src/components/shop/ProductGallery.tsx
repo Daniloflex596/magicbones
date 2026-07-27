@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import type { ProductData } from '../../lib/types';
 import { CategoryGlyph } from './CategoryGlyph';
+import { withBase } from '../../lib/url';
 
 export function ProductGallery({
   images,
@@ -31,7 +32,7 @@ export function ProductGallery({
                 <span className="gallery__soon">Foto in arrivo</span>
               </>
             ) : (
-              <img src={current.src} alt={current.alt} />
+              <img src={withBase(current.src)} alt={current.alt} />
             )}
           </motion.div>
         </AnimatePresence>
@@ -47,7 +48,7 @@ export function ProductGallery({
               aria-label={`Mostra immagine ${i + 1}`}
               aria-current={i === active}
             >
-              {img.placeholder ? <CategoryGlyph category={category} className="gallery__thumb-glyph" /> : <img src={img.src} alt="" />}
+              {img.placeholder ? <CategoryGlyph category={category} className="gallery__thumb-glyph" /> : <img src={withBase(img.src)} alt="" />}
             </button>
           ))}
         </div>

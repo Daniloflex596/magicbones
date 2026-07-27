@@ -7,12 +7,30 @@
   "isUnique": true,
   "stock": 1,
   "images": [
-    { "src": "/placeholders/teschio-serpente-scaglie-1.jpg", "alt": "Teschio rivestito per metà da vere scaglie di pelle di pitone e per metà laccato nero", "placeholder": true }
+    {
+      "src": "/foto/teschio-pitone.jpg",
+      "alt": "Teschio rivestito per metà da vere scaglie di pelle di pitone e per metà laccato nero con bordo dorato",
+      "placeholder": false
+    },
+    {
+      "src": "/placeholders/teschio-serpente-scaglie-1.jpg",
+      "alt": "Teschio rivestito per metà da vere scaglie di pelle di pitone e per metà laccato nero",
+      "placeholder": true
+    }
   ],
   "description": "Un teschio rivestito per metà da vera pelle di pitone, applicata scaglia per scaglia, e per metà laccato nero con bordo dorato. Un contrasto di texture pensato per chi ama i pezzi al limite.",
-  "materials": ["osso naturale", "pelle di pitone", "lacca nera", "foglia oro"],
+  "materials": [
+    "osso naturale",
+    "pelle di pitone",
+    "lacca nera",
+    "foglia oro"
+  ],
   "dimensions": "20 × 16 × 22 cm",
-  "tags": ["pitone", "texture", "raro"],
+  "tags": [
+    "pitone",
+    "texture",
+    "raro"
+  ],
   "featured": true,
   "availableSince": "2025-04-04",
   "seoDescription": "Teschio con scaglie di pitone e lacca nera, pezzo raro Magic Bones."

@@ -7,12 +7,29 @@
   "isUnique": false,
   "stock": 6,
   "images": [
-    { "src": "/placeholders/altare-candele-rituale-1.jpg", "alt": "Cinque candele rosse e nere su tessuto a ragnatela nera", "placeholder": true }
+    {
+      "src": "/foto/banco-candele-rosse.jpg",
+      "alt": "Composizione rituale con candele rosse su ossa dorate, teschio dorato incorniciato e rose nere",
+      "placeholder": false
+    },
+    {
+      "src": "/placeholders/altare-candele-rituale-1.jpg",
+      "alt": "Cinque candele rosse e nere su tessuto a ragnatela nera",
+      "placeholder": true
+    }
   ],
   "description": "Set di cinque candele in cera naturale, tinte a mano in rosso e nero, pensate per un piccolo rito quotidiano. Personalizzabile nel numero e nei colori su richiesta.",
-  "materials": ["cera naturale", "pigmenti", "stoppino in cotone"],
+  "materials": [
+    "cera naturale",
+    "pigmenti",
+    "stoppino in cotone"
+  ],
   "dimensions": "altezza variabile 8–16 cm",
-  "tags": ["candele", "rituale", "altare"],
+  "tags": [
+    "candele",
+    "rituale",
+    "altare"
+  ],
   "careNotes": "Non lasciare mai una candela accesa incustodita.",
   "featured": true,
   "availableSince": "2026-05-02",

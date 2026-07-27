@@ -1,5 +1,10 @@
 name: Deploy to GitHub Pages
 
+# Pubblica su https://daniloflex596.github.io/magicbones/ tramite il branch
+# `gh-pages`. Non usiamo actions/deploy-pages perché il GITHUB_TOKEN del
+# workflow non può CREARE il sito Pages ("Resource not accessible by
+# integration"): il branch invece lo auto-provisiona e funziona.
+
 on:
   push:
     branches:
@@ -7,16 +12,14 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: pages
   cancel-in-progress: false
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -31,28 +34,20 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build (GitHub Pages base path)
+      - name: Build (base path /magicbones/)
         run: npm run build
         env:
           GITHUB_PAGES: 'true'
 
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
-        with:
-          enablement: true
+      # Senza .nojekyll, Jekyll ignora le cartelle che iniziano con "_"
+      # (cioè _astro/) e il sito arriva senza CSS né JS.
+      - name: Disable Jekyll
+        run: touch dist/.nojekyll
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Publish to gh-pages
+        uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108549d475ec49e8ef4d45e # v4.0.0
         with:
-          path: ./dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: gh-pages
+          commit_message: "Deploy: ${{ github.event.head_commit.message }}"

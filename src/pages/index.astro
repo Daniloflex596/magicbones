@@ -122,6 +122,7 @@ const featured = entries.filter((e) => e.data.featured).slice(0, 4).map(toPlainP
     import { setupScrollRestoration } from '../components/world/engine/boot.js';
     import { setupReveal } from '../lib/reveal.js';
     import { pseudo } from '../lib/pseudo';
+    import { damp } from '../lib/damp';
     import { mountSigil, seedFromId } from '../lib/sigil';
 
     setupScrollRestoration();
@@ -183,7 +184,7 @@ const featured = entries.filter((e) => e.data.featured).slice(0, 4).map(toPlainP
       resize();
       window.addEventListener('resize', resize, { passive: true });
 
-      let targetPX = 0, targetPY = 0, smoothPX = 0, smoothPY = 0;
+      let targetPX = 0, targetPY = 0, smoothPX = 0, smoothPY = 0, lastNow = 0;
       if (finePointer && !prefersReduced) {
         embersCanvas.parentElement!.addEventListener('pointermove', (e) => {
           const rect = embersCanvas!.parentElement!.getBoundingClientRect();
@@ -193,9 +194,11 @@ const featured = entries.filter((e) => e.data.featured).slice(0, 4).map(toPlainP
         embersCanvas.parentElement!.addEventListener('pointerleave', () => { targetPX = 0; targetPY = 0; }, { passive: true });
       }
 
-      function draw(time: number) {
-        smoothPX += (targetPX - smoothPX) * 0.04;
-        smoothPY += (targetPY - smoothPY) * 0.04;
+      function draw(time: number, dt = 1 / 60) {
+        // Damping legato al tempo reale, non al frame: a 120 Hz la parallasse
+        // deve "pesare" come a 60 Hz (vedi lib/damp.ts).
+        smoothPX = damp(smoothPX, targetPX, 11, dt);
+        smoothPY = damp(smoothPY, targetPY, 11, dt);
         ctx.clearRect(0, 0, w, h);
         embers.forEach((e) => {
           const depth = e.r / 3.4;
@@ -220,7 +223,9 @@ const featured = entries.filter((e) => e.data.featured).slice(0, 4).map(toPlainP
         function frame(now: number) {
           raf = requestAnimationFrame(frame);
           if (document.hidden) return;
-          draw((now - start) / 1000);
+          const dt = lastNow ? (now - lastNow) / 1000 : 1 / 60;
+          lastNow = now;
+          draw((now - start) / 1000, dt);
         }
         raf = requestAnimationFrame(frame);
 
@@ -425,7 +430,18 @@ const featured = entries.filter((e) => e.data.featured).slice(0, 4).map(toPlainP
       60% { opacity: 1; transform: translateY(-8px) rotate(1deg) scale(1.015); }
       100% { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
     }
-    .hero__stage .card { animation: hero-card-rise 0.9s cubic-bezier(0.22, 0.85, 0.32, 1) 0.15s both; }
+    /* Dopo essere salita, la carta LEVITA: un respiro lentissimo che la
+       tiene viva senza chiedere attenzione. Le due animazioni si
+       concatenano (rise 0.9s, poi float in loop). */
+    @keyframes hero-card-float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(0.5deg); }
+    }
+    .hero__stage .card {
+      animation:
+        hero-card-rise 0.9s cubic-bezier(0.22, 0.85, 0.32, 1) 0.15s both,
+        hero-card-float 7s ease-in-out 1.05s infinite;
+    }
     @keyframes wm-pop {
       0% { opacity: 0; transform: translateY(0.5em) rotate(6deg); }
       100% { opacity: 1; transform: translateY(0) rotate(0deg); }
@@ -471,6 +487,8 @@ const featured = entries.filter((e) => e.data.featured).slice(0, 4).map(toPlainP
       .hero__stage .card { animation: none; }
       :global(.wm-letter) { animation: none; }
       .marquee__track { animation: none; }
+      /* la sezione media resta scorrevole ma senza scatti */
+      html { scroll-behavior: auto; }
     }
 
     .btn {
