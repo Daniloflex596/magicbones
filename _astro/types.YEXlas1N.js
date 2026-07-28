@@ -1,0 +1,1 @@
+var e={"teschio-dipinto":`Teschi dipinti`,"gioiello-osso":`Gioielli in osso`,"arredo-rituale":`Arredo rituale`,candele:`Candele`,"cristalli-muschio":`Cristalli & muschio`,"tarocchi-zodiaco":`Tarocchi & zodiaco`};function t(e,t){let n=new Intl.NumberFormat(`it-IT`,{style:`currency`,currency:`EUR`,maximumFractionDigits:0}).format(e);return t?`da ${n}`:n}export{t as n,e as t};
