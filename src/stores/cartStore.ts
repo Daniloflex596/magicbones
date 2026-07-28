@@ -15,6 +15,17 @@ export interface CartItem {
   priceIsFrom: boolean;
   quantity: number;
   isCustom: boolean;
+  /**
+   * Pezzo unico: ne esiste UNO solo al mondo. Opzionale perché i carrelli già
+   * salvati in localStorage prima di questo campo si reidratano senza — lì
+   * `undefined` vale "non unico", che è il comportamento di prima.
+   */
+  isUnique?: boolean;
+}
+
+/** Un pezzo unico non può mai superare quantità 1: ce n'è uno solo. */
+function capQuantity(item: { isUnique?: boolean }, quantity: number): number {
+  return item.isUnique ? 1 : quantity;
 }
 
 interface CartState {
@@ -40,11 +51,11 @@ export const useCartStore = create<CartState>()(
         if (existing) {
           set({
             items: get().items.map((i) =>
-              i.id === item.id ? { ...i, quantity: i.quantity + quantity } : i,
+              i.id === item.id ? { ...i, quantity: capQuantity(i, i.quantity + quantity) } : i,
             ),
           });
         } else {
-          set({ items: [...get().items, { ...item, quantity }] });
+          set({ items: [...get().items, { ...item, quantity: capQuantity(item, quantity) }] });
         }
         set({ isOpen: true });
       },
@@ -54,7 +65,9 @@ export const useCartStore = create<CartState>()(
           get().remove(id);
           return;
         }
-        set({ items: get().items.map((i) => (i.id === id ? { ...i, quantity } : i)) });
+        set({
+          items: get().items.map((i) => (i.id === id ? { ...i, quantity: capQuantity(i, quantity) } : i)),
+        });
       },
       clear: () => set({ items: [] }),
     }),

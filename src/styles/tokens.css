@@ -1,29 +1,101 @@
+/*
+ * ============================================================================
+ *  MAGIC BONES — StyleBible
+ * ============================================================================
+ *  Ogni colore qui viene campionato dal BIGLIETTO DA VISITA di Claudia (la
+ *  card con le amanite su fondo notturno), non inventato. La card e stata
+ *  fotografata sotto luce calda: i valori sono presi dopo bilanciamento del
+ *  bianco sull'etichetta "MAGIC BONES" e recupero della saturazione.
+ *
+ *  La regola che governa tutto: la card e SATURA e ILLUSTRATA, non un
+ *  notturno smorto. Rosso vermiglio, muschio giallo-acido, viola shocking,
+ *  petrolio: se un colore qui sembra "di buon gusto ma spento", e sbagliato.
+ * ============================================================================
+ */
 :root {
-  /* Notte / mondo 3D */
-  --bg-night: #0c0f1a;
-  --night-deep: #05060b;
-  --amanita-red: #e8452b;
-  --amanita-glow: #ff8a4d;
-  --mushroom-violet: #8b5cf6;
-  --moss-green: #3f5d3a;
-  --turquoise: #2fb8c4;
-  --leaf-blue: #3a5a78;
-  --bone-cream: #e4d9b8;
+  /* --- Il suolo del sottobosco: indaco-violetto, mai blu-grigio freddo --- */
+  --soil-deep: #0f0b1e;      /* il nero piu profondo tra i funghi */
+  --soil: #1a1533;           /* fondo dominante della card */
+  --soil-lift: #241d3d;      /* dove la luce del fungo tocca il terreno */
 
-  /* Negozio / giorno */
-  --bordeaux: #5a1e26;
-  --bordeaux-light: #7a323c;
-  --paper-warm: #f2ece1;
-  --paper-warm-dim: #e8e0d2;
+  /* --- Amanita: il rosso e IL colore del brand --- */
+  --amanita: #e8402c;        /* cappello in piena luce */
+  --amanita-deep: #c0281a;   /* bordo del cappello, lamelle in ombra */
+  --amanita-flesh: #d4604e;  /* lamelle sotto il cappello */
+  --amanita-spot: #fdf8ee;   /* i puntini bianchi */
 
-  /* Tipografia */
-  --font-display: 'Cormorant Garamond', serif;
-  --font-body: 'Jost', sans-serif;
+  /* --- Osso / gambo: il nome della bottega e qui --- */
+  --bone-light: #f2e0c4;     /* gambo illuminato, striature chiare */
+  --bone: #dcc59e;           /* osso medio */
+  --bone-shade: #b89a72;     /* osso in ombra */
+
+  /* --- I funghetti piccoli: viola e magenta shocking --- */
+  --shroom-magenta: #d94ec0;
+  --shroom-violet: #8b5fc9;
+  --shroom-violet-deep: #7346b0;
+
+  /* --- Muschio: giallo-acido, non verde bosco --- */
+  --moss: #d8cb2a;
+  --moss-deep: #a89818;
+  --moss-shade: #6f6410;
+
+  /* --- Foglie: petrolio --- */
+  --petrol: #2d7a9e;
+  --petrol-deep: #1e5f7d;
+
+  /* --- Superficie chiara: l'etichetta bianca della card + il biglietto
+         pastello acqua-crema (il secondo biglietto di Claudia) --- */
+  --label: #fdfbf6;          /* la carta dell'etichetta MAGIC BONES */
+  --paper: #f4efe4;          /* fondo chiaro delle pagine negozio */
+  --paper-dim: #e9e1d1;
+  --ink: #7d1f18;            /* il rosso scuro del lettering "MAGIC BONES" */
+  --ink-soft: rgba(125, 31, 24, 0.72);
+
+  /* --- Alias semantici: i componenti usano QUESTI, non i colori grezzi,
+         cosi un ritocco di palette non richiede di rincorrere le classi. --- */
+  --bg: var(--soil);
+  --bg-deep: var(--soil-deep);
+  --fg: var(--bone-light);
+  --fg-dim: rgba(242, 224, 196, 0.68);
+  --accent: var(--amanita);
+  --accent-2: var(--moss);
+  --accent-3: var(--shroom-magenta);
+
+  /*
+   * --- Ruoli del NEGOZIO ----------------------------------------------------
+   * Il negozio vive su fondo chiaro (la carta bianca dell'etichetta "MAGIC
+   * BONES"), il mondo su fondo scuro. Sono due meta della stessa card, non due
+   * palette diverse.
+   *
+   * Questi nomi esistevano gia nei componenti: invece di rinominarli in 79
+   * punti, li ridefiniamo qui puntando ai colori nuovi. Un `var()` senza
+   * definizione non da errore in console — degrada in silenzio a nero/
+   * trasparente — quindi la coerenza di questo blocco e verificata da
+   * `npm run qa:token`, che fallisce se un token usato non e definito.
+   */
+  --bordeaux: var(--ink);              /* il rosso scuro del lettering */
+  --bordeaux-light: #9c2c22;
+  --paper-warm: var(--paper);
+  --paper-warm-dim: var(--paper-dim);
+  --bone-cream: var(--bone-light);
+  --bg-night: var(--soil);
+  --night-deep: var(--soil-deep);
+  --amanita-glow: #ff7a4d;
+  /* Accento freddo: il petrolio della card. Uso la variante PROFONDA perche
+     quella chiara su carta chiara si ferma a ~4.2:1, sotto la soglia AA. */
+  --turquoise: var(--petrol-deep);
+
+  /* --- Tipografia --- */
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Jost', system-ui, sans-serif;
   --font-flash: 'Pirata One', cursive;
 
-  /* Ritmo */
+  /* --- Ritmo --- */
   --radius-md: 0.5rem;
   --radius-lg: 1rem;
-  --shadow-glow-amanita: 0 0 24px rgba(232, 69, 43, 0.35);
-  --shadow-glow-turquoise: 0 0 20px rgba(47, 184, 196, 0.3);
+
+  /* --- Bagliori: il fungo illumina davvero il terreno intorno --- */
+  --glow-amanita: 0 0 32px rgba(232, 64, 44, 0.42);
+  --glow-moss: 0 0 24px rgba(216, 203, 42, 0.3);
+  --glow-magenta: 0 0 26px rgba(217, 78, 192, 0.35);
 }

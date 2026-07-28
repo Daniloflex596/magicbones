@@ -55,7 +55,8 @@ function flySigilToCart(fromEl: HTMLElement, productId: string, accent: string):
  * link "Scheda completa" sul retro, per chi vuole tutti i dettagli/SEO.
  */
 export function ProductCard({ product }: { product: Product }) {
-  const { title, category, price, priceIsFrom, isUnique, isCustom, description, images } = product.data;
+  const { title, category, price, priceIsFrom, isUnique, isCustom, description, images, materials, dimensions } =
+    product.data;
   const [flipped, setFlipped] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -83,7 +84,7 @@ export function ProductCard({ product }: { product: Product }) {
 
   function handleAdd() {
     if (cardRef.current) flySigilToCart(cardRef.current, product.id, CATEGORY_ACCENT[category]);
-    add({ id: product.id, title, price, priceIsFrom, isCustom });
+    add({ id: product.id, title, price, priceIsFrom, isCustom, isUnique });
   }
 
   /** Senza JS il fronte è un link vero alla scheda; con JS gira la carta. */
@@ -151,6 +152,30 @@ export function ProductCard({ product }: { product: Product }) {
           <div className="card__face card__face--back sigil-back" ref={backRef}>
             <h3 className="sigil-back__title">{title}</h3>
             <p className="sigil-back__desc">{description}</p>
+            {/* Materiali e misure riempiono il retro con l'informazione che
+                serve davvero a decidere — prima qui restava un vuoto bianco. */}
+            {(materials.length > 0 || dimensions) && (
+              <dl className="sigil-back__specs">
+                {materials.length > 0 && (
+                  <>
+                    <dt>Materiali</dt>
+                    <dd>{materials.join(' · ')}</dd>
+                  </>
+                )}
+                {dimensions && (
+                  <>
+                    <dt>Misure</dt>
+                    <dd>{dimensions}</dd>
+                  </>
+                )}
+                {isUnique && (
+                  <>
+                    <dt>Disponibilità</dt>
+                    <dd>Pezzo unico — ne esiste uno solo</dd>
+                  </>
+                )}
+              </dl>
+            )}
             <p className="sigil-back__price">{formatPrice(price, priceIsFrom)}</p>
             <button type="button" className="sigil-back__add" onClick={handleAdd}>
               Aggiungi al carrello

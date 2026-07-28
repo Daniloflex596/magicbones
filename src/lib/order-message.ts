@@ -11,12 +11,20 @@ export function buildOrderText(items: CartItem[], customerName: string, customer
   const lines = [
     `Richiesta ordine Magic Bones — ${customerName || 'senza nome'}`,
     '',
-    ...items.map(
-      (i) =>
-        `• ${i.title} × ${i.quantity} — ${formatEuro(i.price * i.quantity)}${i.isCustom ? ' (personalizzabile — da confermare)' : ''}`,
-    ),
+    ...items.map((i) => {
+      // "a partire da" deve restare visibile anche nel messaggio: senza,
+      // Claudia legge un prezzo fermo su un pezzo che va preventivato.
+      const prezzo = `${i.priceIsFrom ? 'a partire da ' : ''}${formatEuro(i.price * i.quantity)}`;
+      const note = [
+        i.isUnique ? 'pezzo unico' : '',
+        i.isCustom ? 'personalizzabile — da confermare' : '',
+      ].filter(Boolean);
+      return `• ${i.title} × ${i.quantity} — ${prezzo}${note.length ? ` (${note.join(', ')})` : ''}`;
+    }),
     '',
-    `Totale indicativo: ${formatEuro(items.reduce((s, i) => s + i.price * i.quantity, 0))}`,
+    `Totale indicativo: ${formatEuro(items.reduce((s, i) => s + i.price * i.quantity, 0))}${
+      items.some((i) => i.priceIsFrom) ? ' (alcuni pezzi sono "a partire da": da preventivare)' : ''
+    }`,
     '',
     `Contatto: ${customerContact || 'da specificare'}`,
     notes ? `Note: ${notes}` : '',

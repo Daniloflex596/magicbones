@@ -96,15 +96,19 @@ export function CartDrawer() {
                           <p className="item-title">{item.title}</p>
                           <p className="item-price">{formatEuro(item.price)}</p>
                         </div>
-                        <div className="item-qty">
-                          <button onClick={() => setQuantity(item.id, item.quantity - 1)} aria-label="Riduci quantità">
-                            −
-                          </button>
-                          <span>{item.quantity}</span>
-                          <button onClick={() => setQuantity(item.id, item.quantity + 1)} aria-label="Aumenta quantità">
-                            +
-                          </button>
-                        </div>
+                        {item.isUnique ? (
+                          <span className="item-unique">pezzo unico</span>
+                        ) : (
+                          <div className="item-qty">
+                            <button onClick={() => setQuantity(item.id, item.quantity - 1)} aria-label={`Riduci quantità di ${item.title}`}>
+                              −
+                            </button>
+                            <span>{item.quantity}</span>
+                            <button onClick={() => setQuantity(item.id, item.quantity + 1)} aria-label={`Aumenta quantità di ${item.title}`}>
+                              +
+                            </button>
+                          </div>
+                        )}
                         <button className="item-remove" onClick={() => remove(item.id)} aria-label={`Rimuovi ${item.title}`}>
                           Rimuovi
                         </button>
@@ -218,15 +222,24 @@ export function CartDrawer() {
           gap: 0.5rem;
           font-family: var(--font-body);
         }
+        /* 44px pieni: sotto questa soglia il dito manca il bersaglio. */
         .item-qty button {
-          width: 2.25rem;
-          height: 2.25rem;
+          width: 2.75rem;
+          height: 2.75rem;
           flex-shrink: 0;
           border-radius: 999px;
           border: 1px solid rgba(90, 30, 38, 0.25);
           background: transparent;
           color: var(--bordeaux);
           cursor: pointer;
+        }
+        .item-unique {
+          font-family: var(--font-body);
+          font-size: 0.72rem;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+          color: rgba(90, 30, 38, 0.6);
+          white-space: nowrap;
         }
         .item-remove {
           grid-column: 1 / -1;

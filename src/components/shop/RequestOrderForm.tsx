@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import type { CartItem } from '../../stores/cartStore';
 import { buildMailtoLink, buildWhatsAppLink } from '../../lib/order-message';
@@ -8,12 +8,26 @@ export function RequestOrderForm({ items, onSent }: { items: CartItem[]; onSent:
   const [contact, setContact] = useState('');
   const [notes, setNotes] = useState('');
   const [sent, setSent] = useState<'whatsapp' | 'email' | null>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
   function send(channel: 'whatsapp' | 'email') {
     const url = channel === 'whatsapp' ? buildWhatsAppLink(items, name, contact, notes) : buildMailtoLink(items, name, contact, notes);
     window.open(url, channel === 'whatsapp' ? '_blank' : '_self');
     setSent(channel);
     onSent();
+  }
+
+  /**
+   * Il canale email e un <button type="button">, quindi NON passa dalla
+   * validazione nativa del form: senza questo controllo si poteva inviare a
+   * modulo vuoto e Claudia riceveva "senza nome / Contatto: da specificare",
+   * con il carrello svuotato e nessun modo di ricontattare il cliente.
+   * `reportValidity()` esegue le stesse regole del submit e mostra i messaggi
+   * del browser.
+   */
+  function sendEmail() {
+    if (formRef.current && !formRef.current.reportValidity()) return;
+    send('email');
   }
 
   if (sent) {
@@ -31,30 +45,57 @@ export function RequestOrderForm({ items, onSent }: { items: CartItem[]; onSent:
 
   return (
     <form
+      ref={formRef}
       className="order-form"
       onSubmit={(e) => {
         e.preventDefault();
         send('whatsapp');
       }}
     >
-      <label>
+      {/* name + autoComplete: senza, il riempimento automatico del telefono
+          non propone nome e contatto — su mobile è metà della compilazione. */}
+      <label htmlFor="ordine-nome">
         Nome
-        <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Il tuo nome" required />
+        <input
+          id="ordine-nome"
+          name="name"
+          autoComplete="name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Il tuo nome"
+          required
+        />
       </label>
-      <label>
+      <label htmlFor="ordine-contatto">
         Contatto (email o telefono)
-        <input value={contact} onChange={(e) => setContact(e.target.value)} placeholder="Dove risponderti" required />
+        <input
+          id="ordine-contatto"
+          name="contact"
+          autoComplete="email"
+          inputMode="email"
+          value={contact}
+          onChange={(e) => setContact(e.target.value)}
+          placeholder="Dove risponderti"
+          required
+        />
       </label>
-      <label>
+      <label htmlFor="ordine-note">
         Note (misure, personalizzazioni, colori…)
-        <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={3} placeholder="Facoltativo" />
+        <textarea
+          id="ordine-note"
+          name="notes"
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          rows={3}
+          placeholder="Facoltativo"
+        />
       </label>
 
       <div className="order-form__actions">
         <button type="submit" className="btn btn--primary">
           Invia su WhatsApp
         </button>
-        <button type="button" className="btn btn--ghost" onClick={() => send('email')}>
+        <button type="button" className="btn btn--ghost" onClick={sendEmail}>
           Invia via email
         </button>
       </div>

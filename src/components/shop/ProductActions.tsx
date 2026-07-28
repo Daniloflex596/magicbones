@@ -7,6 +7,7 @@ export function ProductActions({ product }: { product: Product }) {
   const add = useCartStore((s) => s.add);
   const [qty, setQty] = useState(1);
   const [justAdded, setJustAdded] = useState(false);
+  const { isUnique } = product.data;
 
   function handleAdd() {
     add(
@@ -16,6 +17,7 @@ export function ProductActions({ product }: { product: Product }) {
         price: product.data.price,
         priceIsFrom: product.data.priceIsFrom,
         isCustom: product.data.isCustom,
+        isUnique,
       },
       qty,
     );
@@ -25,15 +27,21 @@ export function ProductActions({ product }: { product: Product }) {
 
   return (
     <div className="actions">
-      <div className="actions__qty">
-        <button onClick={() => setQty((q) => Math.max(1, q - 1))} aria-label="Riduci quantità">
-          −
-        </button>
-        <span>{qty}</span>
-        <button onClick={() => setQty((q) => q + 1)} aria-label="Aumenta quantità">
-          +
-        </button>
-      </div>
+      {/* Un pezzo unico non ha selettore di quantità: chiederne due non ha
+          senso, e mostrarne uno promette una disponibilità che non esiste. */}
+      {isUnique ? (
+        <p className="actions__unique">Pezzo unico — ne esiste uno solo</p>
+      ) : (
+        <div className="actions__qty">
+          <button onClick={() => setQty((q) => Math.max(1, q - 1))} aria-label="Riduci quantità">
+            −
+          </button>
+          <span>{qty}</span>
+          <button onClick={() => setQty((q) => q + 1)} aria-label="Aumenta quantità">
+            +
+          </button>
+        </div>
+      )}
       <motion.button className="actions__add" onClick={handleAdd} whileTap={{ scale: 0.96 }}>
         {justAdded ? 'Aggiunto ✓' : 'Aggiungi al carrello'}
       </motion.button>
@@ -57,6 +65,10 @@ export function ProductActions({ product }: { product: Product }) {
         .actions__note {
           flex-basis: 100%;
           font-family: var(--font-body); font-size: 0.8rem; color: var(--turquoise);
+        }
+        .actions__unique {
+          font-family: var(--font-body); font-size: 0.85rem;
+          color: var(--bordeaux); opacity: 0.75; margin: 0;
         }
       `}</style>
     </div>

@@ -164,8 +164,20 @@ body {
 
 .sigil-back { background: #fffdf9; padding: 1.1rem 1.15rem; color: var(--bordeaux); }
 .sigil-back__title { font-family: var(--font-display); font-weight: 600; font-size: 1.05rem; line-height: 1.25; margin: 0 0 0.35rem; }
-.sigil-back__desc { font-size: 0.78rem; line-height: 1.5; color: rgba(90,30,38,.85); flex: 1; overflow-y: auto; margin: 0; }
-.sigil-back__price { font-weight: 500; margin: 0.5rem 0; font-variant-numeric: tabular-nums; }
+.sigil-back__desc { font-size: 0.78rem; line-height: 1.5; color: rgba(90,30,38,.85); overflow-y: auto; margin: 0; }
+/* Specifiche: prendono lo spazio che avanza invece di lasciarlo bianco. */
+.sigil-back__specs {
+  flex: 1; margin: 0.7rem 0 0; padding: 0.6rem 0 0;
+  border-top: 1px solid rgba(90,30,38,.14);
+  display: grid; grid-template-columns: auto 1fr; gap: 0.2rem 0.7rem;
+  align-content: start; font-size: 0.7rem; line-height: 1.45; overflow-y: auto;
+}
+.sigil-back__specs dt {
+  font-family: var(--font-flash); letter-spacing: .03em;
+  color: rgba(90,30,38,.5); white-space: nowrap;
+}
+.sigil-back__specs dd { margin: 0; color: rgba(90,30,38,.8); }
+.sigil-back__price { font-weight: 500; margin: 0.6rem 0 0.5rem; font-variant-numeric: tabular-nums; }
 .sigil-back__add {
   background: var(--bordeaux); color: var(--paper-warm); border: none; border-radius: 999px;
   padding: 0.55rem 0.8rem; font-size: 0.8rem; font-weight: 500; min-height: 2.4rem; cursor: pointer;
