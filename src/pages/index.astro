@@ -1,8 +1,24 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
 import { CartButton } from '../components/shop/CartButton';
 import { CartDrawer } from '../components/shop/CartDrawer';
+import { PannelloProdotto } from '../components/world/PannelloProdotto';
+import { toPlainProduct } from '../lib/types';
 import { withBase } from '../lib/url';
+
+/*
+ * I pezzi che vivono DENTRO il mondo, nei barattoli dell'atto dei teschi.
+ * Gli stessi id sono cablati in world.js (BARATTOLI_TESCHI): il raycast
+ * restituisce l'id, il DOM apre il pannello. Se un id qui e in world.js
+ * divergessero, il tocco nel mondo non troverebbe il prodotto — per questo
+ * l'ordine e identico e la fonte e la stessa collection.
+ */
+const NEI_BARATTOLI = ['teschio-toro-pentagramma', 'teschio-uccello-ametista', 'teschio-serpente-scaglie'];
+const tutti = await getCollection('products');
+const pezziDelMondo = NEI_BARATTOLI.map((id) => tutti.find((p) => p.id === id))
+  .filter((p): p is NonNullable<typeof p> => Boolean(p))
+  .map(toPlainProduct);
 
 /*
  * IL SOTTOBOSCO — home immersiva.
@@ -85,10 +101,11 @@ import { withBase } from '../lib/url';
         <h2>I teschi</h2>
         <p>
           Capra, cervo, toro, pitone. Ogni cranio viene pulito, preparato e
-          dipinto a mano: mandala turchesi, pentagrammi rossi, foglia oro,
-          cristalli grezzi incastonati nelle orbite.
+          dipinto a mano. Qui sono nei barattoli, tra le radici:
+          <strong>toccane uno</strong> per guardarlo da vicino.
         </p>
-        <a class="btn" href={withBase('/negozio')}>Guarda i teschi →</a>
+        <PannelloProdotto client:load prodotti={pezziDelMondo} />
+        <a class="btn btn--minore" href={withBase('/negozio')}>Tutti i teschi in negozio →</a>
       </div>
     </section>
 
@@ -153,12 +170,22 @@ import { withBase } from '../lib/url';
 
   <script>
     import { mountWorld } from '../components/world/mount.js';
+
     const canvas = document.getElementById('mondo') as HTMLCanvasElement | null;
     if (canvas) {
       mountWorld({
         canvas,
         preloaderEl: document.getElementById('preloader'),
         stageEl: document.getElementById('stage'),
+        basePath: import.meta.env.BASE_URL,
+        // Il mondo non apre niente da solo: annuncia il pezzo toccato e il
+        // punto sullo schermo. Il pannello React ascolta e apre — cosi la via
+        // 3D e quella da tastiera finiscono esattamente nello stesso posto.
+        onPick(productId: string, punto: { x: number; y: number } | null) {
+          window.dispatchEvent(
+            new CustomEvent('mondo:prendi', { detail: { productId, punto } }),
+          );
+        },
       });
     }
   </script>

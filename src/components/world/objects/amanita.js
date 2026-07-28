@@ -33,7 +33,7 @@ function capProfile(radius, height) {
  * Una amanita completa.
  * @param seed  intero: decide inclinazione, macchie, striature — deterministico
  */
-export function createAmanita(seed, { radius = 0.62, height = 0.46, stemH = 1.9, tier = 'high' } = {}) {
+export function createAmanita(seed, { radius = 0.62, height = 0.46, stemH = 1.9, tier = 'high', conLuce = false } = {}) {
   const g = new THREE.Group();
 
   // --- Gambo: color OSSO. E il gioco di parole del brand, in geometria. ------
@@ -89,13 +89,17 @@ export function createAmanita(seed, { radius = 0.62, height = 0.46, stemH = 1.9,
   g.add(dots);
 
   // --- Luce del fungo -------------------------------------------------------
-  // Ogni amanita illumina davvero il terreno sotto di se: e cosi che il mondo
-  // legge come "bioluminescente" invece che "illuminato da una lampada fuori
-  // campo". Solo sulle amanite principali (tier alto), altrimenti si esplode
-  // il numero di luci.
+  // Solo su POCHE amanite, scelte dal chiamante. Una PointLight per fungo
+  // sembrava giusto ("ognuno illumina il terreno sotto di se") ed era il difetto
+  // di performance piu grave del mondo: con 14 amanite si arrivava a 20 luci
+  // dinamiche, che Three valuta per OGNI pixel. Misurato: 3 frame al secondo,
+  // abbastanza da congelare le animazioni JS dell'interfaccia.
+  //
+  // Le altre restano bioluminescenti lo stesso: l'emissive del cappello non
+  // costa nulla, e a distanza la differenza non si vede.
   let light = null;
-  if (tier !== 'low') {
-    light = new THREE.PointLight(0xe8402c, 1.5, 4.2, 2);
+  if (conLuce) {
+    light = new THREE.PointLight(0xe8402c, 2.4, 5.0, 2);
     light.position.y = stemH - 0.25;
     g.add(light);
   }

@@ -33,7 +33,13 @@ interface CartState {
   isOpen: boolean;
   open: () => void;
   close: () => void;
-  add: (item: Omit<CartItem, 'quantity'>, quantity?: number) => void;
+  /**
+   * `apri` decide se il carrello si spalanca dopo l'aggiunta. Nel negozio si:
+   * e la conferma che l'azione ha avuto effetto. DENTRO IL MONDO 3D no: il
+   * pezzo vola dentro il barattolo e quella e gia la conferma — un pannello
+   * che si spalanca sopra la scena spezzerebbe l'esperienza a meta.
+   */
+  add: (item: Omit<CartItem, 'quantity'>, quantity?: number, opts?: { apri?: boolean }) => void;
   remove: (id: string) => void;
   setQuantity: (id: string, quantity: number) => void;
   clear: () => void;
@@ -46,7 +52,7 @@ export const useCartStore = create<CartState>()(
       isOpen: false,
       open: () => set({ isOpen: true }),
       close: () => set({ isOpen: false }),
-      add: (item, quantity = 1) => {
+      add: (item, quantity = 1, { apri = true } = {}) => {
         const existing = get().items.find((i) => i.id === item.id);
         if (existing) {
           set({
@@ -57,7 +63,7 @@ export const useCartStore = create<CartState>()(
         } else {
           set({ items: [...get().items, { ...item, quantity: capQuantity(item, quantity) }] });
         }
-        set({ isOpen: true });
+        if (apri) set({ isOpen: true });
       },
       remove: (id) => set({ items: get().items.filter((i) => i.id !== id) }),
       setQuantity: (id, quantity) => {

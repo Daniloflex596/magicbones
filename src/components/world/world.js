@@ -20,11 +20,22 @@ import { createCameraRig } from './engine/camera-rig.js';
 import { createUndergrowth, pathXAt } from './objects/undergrowth.js';
 import { createAmanita } from './objects/amanita.js';
 import { createBoneColumn } from './objects/bone-column.js';
+import { createJar } from './objects/jar.js';
 
-const SOIL = 0x1a1533;
 const SOIL_DEEP = 0x0f0b1e;
 
-export function initWorld(canvas, { tier = 'high', dpr = 2 } = {}) {
+/**
+ * I barattoli dell'atto 2, in FILA lungo il percorso sulla destra: la camera
+ * sta a sinistra e ci passa accanto uno dopo l'altro. Tre soggetti DISTINTI —
+ * non varianti dello stesso — come impone la ricetta della skill per ogni tappa.
+ */
+const BARATTOLI_TESCHI = [
+  { productId: 'teschio-toro-pentagramma', foto: 'toro-pentagramma.jpg', z: 0.9, off: 1.05, h: 0.72 },
+  { productId: 'teschio-uccello-ametista', foto: 'uccello-ametista.jpg', z: -0.35, off: 1.28, h: 0.58 },
+  { productId: 'teschio-serpente-scaglie', foto: 'teschio-pitone.jpg', z: -1.6, off: 1.12, h: 0.66 },
+];
+
+export function initWorld(canvas, { tier = 'high', dpr = 2, basePath = '/' } = {}) {
   // --- Renderer -------------------------------------------------------------
   const renderer = new THREE.WebGLRenderer({
     canvas,
@@ -70,14 +81,21 @@ export function initWorld(canvas, { tier = 'high', dpr = 2 } = {}) {
     : [[10.2, 1], [9.0, -1], [7.2, 1], [6.0, -1], [4.2, 1], [2.4, -1],
        [0.6, 1], [-1.4, -1], [-3.2, 1], [-5.0, -1], [-7.0, 1], [-8.6, -1],
        [-10.4, 1], [-12.0, -1]];
+  // Budget luci: SOLO le amanite grandi ne hanno una. Le altre restano
+  // bioluminescenti tramite emissive, che non costa niente. Su mobile nessuna.
+  const MAX_LUCI_AMANITA = tier === 'low' ? 0 : 4;
+  let luciAssegnate = 0;
   AMANITA_PLAN.forEach(([z, side], i) => {
     const seed = i * 3 + 7;
     const big = i % 3 === 0;
+    const conLuce = big && luciAssegnate < MAX_LUCI_AMANITA;
+    if (conLuce) luciAssegnate++;
     const a = createAmanita(seed, {
       radius: big ? 0.85 : 0.58,
       height: big ? 0.6 : 0.42,
       stemH: big ? 2.5 : 1.7,
       tier,
+      conLuce,
     });
     a.group.position.set(pathXAt(z) + side * (1.25 + (i % 4) * 0.42), 0, z);
     scene.add(a.group);
@@ -115,10 +133,60 @@ export function initWorld(canvas, { tier = 'high', dpr = 2 } = {}) {
     scene.add(d);
   });
 
+  // --- ATTO 2: i barattoli --------------------------------------------------
+  // Il logo di Claudia e una mano che regge un barattolo con dentro un teschio.
+  // Qui i barattoli stanno tra le radici, ognuno con dentro una sua foto vera.
+  const jars = [];
+  BARATTOLI_TESCHI.forEach((cfg, i) => {
+    const j = createJar(i * 7 + 23, { productId: cfg.productId, tier, height: cfg.h });
+    j.group.position.set(pathXAt(cfg.z) + cfg.off, 0, cfg.z);
+    scene.add(j.group);
+    jars.push({ ...cfg, obj: j });
+  });
+
+  /**
+   * Le texture partono DOPO il pre-warm: se le caricassimo qui bloccherebbero
+   * il primo fotogramma per ~300 KB di JPEG. Fino ad allora ogni barattolo
+   * mostra un piano color osso — mai un rettangolo nero.
+   */
+  function loadPhotos() {
+    const loader = new THREE.TextureLoader();
+    const base = basePath.endsWith('/') ? basePath : basePath + '/';
+    return Promise.all(jars.map(({ obj, foto }) => obj.loadPhoto(`${base}foto/jar/${foto}`, loader)));
+  }
+
   // --- Resize ---------------------------------------------------------------
   function resize(w, h) {
     renderer.setSize(w, h, false);
     rig.onResize(camera, w / h);
+  }
+
+  // --- Interazione ----------------------------------------------------------
+  /** Bersagli del raycast: solo le zone sensibili, mai l'intera scena. */
+  const pickables = jars.map(({ obj }) => obj.hitMesh);
+
+  /**
+   * Dove si trova un prodotto sullo schermo, in px. Serve al volo verso il
+   * barattolo-carrello: l'animazione parte dal punto esatto in cui l'utente ha
+   * visto l'oggetto, non da un angolo qualsiasi.
+   */
+  function projectToScreen(productId) {
+    const voce = jars.find((j) => j.productId === productId);
+    if (!voce) return null;
+    const v = new THREE.Vector3();
+    voce.obj.group.getWorldPosition(v);
+    v.y += voce.h * 0.5;
+    v.project(camera);
+    const r = canvas.getBoundingClientRect();
+    return {
+      x: r.left + ((v.x + 1) / 2) * r.width,
+      y: r.top + ((-v.y + 1) / 2) * r.height,
+      visibile: v.z < 1,
+    };
+  }
+
+  function setHover(productId) {
+    jars.forEach(({ obj }) => obj.setHover(obj.productId === productId));
   }
 
   return {
@@ -127,6 +195,10 @@ export function initWorld(canvas, { tier = 'high', dpr = 2 } = {}) {
     camera,
     applyCamera: rig.applyCamera,
     resize,
+    loadPhotos,
+    pickables,
+    projectToScreen,
+    setHover,
 
     /**
      * Unico punto di ingresso delle animazioni. `signals` arriva dalla timeline
@@ -148,12 +220,20 @@ export function initWorld(canvas, { tier = 'high', dpr = 2 } = {}) {
       boneColumns.forEach((c, i) => {
         c.setReveal(Math.max(0, Math.min(1, reveal * 1.35 - i * 0.18)));
       });
+
+      // I barattoli si accendono quando l'atto dei teschi e centrato: e il
+      // segnale che dice "questi si possono prendere".
+      const teschi = signals.teschi ?? 0;
+      jars.forEach(({ obj }, i) => {
+        obj.setHighlight(Math.max(0, Math.min(1, teschi * 1.25 - i * 0.12)));
+      });
     },
 
     dispose() {
       undergrowth.dispose();
       amanitas.forEach((a) => a.dispose());
       boneColumns.forEach((c) => c.dispose());
+      jars.forEach(({ obj }) => obj.dispose());
       decoyGeo.dispose();
       decoyMat.dispose();
       env.dispose();
