@@ -1,0 +1,89 @@
+product-photography-brief
+
+Invoke when user says
+"product photography brief", "e-commerce shoot brief", "photo shoot brief", "shot planner for e-commerce", or types /product-photography-brief.
+Product Photography Brief Workflow
+This workflow automates the planning and generation of highly detailed, production-ready product photography briefs for e-commerce brands, creative studios, and physical products. It takes a raw product name, description, category, or homepage/listing URL and outputs an actionable photography brief with exact prompts engineered for Higgsfield generation models.
+
+Required Inputs
+When invoking this workflow, the user should provide:
+
+Product Name & Category (e.g., Organic Avocado Face Serum, Leather Minimalist Wallet, Stainless Steel Travel Mug).
+Product Details (e.g., ingredients, texture, color, packaging type, labels).
+Brand Aesthetic (e.g., minimalist/clean, rustic/earthy, high-end luxury, vibrant/pop, dark/moody).
+Target Platforms / Aspect Ratios (e.g., Amazon, Instagram, Pinterest, Shopify).
+Workflow Steps
+Step 1: Input Analysis & Context Extraction
+Identify and extract key attributes to anchor the visual style:
+
+Hero Ingredient/Material: What raw inputs represent the product? (e.g., oats, leather grain, lavender).
+Packaging/Labeling Text: Does the shot need legible labels? If yes, route the packaging shots to imagegen_2_0 (GPT Image 2).
+Brand Colors & Palette: Warm neutrals, bright primary colors, cool blues/greens.
+Lighting Archetype:
+Soft Studio: Diffused, even light, soft shadows (ideal for beauty, skincare).
+Hard/Chiaroscuro: High contrast, dramatic shadows (ideal for luxury, men's grooming).
+Golden Hour / Natural: Warm, directional, organic shadows (ideal for wellness, food).
+Step 2: Model Routing Matrix
+Match each required shot type to the optimal Higgsfield model:
+
+Shot Type	Legible Text Required?	Recommended Higgsfield Model	Rationale
+Hero / Studio Packshot	No	nano_banana_pro / nano_banana_2	Outstanding studio lighting, crisp textures, high fidelity.
+Macro / Texture Close-up	No	nano_banana_pro	Incredible micro-detail rendering for gels, creams, or fabrics.
+Packaging / Text Detail	Yes	imagegen_2_0	Best spatial control and legibility for text characters/logos.
+Lifestyle / In-Use Shot	No	text2image_soul_v2 / soul_v2	Preserves realistic human face identities and hand-holding context.
+Creative / Editorial Ad	No	cinematic_studio_2_5	Highly artistic composition, dramatic lighting, luxury-campaign vibes.
+Step 3: Select 4–6 Shot Archetypes
+Choose the most relevant shots from the 8 Core Shot Types to form a cohesive shoot plan:
+
+The Hero Shot: Clean product alone on a seamless background with commercial lighting.
+The Macro / Detail Shot: Extremely close-up, highlighting texture, materials, ingredients, or craftsmanship.
+The Lifestyle / Contextual Shot: Product in its natural environment of use (e.g., on a clean bathroom shelf).
+The Flat Lay: Top-down overhead layout with curated raw ingredients, tools, or styling props.
+The Unboxing / Packaging Shot: Showcases outer packaging, box texture, and clean branding.
+The Hand / Human Context Shot: A hand holding, pouring, or applying the product.
+The Range Shot: Multiple variants or sizes grouped together.
+The Creative / Editorial Ad Banner: Dramatic lighting, conceptual art direction (e.g., bottle floating in splashing water).
+Step 4: Map Platform-Specific Aspect Ratios
+Apply the standard crop dimensions to the generated outputs:
+
+Shopify / Amazon Main Image: 1:1 (square, pure white seamless background for compliance).
+Instagram Feed: 4:5 (portrait crop).
+Pinterest / Blog Headers: 2:3 (vertical ratio).
+Instagram Reels / TikTok / YouTube Shorts: 9:16 (full screen mobile).
+Website Banner: 16:9 / 21:9 (horizontal landscape).
+Step 5: Draft the Production Brief
+For each selected shot, generate a Prompt Block matching the structure below:
+
+markdown
+
+### Shot [N]: [Shot Type Name]
+- **Target Model**: `[Model Name]`
+- **Aspect Ratio**: `[e.g., 4:5]`
+- **Concept**: [1-sentence scene description]
+- **Generation Prompt**:
+  > [Production-grade prompt: detailed description of subject, packaging material, lighting, camera lens, angle, and environment.]
+- **Negative Prompt**:
+  > [Universal e-commerce exclusion bank + shot-specific exclusions]
+- **Shot Priority**: `[High / Medium / Low]`
+- **Production Tip**: [Specific tip regarding composition, props, or texture execution.]
+Technical Specifications & Prompts
+Negative Prompt Banks
+Add these negative prompts to maintain clean, professional-grade commercial imagery:
+
+Universal E-Commerce Negative Prompt: low resolution, draft, blurry, out of focus, distorted proportions, low quality, noise, grain, ugly, text artifact, double branding, cluttered background, cheap plastic look, artificial shadows.
+Anatomical Negative Prompt (for Hand/Lifestyle shots): extra fingers, deformed hands, mutated fingers, fused digits, double hands, backward hand, claw hand, poor anatomy, unnatural pose.
+Amazon Main Image Negative Prompt: shadow, text, logo, watermark, accessory, prop, colored background, off-white, shadow on product, reflection, graphic element.
+Camera & Lens Specifiers (to inject in prompts)
+Use precise cinematography and camera language to dictate shot rendering:
+
+For Macro shots: Captured on 100mm macro lens, f/2.8, shallow depth of field, sharp focus on raw cream texture.
+For Studio/Hero shots: Shot on 85mm prime lens, clean studio lighting, f/8 aperture, razor-sharp edge definition, commercial photography style.
+For Lifestyle shots: Shot on 35mm lens, natural daylight, organic shadows, f/4 aperture, high-end editorial lifestyle photography.
+Output Verification Checklist
+Before presenting the final brief to the user, ensure it contains:
+
+Strategic Analysis: Short brand alignment and aesthetic justification.
+Cohesive Shot List: 4 to 6 numbered shots matching the brand's aesthetic.
+Exact Model Selections: Assigned using the Model Routing Matrix.
+Copy-Pasteable Prompts: Generation prompts containing specific lens specs, lighting styles, backgrounds, and negative prompts.
+Multi-Platform Aspect Ratios: Clear distribution mappings.

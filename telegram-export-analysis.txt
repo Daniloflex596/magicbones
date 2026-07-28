@@ -1,0 +1,51 @@
+telegram-export-analysis
+
+Telegram Chat Export Analysis
+When a user provides a Telegram chat export (result.json), standard document parsing tools (parse_file, web_extract) often fail due to the file size (frequently 20MB+) or unsupported file type restrictions.
+
+Processing Workflow
+ALWAYS use execute_code (Python) to download and process the file directly.
+
+1. Download and Load
+Do not try to load the entire JSON into prompt context. Download it to /tmp/ and parse it in memory:
+
+python
+
+import urllib.request
+import json
+
+url = "URL_FROM_USER"
+req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+with urllib.request.urlopen(req) as response:
+    data = json.loads(response.read())
+2. Handling Telegram's text Field Quirks
+In Telegram exports, the text field is NOT always a simple string. If the message contains formatting (mentions, links, bold, code), text becomes an array of strings and dictionaries.
+
+Use this exact extraction logic to get clean text:
+
+python
+
+messages = data.get('messages', [])
+# Filter for actual user messages (ignore service messages)
+text_msgs = [m for m in messages if m.get('type') == 'message']
+
+processed_msgs = []
+for m in text_msgs:
+    sender = m.get('from', 'Unknown')
+    date = m.get('date', '')
+    raw_text = m.get('text', '')
+    
+    # Handle Telegram's mixed text array format
+    if isinstance(raw_text, list):
+        text = ''.join([t if isinstance(t, str) else t.get('text', '') for t in raw_text])
+    else:
+        text = raw_text
+        
+    if isinstance(text, str) and text.strip():
+        processed_msgs.append({'sender': sender, 'date': date, 'text': text})
+3. Analysis Patterns
+Since chat logs are massive (often 50k+ messages), do not attempt to print the entire log to standard output.
+
+Sampling: Print the last 300 messages to understand the most recent context and current inside jokes.
+Metrics: Count total messages per sender to determine chat balance.
+Personality/Pattern Slicing: To analyze communication styles, sample chunks from different eras of the history (e.g., text_msgs[len//2 : len//2 + 100]) rather than just the beginning or end.

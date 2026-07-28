@@ -1,0 +1,94 @@
+supercomputer-onboarding
+
+Invoke when user says
+"onboarding", "show me what this can do", "getting started",
+Supercomputer Onboarding Tour
+Deliver a structured, professional onboarding experience that walks a new user through what Higgsfield Supercomputer is, what they can do with it, and how to take their first steps.
+
+ask_user_question rules
+NEVER ask
+aspect ratio
+model preference
+resolution
+duration
+video/image format
+any generation parameter
+DO ask
+Nothing — run the full tour without asking anything. Deliver it as a single well-structured message.
+Tour Structure
+Deliver the full tour as one cohesive message. Use markdown headers and short paragraphs. Keep each section punchy — 2–5 lines max per block. No emojis. No filler phrases.
+
+Section 1: What is Higgsfield Supercomputer?
+Higgsfield Supercomputer is an AI creative studio that combines frontier media generation (images, videos, audio) with research intelligence, automation, and third-party integrations — all driven by natural language. You describe what you want; it handles the tools, models, pipelines, and delivery.
+
+Section 2: What You Can Create
+Cover these capabilities concisely:
+
+Image Generation
+
+Text-to-image with top models: Flux 2, Seedream v5, GPT Image 2 (imagegen_2_0), Grok Image, Z Image, and more
+Image-to-image editing, style transfer, product photoshoots
+Soul IDs — train a face identity from photos and generate consistent likeness across any scene
+Reference elements — lock in a character, environment, or prop and reuse it across generations
+Video Generation
+
+Text-to-video and image-to-video with Seedance 2.0, Veo 3, Kling 3.0, Wan 2.7, Minimax Hailuo, and more
+Cinematic narratives, UGC creator ads, product commercials, motion design reels, cartoon animations
+Full production workflows: TV Ad, UGC, Tutorial, Try-On, Unboxing, Podcast, Cinematic Film, Motion Design
+Audio: voiceover (TTS), voice swap, and video translation/dubbing in multiple languages
+Audio
+
+Text-to-speech with ElevenLabs, MiniMax, and Vibe Voice
+Swap the voice in any existing video
+Translate and dub videos into other languages
+Section 3: Research & Intelligence
+Instagram, TikTok, YouTube deep research — profiles, reels, engagement, comments, trending content
+Ad library intelligence — Meta, TikTok, LinkedIn, Reddit ad creative analysis
+YouTube Shorts trending discovery — viral videos, breakout channels, growth leaders
+Competitor and brand analysis with visual asset extraction
+Section 4: Automation & Integrations
+Scheduled tasks — send yourself daily reports, reminders, or generated content on a cron schedule
+Telegram bot — connect a bot and chat with Supercomputer directly from Telegram
+Connectors — Notion, Slack, Gmail, Google Drive/Docs/Sheets/Calendar, GitHub, HubSpot, Jira, Linear, Dropbox, and more
+Skills — reusable workflows saved as slash commands you can invoke any time
+Section 5: Production Workflows (Skill Shortcuts)
+These are pre-built multi-step pipelines you can trigger by name:
+
+Workflow	What it does
+TV Ad	15-second premium commercial from a product image or URL
+UGC Flow	Talking-head creator review video
+Product Photoshoot	Studio-quality product photography
+Amazon Listing	Full Amazon image set + A+ content
+Cinematic Flow	Narrative short film, scripted scenes
+Podcast Flow	AI-hosted podcast with two speakers
+Motion Design Flow	Brand reel, kinetic typography, product reveal
+Cartoon Flow	2D/2.5D animated scene
+Video Adapt	Recreate a TikTok/YouTube video with your product
+Trigger any of these by describing what you want — e.g. "make a TV ad for this product" or "create a UGC review for my skincare brand."
+
+Section 6: How to Start
+Give the user three clear first steps:
+
+Generate something — Drop a product image or describe a scene and ask for a photo or video. Example: "Generate a cinematic product photo of a black leather wallet on a marble surface."
+
+Run a workflow — Pick a workflow that matches your use case. Example: "Make a 15-second TV ad for [your product]" and share a product image or URL.
+
+Research a competitor or trend — Ask about any creator, brand, or topic. Example: "Research @nike on Instagram and show me their top reels" or "What's trending on TikTok for skincare?"
+
+Section 7: Tips
+You can attach images directly in the chat — they become inputs for generation
+Every generation result is saved in your artifacts panel for reuse
+You can train a Soul ID from 5–100 photos of a person for consistent face identity across any scene
+Workflows chain multiple steps automatically — just describe the goal, not the steps
+Ask "what skills do you have?" to see all available workflows at any time
+Closing Line
+End with a single direct invitation:
+
+What would you like to create first?
+
+Delivery Notes
+Output everything as one message — no tool calls needed for the tour itself
+Do not ask any clarifying questions before or during the tour
+Keep total response under ~600 words
+Use markdown tables and headers for scannability
+Tone: professional and concise — no filler, no hype, no emojis

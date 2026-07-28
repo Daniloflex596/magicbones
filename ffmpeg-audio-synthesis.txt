@@ -1,0 +1,267 @@
+ffmpeg-audio-synthesis
+
+FFmpeg Audio Synthesis & Scoring
+This skill documents how to synthesize, mix, and score audio computationally using ffmpeg, numpy, and pedalboard instead of external downloads or UI tools.
+
+Fast Synthesis (FFmpeg lavfi)
+FFmpeg can generate basic waveforms and noise on the fly without heavy Python processing. Ideal for rapid placeholder or atmospheric sounds.
+
+Atmospheric Wind Texture:
+
+bash
+
+ffmpeg -f lavfi -i "anoisesrc=color=pink:duration=35:amplitude=0.3" \
+  -af "highpass=f=80, lowpass=f=800, equalizer=f=200:width_type=o:width=2:g=-6, equalizer=f=500:width_type=o:width=2:g=4, afade=t=in:d=3, afade=t=out:st=32:d=3, volume=0.6" \
+  output.mp3
+Design logic: Pink noise base, low cut for rumble, high cut for harshness, mid-boost for a "hollow" tunnel feeling.
+
+High-Quality Waveform Construction (NumPy + Pedalboard)
+For punchy, musical, or transient sounds (kicks, drones, plucks), construct the waveform directly in NumPy and pass it through Spotify's pedalboard library for mix-buss processing.
+
+Constructing a Kick Drum:
+
+python
+
+import numpy as np
+import soundfile as sf
+from pedalboard import Pedalboard, Compressor, Reverb, LowShelfFilter, PeakFilter
+
+SR = 44100
+dur = 1.0
+t = np.linspace(0, dur, int(SR * dur), endpoint=False)
+
+# Frequency sweep (the "thud")
+sweep_t = np.minimum(t, 0.08)
+freq_sweep = 150.0 * (45.0 / 150.0) ** (sweep_t / 0.08)
+body = np.sin(2 * np.pi * np.cumsum(freq_sweep) / SR) * np.exp(-12 * t)
+
+# Sub baseline
+sub = np.sin(2 * np.pi * 30 * t) * np.exp(-5 * t) * 0.8
+
+# Transient attack
+click = np.random.randn(SR) * np.exp(-200 * t) * 0.35
+
+kick = (body + sub + click) / np.max(np.abs(body + sub + click)) * 0.9
+
+board = Pedalboard([
+    LowShelfFilter(cutoff_frequency_hz=60, gain_db=4, q=0.7),
+    Compressor(threshold_db=-6, ratio=4, attack_ms=1, release_ms=80),
+])
+
+kick_stereo = np.stack([kick, kick], axis=1).astype(np.float32)
+sf.write('kick.wav', board(kick_stereo, SR), SR)
+Karplus-Strong String Pluck (Koto/Guitar):
+
+python
+
+def karplus_strong(freq, dur_sec, sr=44100, decay=0.996):
+    n = int(sr * dur_sec)
+    buf_len = int(sr / freq)
+    buf = np.random.randn(buf_len) * 0.5
+    out = np.zeros(n)
+    for i in range(n):
+        out[i] = buf[i % buf_len]
+        buf[i % buf_len] = decay * 0.5 * (buf[i % buf_len] + buf[(i+1) % buf_len])
+    return out
+Mixing Dynamics
+When mixing a score against a video track, amix requires careful normalization overrides so it doesn't aggressively auto-duck the primary audio track.
+
+bash
+
+# Correct amix usage: normalize=0 prevents default aggressive compression of inputs
+ffmpeg -i video.mp4 -i layer.wav -filter_complex "[0:a]volume=1.0[va];[1:a]volume=0.55[vb];[va][vb]amix=inputs=2:duration=first:normalize=0[aout]" -map 0:v -map "[aout]" output.mp4
+To duck background tracks under voiceover (adelay handles millisecond precision starting):
+
+bash
+
+ffmpeg -i bg.mp4 -i voiceover.mp3 -filter_complex "[0:a]volume=1.0:enable='lt(t,15.667)',volume=0.5:enable='gte(t,15.667)'[bg]; [1:a]adelay=15667|15667,volume=2.0[vo]; [bg][vo]amix=inputs=2:duration=first:normalize=0[aout]" output.mp4
+Instrument Generation Reference (NumPy)
+The following building blocks can be combined to score full videos without external downloads:
+
+python
+
+# 1. SHAKUHACHI BREATH — breathy fundamental, flutter vibrato
+def shakuhachi(freq,dur_sec=1.8):
+    n=int(SR*dur_sec); tt=np.linspace(0,dur_sec,n)
+    flutter=1+0.04*np.sin(2*np.pi*6*tt)+0.02*np.random.randn(n)
+    tone=np.sin(2*np.pi*freq*flutter*tt)
+    noise=np.random.randn(n)*0.18
+    env=np.exp(-1.5*tt)*(1-np.exp(-20*tt))
+    return ((tone*0.7+noise*0.3)*env).astype(np.float32)
+
+# 2. ERHU STRING — bowed two-string, slight dissonance
+def erhu(freq,dur_sec=2.2):
+    n=int(SR*dur_sec); tt=np.linspace(0,dur_sec,n)
+    v=1+0.012*np.sin(2*np.pi*5*tt)
+    s1=np.sin(2*np.pi*freq*v*tt)
+    s2=np.sin(2*np.pi*freq*1.003*v*tt)*0.6  # slight detune
+    env=(1-np.exp(-15*tt))*np.exp(-1.2*tt)
+    return ((s1+s2)*env*0.5).astype(np.float32)
+
+# 3. BIWA PLUCK — percussive pluck with buzz (Karplus-Strong base)
+def biwa(freq,dur_sec=2.0):
+    n=int(SR*dur_sec); tt=np.linspace(0,dur_sec,n)
+    buf_len=int(SR/freq); buf=np.random.randn(buf_len)*0.8
+    sig=np.zeros(n)
+    for i in range(n):
+        sig[i]=buf[i%buf_len]
+        buf[i%buf_len]=0.997*0.5*(buf[i%buf_len]+buf[(i+1)%buf_len])
+    buzz=np.sin(2*np.pi*freq*2.01*tt)*np.exp(-20*tt)*0.15
+    return (sig+buzz).astype(np.float32)
+
+# 4. GONG STRIKE — low metallic, long tail
+def gong(freq,dur_sec=3.5):
+    n=int(SR*dur_sec); tt=np.linspace(0,dur_sec,n)
+    p1=np.sin(2*np.pi*freq*tt)*np.exp(-0.8*tt)
+    p2=np.sin(2*np.pi*freq*1.41*tt)*np.exp(-1.5*tt)*0.5
+    p3=np.sin(2*np.pi*freq*2.24*tt)*np.exp(-3*tt)*0.3
+    p4=np.sin(2*np.pi*freq*3.0*tt)*np.exp(-5*tt)*0.15
+    return ((p1+p2+p3+p4)/2.0).astype(np.float32)
+
+# 5. BOWED GLASS — pure sine with slow attack, ethereal
+def bowed_glass(freq,dur_sec=3.0):
+    n=int(SR*dur_sec); tt=np.linspace(0,dur_sec,n)
+    vib=1+0.006*np.sin(2*np.pi*4.2*tt)
+    tone=np.sin(2*np.pi*freq*vib*tt)
+    env=(1-np.exp(-8*tt))*np.exp(-0.6*tt)
+    return (tone*env*0.55).astype(np.float32)
+
+# 6. REVERSED PIANO — Karplus-Strong run backwards
+def rev_piano(freq,dur_sec=2.0):
+    n=int(SR*dur_sec); tt=np.linspace(0,dur_sec,n)
+    buf_len=int(SR/freq); buf=np.random.randn(buf_len)*0.6
+    sig=np.zeros(n)
+    for i in range(n):
+        sig[i]=buf[i%buf_len]
+        buf[i%buf_len]=0.998*0.5*(buf[i%buf_len]+buf[(i+1)%buf_len])
+    return sig[::-1].astype(np.float32)  # reverse = swell
+
+# 11. SHAKUHACHI BREATH — breathy fundamental, flutter vibrato
+def shakuhachi(freq,dur_sec=1.8):
+    n=int(SR*dur_sec); tt=np.linspace(0,dur_sec,n)
+    flutter=1+0.04*np.sin(2*np.pi*6*tt)+0.02*np.random.randn(n)
+    tone=np.sin(2*np.pi*freq*flutter*tt)
+    noise=np.random.randn(n)*0.18
+    env=np.exp(-1.5*tt)*(1-np.exp(-20*tt))
+    return ((tone*0.7+noise*0.3)*env).astype(np.float32)
+
+# 12. ERHU STRING — bowed two-string, slight dissonance
+def erhu(freq,dur_sec=2.2):
+    n=int(SR*dur_sec); tt=np.linspace(0,dur_sec,n)
+    v=1+0.012*np.sin(2*np.pi*5*tt)
+    s1=np.sin(2*np.pi*freq*v*tt)
+    s2=np.sin(2*np.pi*freq*1.003*v*tt)*0.6  # slight detune
+    env=(1-np.exp(-15*tt))*np.exp(-1.2*tt)
+    return ((s1+s2)*env*0.5).astype(np.float32)
+
+# 13. BIWA PLUCK — percussive pluck with buzz
+def biwa(freq,dur_sec=2.0):
+    n=int(SR*dur_sec); tt=np.linspace(0,dur_sec,n)
+    buf_len=int(SR/freq); buf=np.random.randn(buf_len)*0.8
+    sig=np.zeros(n)
+    for i in range(n):
+        sig[i]=buf[i%buf_len]
+        buf[i%buf_len]=0.997*0.5*(buf[i%buf_len]+buf[(i+1)%buf_len])
+    buzz=np.sin(2*np.pi*freq*2.01*tt)*np.exp(-20*tt)*0.15
+    return (sig+buzz).astype(np.float32)
+
+# 14. GONG STRIKE — low metallic, long tail
+def gong(freq,dur_sec=3.5):
+    n=int(SR*dur_sec); tt=np.linspace(0,dur_sec,n)
+    p1=np.sin(2*np.pi*freq*tt)*np.exp(-0.8*tt)
+    p2=np.sin(2*np.pi*freq*1.41*tt)*np.exp(-1.5*tt)*0.5
+    p3=np.sin(2*np.pi*freq*2.24*tt)*np.exp(-3*tt)*0.3
+    p4=np.sin(2*np.pi*freq*3.0*tt)*np.exp(-5*tt)*0.15
+    return ((p1+p2+p3+p4)/2.0).astype(np.float32)
+
+# 15. KALIMBA TINE — bright metallic pluck
+def kalimba(freq,dur_sec=1.5):
+    n=int(SR*dur_sec); tt=np.linspace(0,dur_sec,n)
+    buf_len=int(SR/freq); buf=np.random.randn(buf_len)
+    sig=np.zeros(n)
+    for i in range(n):
+        sig[i]=buf[i%buf_len]
+        buf[i%buf_len]=0.999*0.5*(buf[i%buf_len]+buf[(i+1)%buf_len])
+    shine=np.sin(2*np.pi*freq*4*tt)*np.exp(-30*tt)*0.2
+    return (sig+shine).astype(np.float32)
+
+# 16. BOWED GLASS — pure sine with slow attack, ethereal
+def bowed_glass(freq,dur_sec=3.0):
+    n=int(SR*dur_sec); tt=np.linspace(0,dur_sec,n)
+    vib=1+0.006*np.sin(2*np.pi*4.2*tt)
+    tone=np.sin(2*np.pi*freq*vib*tt)
+    env=(1-np.exp(-8*tt))*np.exp(-0.6*tt)
+    return (tone*env*0.55).astype(np.float32)
+
+# 17. REVERSED PIANO — swells into note from silence
+def rev_piano(freq,dur_sec=2.0):
+    n=int(SR*dur_sec); tt=np.linspace(0,dur_sec,n)
+    buf_len=int(SR/freq); buf=np.random.randn(buf_len)*0.6
+    sig=np.zeros(n)
+    for i in range(n):
+        sig[i]=buf[i%buf_len]
+        buf[i%buf_len]=0.998*0.5*(buf[i%buf_len]+buf[(i+1)%buf_len])
+    return sig[::-1].astype(np.float32)
+
+# 18. SINGING BOWL — harmonic drone, struck then sustained
+def singing_bowl(freq,dur_sec=4.0):
+    n=int(SR*dur_sec); tt=np.linspace(0,dur_sec,n)
+    p1=np.sin(2*np.pi*freq*tt)*np.exp(-0.5*tt)
+    p2=np.sin(2*np.pi*freq*2.76*tt)*np.exp(-1.2*tt)*0.4
+    p3=np.sin(2*np.pi*freq*5.18*tt)*np.exp(-2.5*tt)*0.2
+    env=(1-np.exp(-30*tt))
+    return ((p1+p2+p3)*env*0.45).astype(np.float32)
+
+# 19. GUQIN HARMONIC — Chinese zither, high partial pluck
+def guqin(freq,dur_sec=2.5):
+    n=int(SR*dur_sec); tt=np.linspace(0,dur_sec,n)
+    buf_len=max(2,int(SR/(freq*2))); buf=np.random.randn(buf_len)*0.5; sig=np.zeros(n)
+    for i in range(n): sig[i]=buf[i%buf_len]; buf[i%buf_len]=0.9985*0.5*(buf[i%buf_len]+buf[(i+1)%buf_len])
+    return sig.astype(np.float32)
+
+# 20. WATERPHONE SCRAPE — eerie bowed metal, horror texture
+def waterphone(freq,dur_sec=2.8):
+    n=int(SR*dur_sec); tt=np.linspace(0,dur_sec,n)
+    wobble=freq*(1+0.08*np.sin(2*np.pi*0.9*tt)+0.04*np.sin(2*np.pi*2.3*tt))
+    phase=2*np.pi*np.cumsum(wobble)/SR; tone=np.sin(phase)
+    noise=np.random.randn(n)*0.12; env=(1-np.exp(-5*tt))*np.exp(-0.7*tt)
+    return ((tone*0.7+noise*0.3)*env*0.5).astype(np.float32)
+
+# 21. ZHENG (Chinese zither) — high bright pluck
+def zheng(freq,dur_sec=1.8):
+    n=int(SR*dur_sec); buf_len=max(2,int(SR/freq)); buf=np.random.randn(buf_len)*0.7; sig=np.zeros(n)
+    for i in range(n): sig[i]=buf[i%buf_len]; buf[i%buf_len]=0.9992*0.5*(buf[i%buf_len]+buf[(i+1)%buf_len])
+    tt=np.linspace(0,dur_sec,n); shine=np.sin(2*np.pi*freq*3*tt)*np.exp(-40*tt)*0.12
+    return (sig+shine).astype(np.float32)
+
+# 22. HANG DRUM — warm metallic
+def hang(freq,dur_sec=3.0):
+    n=int(SR*dur_sec); tt=np.linspace(0,dur_sec,n)
+    p1=np.sin(2*np.pi*freq*tt)*np.exp(-1.5*tt); p2=np.sin(2*np.pi*freq*2*tt)*np.exp(-3*tt)*0.4
+    p3=np.sin(2*np.pi*freq*3*tt)*np.exp(-6*tt)*0.15; env=(1-np.exp(-30*tt))
+    return ((p1+p2+p3)*env*0.5).astype(np.float32)
+
+# 23. CRYSTAL SINGING BOWL — pure high overtone
+def crystal(freq,dur_sec=10.0):
+    n=int(SR*dur_sec); tt=np.linspace(0,dur_sec,n); vib=1+0.004*np.sin(2*np.pi*5.5*tt)
+    tone=np.sin(2*np.pi*freq*vib*tt)*0.10
+    return tone.astype(np.float32)
+
+# 24. DULCIMER TREMOLO — fast repeated note
+def dulcimer(freq,dur_sec=0.4):
+    n=int(SR*dur_sec); tt=np.linspace(0,dur_sec,n); trem=0.5*(1+np.sin(2*np.pi*16*tt))
+    buf_len=max(2,int(SR/freq)); buf=np.random.randn(buf_len)*0.6; sig=np.zeros(n)
+    for i in range(n): sig[i]=buf[i%buf_len]; buf[i%buf_len]=0.998*0.5*(buf[i%buf_len]+buf[(i+1)%buf_len])
+    return (sig*trem).astype(np.float32)
+
+# 25. WOODEN SLIT DRUM — hollow knock
+def slit_drum(dur_sec=0.18):
+    n=int(SR*dur_sec); tt=np.linspace(0,dur_sec,n)
+    tone=np.sin(2*np.pi*180*tt)*np.exp(-35*tt); knock=np.random.randn(n)*np.exp(-60*tt)*0.2
+    return (tone+knock).astype(np.float32)
+Python Packages Used
+numpy, scipy (Waveform generation, filtering)
+soundfile (Clean audio I/O without heavy dependencies)
+pedalboard (Master bus processing, studio effects)
+librosa (BPM tracking, beat extraction, structural audio analysis)
+Note: Avoid fluidsynth and pyfluidsynth as the underlying binary requires unprivileged operations that may fail or time out on serverless environments without package managers or root access.

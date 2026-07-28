@@ -1,0 +1,105 @@
+felt-puppet-ad-story
+
+version
+1.0
+stop-motion look
+felt puppets with visible fibers and stitching, fabric miniature
+pipeline
+style key, SFX-only Seedance clips, per-block VO, one continuous music
+Felt Puppet Ad Story (fuzzy cotton style, 30s)
+Format: 3 blocks × 10s Seedance clips = 30s. One felt style key locks the look. Clips carry ONLY diegetic SFX; voiceover + one continuous music bed mix in post.
+
+THE STYLE (paste-adaptable tokens)
+Core style string for every image/video prompt:
+
+
+corporate-satire stop-motion puppet film, hand-stitched felt puppets with visible
+fibers and stitching, fabric miniature sets, handmade puppet-film texture
+Palette variants:
+
+Dreary world: muted gray-beige palette, fluorescent flat lighting, beige fabric cubicles
+Warm world: golden-hour light, hot-sand beige grass/fabric, deep teal dusk sky
+Brand world: substitute the client's palette hexes directly in the prompt (e.g. deep ocean teal-black (#04181C), sea foam teal (#1E4D5A)…) — hexes work. Character recipe: felt puppet + yarn hair color + ONE distinguishing garment ("orange yarn hair, mustard tie, too-big gray suit"). Mouths are STITCHED CLOSED — never animate mouths; voice lives in narration only. Repeat the exact garment description in EVERY prompt the character appears in, or identity drifts.
+PHASE 0 — STORY ENGINE (do this before any generation)
+One-line concept. Format: "[relatable everyday absurdity] reveals [the product truth]." Test: can a stranger retell it after one viewing? Examples that worked: hungry devices queue for chips while a giant AI server eats them all; a support group for people who missed trades; office drones in a gray world where one taps his phone and the world turns to color.
+3-act arc across 3 blocks:
+Block 1 = THE WORLD + THE PROBLEM. Establish sympathetic characters and the everyday pain, with ONE clear sight gag. Add a NEAR-MISS if possible (a chip teeters on the plate rim then gets vacuumed away) — near-misses are the strongest hook psychology.
+Block 2 = THE TURN. One decisive action (a single phone tap) triggers the transformation/spectacle. This is the money shot — spend the effects budget here.
+Block 3 = HONESTY + PAYOFF. One honest downside beat (a wobble, a dim, a stumble — cute, never scary), then CLOSE THE LOOP: pay off block 1's characters (the hungry devices get fed; the toaster pops toast). Closed loops read as craft and lift completion.
+Gag design rules: comedy from deadpan physicality (a spring pop, a slow head turn, a balloon wheeze, one perfectly upright coffee cup), never dialogue. ONE spectacle beat per block max — overloading causes AI morphing artifacts.
+Script (one plain spoken line per block, ≤ ~9.5s ≈ 18-24 words):
+Hook block 1 with a question or a "wait, what?" fact.
+Always pair upside with downside: "right call, you earn; wrong call, you lose."
+State loss risk plainly once: "you can lose what you put in."
+Close educational ("learn first"), brand mentioned ONCE, naturally.
+No jargon; describe mechanics instead of naming them.
+Cast the narrator ONCE via ask_user_question voice picker; same voice_id on every block (or two voices only for interview/confessional formats).
+PHASE 1 — Style key
+higgsfield_generate_image, model nano_banana_pro, target aspect (9:16 for paid social). Prompt = STYLE REFERENCE plate: the felt world's environment corner with NO people, NO faces, NO letters — materials and lighting only (felt suit jackets on hangers, fabric cubicle walls, tiny props; or felt grassland with cotton clouds). Include one accent-color object if the story uses a color-awakening beat. Keep the job id — it is the role:"image" media on EVERY clip.
+
+PHASE 2 — Clip prompts (Seedance 2.0, one per block)
+Template skeleton (every block):
+
+
+@Image1 is a STYLE reference only — NOT the first frame. Do not open the video on
+it or reproduce it. Copy ONLY its rendering style: {felt style string + palette}.
+Style & Mood: {tone for this block}.
+Narrative Summary: {one sentence}.
+Dynamic Description: {the staged action — ONE spectacle beat, everything else
+simple; locked-off or slow camera; character descriptions repeated verbatim}.
+Static Description: {set dressing}.
+Motion: {camera + the few motions, named}.
+Audio: ONLY natural diegetic sound effects — {list them}. NO music, NO melody,
+no voice, no dialogue, no narration.
+Negative: morphing, warping, melting, characters changing appearance, extra limbs,
+objects changing scale, moving mouths, lip-sync, music, background music,
+soundtrack, opening on the reference image, reproducing the reference image as a
+frame, photorealism, live-action, captions, on-screen text, letters, numbers,
+logos, watermark{, + block-specific bans}.
+Params: duration: 10, resolution: "1080p", aspect_ratio: "9:16", medias [{value: <style key job id>, role: "image"}]. Critical semantics:
+
+Chart/graph direction is MEANING: if the script says crash, spell the geometry ("starts top-left, plunges to bottom-right, arrowhead DOWN") and ban the opposite in Negative. Models default to up-and-to-the-right.
+Logos must be diegetic — printed decal on a prop with wear (phone case, mug side, laptop sticker); ban "floating logo, logo overlay". Reference a logo element as <<<element-uuid>>> at the prompt top if the client has one.
+Money = felt banknotes drifting like leaves/snow. Never raining money (reads as profit promise to ad reviewers).
+PHASE 3 — Audio (parallel with clips)
+VO: higgsfield_audio_generate type seed_audio, same voice_id per block. If a take exceeds ~9.6s: shorten the LINE and re-voice (preferred) or atempo=1.04-1.06 in post. Slow "character" voices run long — budget words down.
+Music: ONE continuous 30s instrumental bed, mood-matched, that can flip at the block-2 turn (dull → vibrant). Use higgsfield_generate_game_audio. If seed_audio false-flags an orchestral/music prompt (happens), switch model to sonilo_music with duration: 30 — it renders .m4a; convert with ffmpeg -i music.m4a -ar 48000 music.wav.
+Seedance false-positives happen too: if a clip returns nsfw on an innocent scene, reword the metaphor (seesaw→magnifying glass) and resubmit once.
+PHASE 4 — Assemble (3-layer ffmpeg mix)
+Download with curl chained by && (no shell &). Check VO durations + phrase boundaries: ffmpeg -i vo.wav -af silencedetect=noise=-35dB:d=0.2 -f null - Per block (PAD ms ≈ (10000 − vo_ms)/2, tuned to land lines on actions):
+
+
+ffmpeg -y -i clipN.mp4 -i voN.wav -filter_complex \
+ "[0:v]trim=duration=10,setpts=PTS-STARTPTS[v];\
+  [0:a]atrim=duration=10,asetpts=PTS-STARTPTS,volume=0.55[sfx];\
+  [1:a]adelay=PAD|PAD,apad[vo];\
+  [sfx][vo]amix=inputs=2:duration=first:normalize=0[a]" \
+ -map "[v]" -map "[a]" -c:v libx264 -crf 17 -preset medium -pix_fmt yuv420p \
+ -c:a aac -b:a 192k -ar 48000 -t 10 blockN.mp4
+Concat + bed:
+
+
+ffmpeg -f concat -safe 0 -i list.txt -c copy joined.mp4
+ffmpeg -i joined.mp4 -i music.wav -filter_complex \
+ "[1:a]volume=0.30,afade=t=out:st=28:d=2[m];\
+  [0:a][m]amix=inputs=2:duration=first:normalize=0[a]" \
+ -map 0:v -map "[a]" -c:v copy -c:a aac -b:a 192k -ar 48000 master.mp4
+PHASE 5 — Captions (burned, MEASURED timing)
+Never estimate: get real phrase boundaries via audio_analyze ("Transcribe verbatim with timestamps at each phrase boundary, 0.1s precision") cross-checked against silencedetect gaps (trust silencedetect when they differ). SRT line time = block_offset + adelay_pad + phrase_start; hold each caption until the next starts. If you EVER swap a VO take, re-measure — never reuse old caption rhythm. Burn:
+
+
+ffmpeg -i master.mp4 -vf "subtitles=subs.srt:force_style='FontName=DejaVu Sans,\
+Bold=1,FontSize=13,PrimaryColour=&H00FFFFFF,OutlineColour=&H00463A2E,Outline=2.2,\
+Shadow=0.8,BackColour=&H80000000,MarginV=52,Alignment=2'" \
+ -c:v libx264 -crf 17 -preset medium -pix_fmt yuv420p -c:a copy final.mp4
+Verify 1080x1920, then higgsfield_upload and deliver.
+
+Format variants proven in this style
+Gray-to-color awakening: world starts muted gray felt; block-2 tap triggers a radial wave that re-stitches the world (and hero's suit) into the accent/brand palette. Ban gray clothing by name in block 3.
+Wildlife documentary: felt savanna, hushed naturalist narrator, "species" taxonomy of trader types, stampede into pillow pit, watering-hole study close.
+Mockumentary confessionals: office footage + locked-off interview cutaways against a plain wall (stitched mouths make interviews read as VO naturally); two voices allowed here (subject + dry observer).
+Pitfalls
+ONE spectacle beat per block — more causes morphing/outfit-drift/scale wobble.
+Repeat exact character garment text everywhere; negatives ban morphing by name.
+Disk fills after ~15+ videos of working files — clear delivered projects' local folders (finals live on the CDN).
+If ffprobe says "moov atom not found" right after a successful ffmpeg write, the disk is full — check df -h before debugging the file.

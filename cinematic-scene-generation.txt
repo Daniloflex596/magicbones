@@ -1,0 +1,47 @@
+cinematic-scene-generation
+
+Invoke when user says
+"cinematic scene generation", "generate angles and insert shots", "cinematographer angles".
+Cinematic Scene Generation
+This skill leverages Nano Banana Pro to produce premium cinematic image variations (angles and insert shots) using an expert cinematographer and master gaffer system role.
+
+Required Inputs
+Reference Image: An uploaded image or a prior generated job.
+Configuration:
+Count: Number of angles and insert shots to generate (default: 5 of each).
+Aspect Ratio: The framing format for the final output (e.g. 16:9, 2.39:1).
+Style Variance: Select "Standard" for realistic continuous cinematography or "Extreme" for dramatic, extreme modifications.
+Workflow Steps
+Step 1: Pre-Generation Survey (Mandatory)
+Before starting any generation, use ask_user_question to gather structural preferences:
+
+Image Count: "How many alternative angles and insert shots would you like to generate?" (Provide options or a freeform textbox, e.g., 5 of each).
+Aspect Ratio: "What aspect ratio do you want for these shots?" (Options: "16:9 - Cinematic Landscape", "2.39:1 - Ultra-Cinematic Wide", "9:16 - Vertical Story", "1:1 - Square").
+Style Variance: "Do you want standard cinematic coverage or extreme stylistic variations?" (Options: "Standard Coverage", "Extreme Coverage - Bold & Surreal").
+Step 2: Resource Processing
+If the user provided a fresh image upload, run higgsfield_upload to obtain a public URL and media_input ID.
+Check artifact_get(key="upload:<sha256>") to reuse identical assets if applicable.
+Step 3: Prompt Crafting & System Role Integration
+Every single prompt generated must embed the following system directive block exactly to capture the premium optical, lighting, color, and compositing rules:
+
+Base System Role Block
+
+You are a world-class Cinematographer and Master Gaffer. Your goal is to generate images that are indistinguishable from 35mm or 70mm motion picture film. Avoid AI gloss, plastic skin, waxy faces, overprocessed HDR, oversharpened edges, uniform global sharpness, impossible depth of field, perfect symmetry, sterile CGI surfaces, game-engine lighting, inconsistent shadows, floating objects, temporal flicker, morphing geometry, warped hands, smeared hair, unreadable distorted text, fake bokeh, excessive lens flare, neon clipping to white, and hard digital highlight clipping.
+Optics: Always default to Arri Alexa 65 or Panavision Millennium DXL2 sensors. Use specific focal lengths (e.g., 35mm for environmental shots, 85mm for portraits). Captured on ARRI Alexa 35 in ARRIRAW LogC4, ARRI REVEAL color science, K445-style subtle organic texture, gentle highlight rolloff, natural skin tones, expert colorist grade. Natural micro-texture, imperfect skin and surfaces, no beauty smoothing, no waxy faces, no global oversharpening, subtle sensor noise and filmic grain embedded in luminance. 24 fps, 180-degree shutter, natural motion blur, physically plausible movement, stable geometry, consistent wardrobe and background details.
+Lighting: Implement "Rembrandt lighting," "Negative Fill," or "Motivated Lighting." Ensure high dynamic range with soft highlight roll-off and deep, textured shadows. Motivated cinematography lighting, clear key direction, practical sources, realistic shadow falloff, bounce light, negative fill, atmospheric depth.Layered foreground, midground, and background, atmospheric haze, real parallax, focus plane with natural falloff, no impossible infinite sharpness.
+Color Science: Apply a custom Kodak Vision3 5219 film emulation. Prioritize perfect skin tones (natural texture, no "plastic" look) and a professional color grade with rich micro-contrast. Soft ARRI-style highlight rolloff, preserved highlight color, no hard clipping, practical light bloom, subtle halation only around intense sources.
+Integration: Every character must be perfectly composited into the environment with matching light direction, bounce light, and atmospheric depth (haze/halation).
+Stylistic Modification Rules
+Standard Coverage: The camera setups must represent logical continuity, professional coverage (e.g., wide master, medium shot, over-the-shoulder, high-angle coverage, side profiles).
+Extreme Coverage: The camera setups and lighting must become significantly more bold, radical, and surreal. Introduce extreme low Dutch angles, intense shadows with high-contrast chiaroscuro, high-contrast negative fill, stark neon accents, abstract lens distortions, macro probe lenses, or dramatic expressionistic framing.
+Step 4: Parallel Batch Submission
+Bundle all generated prompt requests into a single concurrent batch call using the nano_banana_pro model:
+
+For N angles + N insert shots, submit 2 * N requests in parallel.
+Handle active workspace-wide Claudesfield concurrency limits. If the requested size exceeds limits, split into concurrent loops as required.
+Do not poll for execution completion unless downstream dependencies are immediately required in the same turn.
+Verification & Output
+Confirm submissions to the user by announcing that the cinematic alternative coverage generation has started. Report findings in plain language describing the framing and setups chosen.
+
+
+Copy link

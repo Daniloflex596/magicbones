@@ -1,0 +1,37 @@
+ip-carpetman
+
+IP / Character: Carpetman (Карпетмен / Карпет)
+When a user requests an image featuring "Carpetman", "Карпетмен", or "Карпет", you must NEVER use the raw name in the prompt. Instead, translate it to a precise visual description and attach the pre-uploaded media_input IDs to the images or medias array of your generation tool (e.g. nano_banana_2).
+
+1. Technical & Chat Protocol
+Resolution & Aspect Ratio: Always generate in vertical 9:16 aspect ratio at 2k resolution.
+Batching: Always generate 2 variants for every request in a single parallel higgsfield_generate call: one using nano_banana_2 and one using nano_banana_pro.
+Chat Response: Reply ONLY with the task number (e.g., **21/30**) at the top, followed immediately by the tool call. Do NOT output any filler text, explanations, or confirmations ("робимо", "готово").
+2. Text Prompt Replacement
+Start EVERY prompt with this exact lighting/style prefix: Vertical 9:16 candid iPhone photo, real uneven lighting, slight grain.
+
+Replace the character's name with ONE of the following descriptions depending on the requested outfit. If not specified, default to the Hat outfit. Always include the phrase: "STRICT OUTFIT: Real woven carpet-pattern fabric MASK on face and long GLOVES only; plain solid clothing with NO carpet pattern on it. The fabric on his skin has visible real cloth texture, seams, edges and folds — NOT a tattoo, NOT body paint, NOT a print on skin."
+
+Keep expressions neutral (closed mouth or very subtle closed-lip smile) — never show teeth or wide grins.
+
+Hat (Default): "Carpetman (Hat outfit) — a real living person wearing a fabric carpet-pattern costume, wide-brimmed black felt hat, aviator sunglasses, face neck and arms fully covered with ornate carpet-pattern fabric (red, cobalt blue, ochre, ivory floral motifs), plain solid BLACK oversized cotton t-shirt with short sleeves and red contrast stitching at the collar (no carpet pattern on t-shirt), plain solid BLACK wide trousers (no carpet pattern on trousers), black chunky sneakers"
+Hood: "Carpetman (Hood outfit) — a real living person wearing a fabric carpet-pattern costume, ornate carpet-pattern hood pulled up over his head, aviator sunglasses, face fully covered by the carpet-pattern fabric, triangular carpet-pattern poncho with deep red fringe over a plain black mesh long-sleeve, plain solid BLACK wide trousers (no carpet pattern on trousers), black chunky sneakers"
+3. Styling & Clothing Rules
+Non-standard Civilian Clothing: Should be oversized and highly stylish (heavy cotton, dropped shoulders, streetwear aesthetic).
+Uniforms: If the prompt demands a uniform (doctor, police, sports, Wendy's), it must be authentic and not stylized.
+Dressing/Undressing: Carpetman NEVER undresses. In water, baths, pools, or showers, he remains fully clothed in either his Hat or Hood standard outfit, with wet fabric clinging.
+Prompt Length: Keep prompts robust but concise (~250-400 words) — rich in scene/texture detail but tight on constraints.
+4. Mandatory Reference IDs
+Always include the Face Grid + the corresponding Outfit/Body reference in the model's reference array (first two items in params.images / params.medias). DO NOT re-upload these, pass them directly as type: "media_input".
+
+Face/Identity Grid (Always include, index 0): {"id": "a16310e8-18ed-4723-8a71-8d413252693c", "type": "media_input"}
+
+Outfit: Hat (Default, index 1): {"id": "f521a04d-3fe6-4c1b-83d3-f682b064e503", "type": "media_input"}
+
+Outfit: Hood (index 1): {"id": "29298b2a-9b7e-4eb4-ae03-5e0dfa8a6239", "type": "media_input"}
+
+5. Optional Context References
+Add these to the reference array (index 2+) ONLY if the specific scene context demands it:
+
+Carpet Print (for environments, props, or background): {"id": "0e3a927b-1b1c-4fad-a4c7-d0543d4d47ba", "type": "media_input"}
+Close-up Hands (for gestures, holding items, close-ups): Include both: {"id": "546d0a5a-1898-4efc-be27-da0868beab54", "type": "media_input"} {"id": "ff9159a4-0feb-4ed5-a72b-b4337468f4a9", "type": "media_input"}

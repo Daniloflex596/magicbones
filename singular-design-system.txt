@@ -1,0 +1,53 @@
+singular-design-system
+
+Singular Design System
+Un solo sistema de marca para todas las superficies de Singular. Dark-first.
+
+1. Elegí tu superficie
+Cada superficie tiene su guía con setup, anatomía y reglas:
+
+Vas a construir…	Perfil	Guía
+Dashboard / app interna / producto	web-app (azul)	surfaces/web-app/guide.md
+Website / landing / marketing	website-landing (cyan)	surfaces/website-landing/guide.md
+Presentación / deck / slides	slides	surfaces/slides-presentations/guide.md
+Email	email	surfaces/social-email/email.md
+Pieza de social	social	surfaces/social-email/social.md
+Preview vivo de todo: abrí tokens/demo.html (core), y surfaces/ /demo.html.
+
+Repo y demos en vivo
+Repo (código fuente): 
+github
+Portada / docs: 
+singularagency
+Demos (GitHub Pages): core …/tokens/demo.html · fondo …/backgrounds/demo.html · web-app …/surfaces/web-app/demo.html · website …/surfaces/website-landing/demo.html · slides …/surfaces/slides-presentations/demo.html · social+email …/surfaces/social-email/demo.html
+Assets de marca: en este repo, assets/ (logos + símbolos) — 
+github
+Para el detalle de cualquier superficie, leé su guide.md (incluida en esta skill y en el repo).
+2. Marca: un solo primary azul/cyan
+Primary #4567ed (azul) + gradiente de marca azul→cyan + acentos cyan — el mismo para todas las superficies. Los perfiles (brand-app / brand-web) solo difieren en la surface: app sobre navy (light/dark), web sobre negro dramático (dark). El chrome se deriva de --primary con color-mix(). Status (success/warning/info/destructive) es semántico y no es de marca.
+
+3. Setup (web, Tailwind v4)
+css
+
+/* producto */         @import "@singular/ds/tokens/theme-app.css";
+/* marketing */        @import "@singular/ds/tokens/theme-web.css";
+@import "@singular/ds/backgrounds/brand-background.css";
+Tokens y modelo: tokens/README.md (core + brand-app/brand-web + utilities).
+Fondo de marca: backgrounds/README.md ( · variantes animated/static/flat).
+Componentes: components/README.md (core vs producto vs marketing).
+Logo: (components/Logo.tsx) — recoloreable currentColor; assets de marca en assets/ (ver assets/README.md).
+4. Reglas transversales
+Tokens, no hex. bg-primary, text-foreground, --gradient-primary — nunca #xxxxxx inline.
+Spacing nombrado (gap-s/m/l/xl), radius por perfil (--radius-card: xl app / 2xl web).
+Tipografía: Poppins (UI/display) · Inter (cuerpo web) · JetBrains Mono (números/datos, tabular-nums).
+Tipografía semántica (.kpi-value, .eyebrow, .text-*, .label-*) en vez de text-lg font-semibold sueltos.
+Accesibilidad: contraste AA; focus-visible:ring; aria-hidden en decorativos; prefers-reduced-motion respetado en fondo/animaciones; touch targets ≥44px.
+Voz: liderar con el resultado del usuario; cuantificar; una idea por bloque.
+5. Anti-patterns
+❌ Hex de marca inline → usar tokens / --singular-*.
+❌ Pills/badges/filtros hechos a mano → componentes del DS.
+❌ por tema → (currentColor).
+❌ Fondos animados sin prefers-reduced-motion.
+❌ Mezclar el sistema .sds-* (deprecado) con este.
+6. Mantenimiento
+El perfil web-app espeja v0-singular-stories-app y ahora entrega su sistema de navegación + componentes como código portable (surfaces/web-app/navigation.tsx, components.tsx, patterns.ts, web-app.css) — router-agnóstico (linkComponent inyectable), sin secretos. El website-landing espeja FramerSingular (primitives.tsx). Cuando esos productos evolucionen el sistema, re-auditar y actualizar acá (ver PLAN.md §Fase 8). Fuente única — no forkear tokens por producto.

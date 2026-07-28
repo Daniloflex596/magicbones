@@ -1,0 +1,233 @@
+seo-auditor
+
+SEO Auditor
+Output Contract
+Create exactly one deliverable named TODO_seo-auditor.md in the active workspace unless the user explicitly requests a different path. Do not create auxiliary reports, exports, screenshots, or scratch files unless the user asks for them.
+
+Write the deliverable as Markdown with trackable checkbox tasks. Preserve the user's scope exactly: do not silently add domains, tools, markets, competitors, or implementation tasks outside the request.
+
+Every finding and recommendation must have a stable ID:
+
+Findings: SEO-FIND-<section>.<number>
+Recommendations: SEO-REC-<section>.<number>
+Verification tasks: SEO-VERIFY-<section>.<number>
+Proposed code changes: SEO-CODE-<section>.<number>
+Use fenced code blocks for patch-style diffs, JSON-LD, config snippets, or commands.
+
+Discovery First
+Before auditing, establish the audit context from the prompt, local repo, accessible site, or provided artifacts:
+
+Site URL and scope: full site, subdomain, page template, or specific section
+Target markets, languages, and geographic regions
+Business goals, conversion goals, and target keyword themes
+Competitors or benchmark sites
+Available evidence: crawl exports, Search Console, GA4, Lighthouse/PageSpeed data, backlink reports, screenshots, server logs, or code
+If essential context is missing and cannot be inferred, document the gap in TODO_seo-auditor.md as an assumption or data-needed recommendation. Do not block the deliverable unless the user explicitly asks for live measurements that require unavailable access.
+
+Audit Workflow
+Use this sequence for comprehensive audits:
+
+Discovery and crawl analysis
+Catalogue URLs, status codes, redirect chains, canonical targets, robots directives, sitemap coverage, blocked resources, orphan pages, noindex usage, and hreflang where applicable.
+Technical health assessment
+Evaluate Core Web Vitals, TTFB, HTTPS, certificates, mixed content, mobile readiness, viewport configuration, structured data validity, and resource optimization.
+On-page and content analysis
+Review title tags, meta descriptions, heading hierarchy, content depth, duplicate or thin content, E-E-A-T signals, image optimization, internal links, navigation, and user experience signals.
+Off-page and competitive benchmarking
+Assess backlink quality, anchor diversity, toxic link exposure, domain/page authority proxies, link velocity, brand signals, competitor keyword gaps, and local SEO factors when applicable.
+Roadmap and reporting
+Score every finding by impact, effort, and ROI projection. Group remediations into Immediate, Short-term, and Long-term phases. Include validation steps for every recommendation.
+For detailed audit coverage, read references/audit-coverage.md only when drafting or checking a comprehensive TODO_seo-auditor.md.
+
+Required TODO Structure
+Use these top-level sections in TODO_seo-auditor.md:
+
+markdown
+
+# SEO Audit and Optimization TODO
+
+## Context
+- [ ] **SEO-CTX-1.1 Site URL and Scope**:
+  - **Site URL**:
+  - **Scope**:
+  - **Target Markets / Languages / Regions**:
+  - **Business Goals**:
+  - **Target Keyword Themes**:
+  - **Competitors**:
+  - **Evidence Sources**:
+
+## Audit Findings
+- [ ] **SEO-FIND-1.1 [Finding Title]**:
+  - **Location**:
+  - **Description**:
+  - **Evidence**:
+  - **Impact**: Critical/High/Medium/Low
+  - **Effort**:
+  - **ROI Projection**:
+  - **Recommendation**:
+
+## Remediation Recommendations
+- [ ] **SEO-REC-1.1 [Recommendation Title]**:
+  - **Priority**: Critical/High/Medium/Low
+  - **Effort**:
+  - **Expected Outcome**:
+  - **Validation**:
+
+## Proposed Code Changes
+- [ ] **SEO-CODE-1.1 [Change Title]**:
+  - **Files / Components**:
+  - **Patch**:
+
+## Commands
+- [ ] **SEO-CMD-1.1 [Command Purpose]**:
+  - **Local**:
+  - **CI**:
+
+## Quality Assurance Checklist
+- [ ] **SEO-VERIFY-1.1 Specific evidence**: All findings reference specific URLs, code lines, or measurable metrics.
+- [ ] **SEO-VERIFY-1.2 Critical evidence**: Tool results or screenshots are included as evidence for every critical finding when available.
+- [ ] **SEO-VERIFY-1.3 Competitors**: Competitor benchmark data supports priority and impact assessments when competitors are in scope.
+- [ ] **SEO-VERIFY-1.4 Guidelines**: Recommendations cite Google guidelines or documented best practices where relevant.
+- [ ] **SEO-VERIFY-1.5 Technical fixes**: Code examples are provided for meta tags, schema, redirects, and other technical fixes.
+- [ ] **SEO-VERIFY-1.6 Validation**: Every recommendation has a measurable validation step.
+- [ ] **SEO-VERIFY-1.7 ROI grounding**: ROI projections and traffic estimates are grounded in available data or clearly marked assumptions.
+Recommendation Rules
+Make recommendations implementation-ready:
+
+Prioritize measurable organic traffic, conversion, and revenue impact over issue volume.
+Separate quick wins under one hour from strategic initiatives that take days or weeks.
+Include before/after expectations for Core Web Vitals, indexing, rankings, traffic, CTR, or conversions.
+Cite authoritative guidance from Google Search Central, PageSpeed/Core Web Vitals docs, Schema.org, or tool documentation when making standards-based claims.
+Never recommend cloaking, hidden text, link schemes, doorway pages, automated spam, fake reviews, or other tactics that violate Google Search Essentials.
+Evidence Handling
+When live tools or data are available, use them and record the evidence. When they are unavailable, say so explicitly and convert the gap into a tracked task.
+
+Acceptable evidence includes:
+
+URLs and HTTP status codes from crawls
+robots.txt and sitemap contents
+Lighthouse/PageSpeed/Core Web Vitals metrics
+Search Console and GA4 metrics
+Structured data validator results
+Backlink export rows or summaries
+Code locations for metadata, redirects, schema, routing, or rendering behavior
+Screenshots only when the user requests them or they are already providedinterface:
+  display_name: "SEO Auditor"
+  short_description: "Technical SEO audits and optimization roadmaps"
+  default_prompt: "Use $seo-auditor to audit a site and write the tracked SEO roadmap to TODO_seo-auditor.md."SEO Audit Coverage
+Use this reference to check comprehensive SEO audit coverage before finalizing TODO_seo-auditor.md.
+
+Core Tasks
+Audit crawlability, indexing, robots.txt, and XML sitemap configuration.
+Analyze Core Web Vitals: LCP, FID or INP, CLS, and TTFB.
+Evaluate title tags, meta descriptions, header hierarchy, content quality, and E-E-A-T signals.
+Assess backlink profile quality, domain trust proxies, anchor text, toxic links, and off-page signals.
+Review structured data and schema markup for rich-result eligibility.
+Benchmark keyword rankings, content gaps, and competitive positioning.
+Domain Checklist
+Crawlability and Indexing
+Robots.txt syntax and directives
+XML sitemap completeness, validity, submitted status, and URL coverage
+Crawl budget prioritization
+Crawl errors, blocked resources, access issues, and soft 404s
+Canonical consistency and self-referencing canonicals
+Noindex directives and unintended exclusions
+Hreflang implementation for international sites
+Site Architecture and URL Structure
+URL readability, hierarchy, and parameter handling
+Information architecture and click depth
+Internal linking distribution and equity flow
+Main and secondary navigation
+Breadcrumbs and BreadcrumbList schema
+Pagination handling
+301/302 redirects and redirect chain resolution
+Performance and Core Web Vitals
+Page load time and template-level performance
+LCP under 2.5 seconds
+FID or INP under 200 milliseconds
+CLS under 0.1
+TTFB under 800 milliseconds
+Image, CSS, and JavaScript optimization
+Mobile versus desktop performance comparison
+Mobile-Friendliness
+Responsive implementation
+Mobile-first indexing readiness
+Mobile usability and touch targets
+Viewport meta tag
+Mobile page speed
+AMP, if applicable
+HTTPS and Security
+HTTPS enforcement
+SSL certificate validity and configuration
+Mixed content
+HSTS
+Security headers
+Structured Data
+Prefer JSON-LD over Microdata or RDFa.
+Validate with Google Rich Results Test and Schema.org validator when possible.
+Review Organization, WebSite, BreadcrumbList, LocalBusiness, Product, Article, FAQ, and HowTo schema only where visible content supports it.
+Flag schema that does not match visible content as a policy risk.
+On-Page SEO
+Unique keyword-relevant title tags, generally 50-60 characters.
+Unique meta descriptions with CTA, generally 150-160 characters.
+One H1 per page and logical H2-H6 hierarchy.
+Content depth, freshness, duplicate/thin content, keyword focus, semantic coverage, and E-E-A-T.
+Image alt text, file names, file sizes, next-gen formats, dimensions, lazy loading, and image schema.
+Internal anchor relevance, variety, orphan pages, footer/contextual links, and homepage click depth.
+User Experience Signals
+Organic landing page engagement
+Bounce rate by page type
+Pages per session
+Navigation and user journey
+On-site search
+Custom 404 page
+Off-Page and Domain Trust
+Backlink quality, quantity, relevance, and authority proxies
+Anchor diversity and exact-match risk
+Toxic links and disavow/removal candidates
+Link velocity
+Broken backlink recovery
+Brand searches and social signals
+Competitor backlink gaps
+Local SEO
+Apply only when relevant:
+
+Google Business Profile claim, verification, completeness, categories, photos, posts, and services
+Citation consistency and NAP coverage
+Review quantity, quality, velocity, and responses
+Local keyword targeting and local content
+LocalBusiness schema
+Local pack opportunities
+International SEO
+Apply only when relevant:
+
+Hreflang correctness
+Language or region URL structure: subdomain, subdirectory, or ccTLD
+Regional content variation and cultural adaptation
+Currency, pricing, and regulatory display
+Geotargeting in Search Console
+Regional keywords
+Hosting and CDN proximity
+Analytics and Monitoring
+Google Search Console performance, coverage, Core Web Vitals, enhancements, manual actions, and security issues.
+GA4 installation, enhanced measurement, conversion events, ecommerce, cross-domain tracking, and organic acquisition reporting.
+Rank tracking for target keywords, featured snippets, mobile versus desktop rankings.
+Competitor keyword, content gap, and backlink gap monitoring.
+Lighthouse CI or equivalent deployment guardrails for performance regressions.
+Roadmap Requirements
+Every recommendation should include:
+
+Priority: Critical, High, Medium, or Low
+Effort estimate: hours, days, or weeks
+Expected outcome: traffic, ranking, CTR, Core Web Vitals, crawling, indexing, or conversion impact
+Validation: exact tool, metric, command, or report to confirm progress
+Roadmap bucket: Immediate, Short-term, or Long-term
+Red Flags
+Mass noindex without clear justification
+Redirect chains longer than two hops
+Sitemap URLs that are orphaned or blocked by robots.txt
+Keyword cannibalization across multiple pages
+Missing, duplicate, or incorrect canonical tags
+Structured data that does not match visible content
+Core Web Vitals failures in CrUX field data
+Toxic backlink accumulation without monitoring

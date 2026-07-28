@@ -1,0 +1,34 @@
+web-app-building
+
+Web UI Building & Patching
+Authentication & UX flows
+Keep it frictionless: Users strongly dislike complex auth flows. Never ask the user to open DevTools, retrieve session cookies, or copy JWT tokens manually.
+Automated Token Bridges (Chrome Extensions): When integrating separate tools (like local web UIs or Hosted Editors) with external platforms like Higgsfield, a lightweight Manifest V3 Chrome Extension is the ideal bridge. It reads JWT/Auth tokens from active tab storage/cookies on the platform domain and auto-injects them into localhost or hosted application fields dynamically (dispatching proper React/Vue/Angular input events). This cleanly replaces manual DevTools/copy-paste auth loops.
+Anchor Tags vs window.open(): Pop-up blockers block window.open() in the browser unless it happens synchronously inside a direct user-click handler. Use <a href="..." target="_blank"> whenever possible to inherit existing login sessions frictionlessly. If the element is hidden (e.g. inside an inactive panel tab), standard anchor tags may be blocked; in that case, switch to checking for popup execution using a direct <button onclick="window.open('...', '_blank')"> tied to the user gesture.
+Clipboard Fallbacks: The navigator.clipboard API fails silently on CloudFront/CDN domains due to window.isSecureContext blocking. Always provide a visible <textarea> modal fallback with the content pre-selected so the user can copy manually.
+Clipboard API vs ExecCommand: The modern navigator.clipboard.writeText() fails silently when the HTML is hosted on a non-HTTPS context OR a secure but unrecognized CDN origin (like CloudFront) where clipboard permissions aren't explicitly granted. Always provide a fallback path (e.g. a modal with a pre-selected text area inside it, instructing the user to press Ctrl+C / Cmd+C manually, and a fallback button attempting document.execCommand('copy')).
+No File Checkers for Auth: Avoid inline API token pickers in HTML editors; they cause friction. Use links allowing manual URL copy/paste.
+File Manipulation & Patching
+Avoid Greedy Regex: Never use sed or re.sub with greedy multiline patterns (like .*? across lines) to surgically remove code blocks from complex HTML/JS files. It frequently misfires (e.g. failing to stop where expected) and wipes out unrelated downstream functions. Use non-regex split() / find() geometry or do a clean rebuild from base.
+Use Exact Replacements: When modifying files via Python scripts, use exact content.replace(old_exact_string, new_exact_string, 1).
+Complete Rebuilds: If a file becomes corrupted or requires structural change, do not attempt to repeatedly patch it. Re-download the last known good base version and apply the new features additively in one continuous script.
+Emoji & Encoding
+HTML Entity JS Escaping: When changing text content dynamically via JS (element.textContent = '...'), remember textContent parses string literals directly and ignores HTML entities like &#9654;. It will literally display &#9654;. Always use explicit unicode characters (e.g. \u25B6 or ▶) when assigning to textContent within JavaScript blocks.
+URL Handling & Formats
+Editor Inputs: When writing HTML inputs that accept video URLs, handle both raw job UUIDs and direct CDN .mp4 URLs safely.
+Resolution Logic: If parsing a UUID to build an asset URL (e.g. https://higgsfield.ai/asset/video/UUID) ensure the regex matches exactly and doesn't accidentally strip the .mp4 extension from a direct CDN URL. Check .includes('.mp4') first and pass it through unmodified if true. If the input is from cloudfront.net or ends in .mp4, pass it through unmodified.
+Video Element References: Models running on the Higgsfield API use persistent entities. Use higgsfield_element(action='get', element_id='<uuid>') to resolve them. Provide a rich text description for the element when creating it; models like imagegen_2_0 synthesize both the reference image and the text description during generation. Avoid the <<<id>>> reference format with Kling 3.0 when using end_image as it is incompatible.
+CORS & Scrubbing: Browser-based <video> scrubbers require the HTML to be hosted on the same CDN origin as the videos to bypass CORS. Always upload new editor iterations via higgsfield_upload to inherit the CDN origin.CloudFront / CDN Editor Quirks
+When building standalone HTML editors hosted on CloudFront or other raw CDN endpoints, standard browser security policies block certain behaviors:
+
+Clipboard API Fails / Silent Errors Problem: navigator.clipboard.writeText requires a secure context (HTTPS with a trusted domain), which CDN URLs often lack. document.execCommand('copy') also fails silently. Fix: Always provide a fallback modal with a <textarea readonly>. Populate the text, show the modal, and programmatically select the text (ta.focus(); ta.select(); ta.setSelectionRange(0, 99999);) so the user can reliably copy it manually.
+
+Popup Blockers Block Target Blank [blocked] Problem: <a> tags with target="_blank" are often intercepted by popup blockers when generated dynamically or clicked from within otherwise hidden panels (like tabs). Fix: Use buttons that explicitly trigger window.open synchronously on click: <button onclick="window.open('url', '_blank')">. This fires directly from a trusted user gesture and bypasses blockers. [blocked]
+
+[blocked]
+HTML Entities in JS textContent Problem: Assigning element.textContent = '&#9654;' inside JavaScript will render the literal string "&#9654;" rather than a play icon. Fix: Use actual Unicode characters in JS strings (e.g., element.textContent = '\u25b6') or use innerHTML if injecting entities.
+
+[blocked]
+
+Copy link
+

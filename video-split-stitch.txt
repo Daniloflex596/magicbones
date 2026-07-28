@@ -1,0 +1,216 @@
+video-split-stitch
+
+Video Split Stitch Pipeline
+This skill performs a complete shot-change split and AI transition stitch pipeline on a single clip. It downloads a video, detects the frame index where the visual difference is greatest (shot change), extracts the surrounding boundary frames, splits the video into two parts, and utilizes Seedance 2.0 to generate a seamless AI-generated bridging transition clip between them.
+
+Required Inputs
+Video Reference: A direct HTTPS URL or a local sandbox path to a .mp4 video file.
+Bridging Prompt: Optional text describing the desired action / movement / visual transformation during the AI transition.
+Execution Workflow
+Step 1: Initialize Workspace
+Create a unique run directory under /tmp/split_stitch_<timestamp> to keep files isolated.
+
+Step 2: Download/Locate Video
+If the input is an HTTPS URL (e.g., direct .mp4 CDN link), download it locally using curl -o input.mp4 "URL".
+If it is already a local path, copy or symlink it into the run directory as input.mp4.
+Step 3: Run Visual Difference Analysis
+Execute the local visual analysis script to calculate absolute pixel differences between consecutive frames and locate the frame index of maximum delta (shot change boundary):
+
+bash
+
+python3 /home/user/skills/video-split-stitch/split_utils.py analyze input.mp4
+Extract the following from the script's stdout:
+
+split_frame (the index prior to change)
+time_sec (the exact timestamp of the boundary)
+width, height, fps (original dimensions and framerate)
+Step 4: Present Findings for User Approval
+Use the standard chat interface or a structured question to show the user:
+
+The detected boundary frame index and timestamp.
+Tell the user we will extract frame_a (at split_frame) and frame_b (at split_frame + 1).
+Wait for user approval (e.g., "approve" or "go") before executing the physical split and AI generation.
+Step 5: Extract Frames and Split Video
+Once approved, run the split action:
+
+bash
+
+python3 /home/user/skills/video-split-stitch/split_utils.py split input.mp4 <split_frame> .
+This script will produce:
+
+frame_a.png (first boundary frame)
+frame_b.png (second boundary frame)
+part1.mp4 (split part 1)
+part2.mp4 (split part 2)
+Step 6: Upload Reference Boundary Frames
+Call higgsfield_upload on both frame_a.png and frame_b.png to obtain public media IDs and URLs from the Higgsfield CDN. These are mandatory inputs for the Seedance generator.
+
+Step 7: Generate AI Bridging Transition
+Using the uploaded frame IDs and URLs, submit a Seedance 2.0 generation job via higgsfield_generate.
+
+Generation Rules:
+
+Model: Use seedance_2_0 (product name seedance_2_0).
+Parameters:
+Set params.medias with:
+{ "role": "image", "data": { "id": "<frame_a_upload_id>", "type": "media_input" } }
+{ "role": "image", "data": { "id": "<frame_b_upload_id>", "type": "media_input" } }
+Set params.prompt to the user's prompt or a generic descriptive prompt referencing the two uploaded images (e.g., "seamless, transitionless bridging of @Image1 to @Image2").
+Do NOT use transition words (dissolve, fade, morph, blend, wipe) in the prompt, as per the user's positive phrasing rules.
+Resolution Logic: Retrieve the height of the original source video. If the source video height is 1080 (e.g. 1920x1080 or 1080x1920), set params.resolution to "1080p". If the height is 720, set it to "720p". If it is 480 or another size, map to the closest matching option supported by the model (e.g., "480p").
+Match the aspect ratio (aspect_ratio) of the original video (e.g., 9:16 or 16:9).
+Pass workspace plan concurrency limits.
+Step 8: Final Review & Assembly
+Check the generation job status using higgsfield_job_status until it is completed.
+Present the split videos (part1.mp4, part2.mp4) and the AI-generated bridging transition video (bridge.mp4) to the user.
+Ask the user if they are happy with the bridging generation.
+If they are happy, ask if you should stitch all 3 clips (part1.mp4, bridge.mp4, and part2.mp4) together into a single unified video file using FFmpeg.
+Keep all files, logs, and job IDs recorded in the chat session's artifacts.import os
+import sys
+import cv2
+import numpy as np
+
+def analyze_video(video_path):
+    """
+    Analyzes a video file to find the two adjacent frames with the greatest visual difference
+    (i.e., the most likely location of a shot change / cut).
+    
+    Returns:
+        tuple: (best_frame_idx, max_diff_value, frame_count, fps, width, height)
+               best_frame_idx is the index of the first of the two frames (split point).
+    """
+    cap = cv2.VideoCapture(video_path)
+    if not cap.isOpened():
+        print(f"Error: Could not open video file {video_path}", file=sys.stderr)
+        sys.exit(1)
+        
+    fps = cap.get(cv2.CAP_PROP_FPS)
+    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    
+    if total_frames < 2:
+        print("Error: Video has fewer than 2 frames. Cannot compute differences.", file=sys.stderr)
+        sys.exit(1)
+        
+    print(f"Analyzing {total_frames} frames ({width}x{height} @ {fps:.2f} fps)...")
+    
+    prev_gray = None
+    max_diff = -1.0
+    best_idx = -1
+    
+    frame_idx = 0
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
+            
+        # Convert to grayscale for simple, robust structural/histogram comparison
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        
+        # Blur slightly to reduce high-frequency noise / compression artifacts
+        gray = cv2.GaussianBlur(gray, (5, 5), 0)
+        
+        if prev_gray is not None:
+            # Simple absolute difference of pixel values
+            diff = cv2.absdiff(gray, prev_gray)
+            mean_diff = np.mean(diff)
+            
+            # Additional score: structural change via histogram correlation or simple MSE
+            if mean_diff > max_diff:
+                max_diff = mean_diff
+                best_idx = frame_idx - 1 # the frame index prior to change
+                
+        prev_gray = gray
+        frame_idx += 1
+        
+    cap.release()
+    return best_idx, max_diff, total_frames, fps, width, height
+
+def extract_and_split(video_path, split_idx, output_dir="."):
+    """
+    Extracts the two boundary frames at the split point (split_idx and split_idx + 1)
+    and splits the video into two parts:
+    - part1: [0, split_idx]
+    - part2: [split_idx + 1, end]
+    """
+    cap = cv2.VideoCapture(video_path)
+    if not cap.isOpened():
+        print(f"Error: Could not open video file {video_path}", file=sys.stderr)
+        sys.exit(1)
+        
+    fps = cap.get(cv2.CAP_PROP_FPS)
+    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    
+    # Extract frames
+    frame_a = None
+    frame_b = None
+    
+    cap.set(cv2.CAP_PROP_POS_FRAMES, split_idx)
+    ret, frame_a = cap.read()
+    if not ret:
+        print(f"Error: Could not read frame at index {split_idx}", file=sys.stderr)
+        sys.exit(1)
+        
+    ret, frame_b = cap.read()
+    if not ret:
+        print(f"Error: Could not read frame at index {split_idx + 1}", file=sys.stderr)
+        sys.exit(1)
+        
+    cap.release()
+    
+    # Save the frames as PNGs
+    frame_a_path = os.path.join(output_dir, "frame_a.png")
+    frame_b_path = os.path.join(output_dir, "frame_b.png")
+    
+    cv2.imwrite(frame_a_path, frame_a)
+    cv2.imwrite(frame_b_path, frame_b)
+    
+    # Perform split using ffmpeg for precise/fast split
+    split_time_sec = (split_idx + 1) / fps
+    
+    part1_path = os.path.join(output_dir, "part1.mp4")
+    part2_path = os.path.join(output_dir, "part2.mp4")
+    
+    # Command to extract part1: up to split_time_sec
+    cmd_part1 = f'ffmpeg -y -i "{video_path}" -to {split_time_sec} -c:v libx264 -preset superfast -crf 18 -c:a aac "{part1_path}"'
+    # Command to extract part2: starting from split_time_sec
+    cmd_part2 = f'ffmpeg -y -i "{video_path}" -ss {split_time_sec} -c:v libx264 -preset superfast -crf 18 -c:a aac "{part2_path}"'
+    
+    print(f"Splitting video at frame {split_idx} (time: {split_time_sec:.3f}s)...")
+    os.system(cmd_part1)
+    os.system(cmd_part2)
+    
+    return frame_a_path, frame_b_path, part1_path, part2_path
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Usage: python3 split_utils.py <action> <video_path> [split_idx] [output_dir]")
+        sys.exit(1)
+        
+    action = sys.argv[1]
+    
+    if action == "analyze":
+        v_path = sys.argv[2]
+        best_idx, max_diff, frame_count, fps, w, h = analyze_video(v_path)
+        print(f"RESULT:split_frame={best_idx}")
+        print(f"RESULT:max_diff={max_diff:.4f}")
+        print(f"RESULT:frame_count={frame_count}")
+        print(f"RESULT:fps={fps}")
+        print(f"RESULT:width={w}")
+        print(f"RESULT:height={h}")
+        print(f"RESULT:time_sec={(best_idx + 1) / fps:.3f}")
+        
+    elif action == "split":
+        v_path = sys.argv[2]
+        s_idx = int(sys.argv[3])
+        out_dir = sys.argv[4] if len(sys.argv) > 4 else "."
+        os.makedirs(out_dir, exist_ok=True)
+        
+        f_a, f_b, p1, p2 = extract_and_split(v_path, s_idx, out_dir)
+        print(f"RESULT:frame_a={os.path.abspath(f_a)}")
+        print(f"RESULT:frame_b={os.path.abspath(f_b)}")
+        print(f"RESULT:part1={os.path.abspath(p1)}")
+        print(f"RESULT:part2={os.path.abspath(p2)}")

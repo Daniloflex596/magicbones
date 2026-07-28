@@ -1,0 +1,100 @@
+nike-air-force-ad
+
+9
+16 vertical format, Seedance 2.0, motion-control camera, SFX-only audio.
+6-shot structure
+leather macro → hero float → outsole macro → levitation →
+Triggers
+"nike air force ad", "air force 1 video", "AF1 ad".
+Nike Air Force 1 — Cinematic Product Reveal Ad
+When to use
+User asks for a Nike Air Force 1 video ad / commercial / product reveal
+Quick re-run or variant of the validated AF1 prompt
+Parameters
+Parameter	Default	Notes
+Model	seedance_2_0	
+Aspect ratio	9:16	Vertical — TikTok / Reels / Shorts
+Duration	15 seconds	
+Audio	generate_audio: true	SFX-only, no speech
+Palette	White #FFFFFF, Jet black #0A0A0A, Warm silver #C0C0C0	
+Camera mode	Bot&Dolly motion-control precision	
+Shot structure (6 shots)
+0-2.5s — Extreme macro leather toe box — perforated holes catching hard rim light, imperceptible dolly push-in 3cm
+2.5-5s — Hero float 3/4 angle — shoe floating in black void, programmed orbital sweep 45°, studio three-point lighting
+5-7.5s — Outsole tread macro — pivot-point tread pattern, surgical crane descent 4cm, volumetric shaft light
+7.5-10s — Low-angle levitation — shoe tilted 15° above reflective black surface, mechanical lift-and-rotate 30°
+10-12.5s — Paired beauty shot — both shoes on gradient void, drift lock-on with micro horizon tilt
+12.5-13.7s — Wordmark closer — "AIR FORCE 1" centered on black void, then 1.3s tail freeze
+Transitions
+Junction	Type
+Shot 1→2	DRAMATIC PUSH-THROUGH (through eyelet into void)
+Shot 2→3	DRAMATIC OBJECT MORPH (chrome dust dissolve)
+Shot 3→4	DRAMATIC LIGHT SWEEP (warm silver ray)
+Shot 4→5	Bot&Dolly snap (frame-perfect lock)
+Shot 5→6	DRAMATIC PARTICLE DISSOLVE (silver chrome → wordmark)
+Audio design
+Timecode	SFX
+0.5s	Deep resonant bass thump
+1.5s	Subtle leather creak
+2.5s	Atmospheric whoosh (push-through)
+5s	Crystalline chime (morph)
+7.5-10s	Low rumble build
+10s	Sharp impact hit (snap)
+12.5s	Specular flash chime (wordmark)
+13.7-15s	Ambient drone hold to tail
+Prompt
+
+CRITICAL: Animate as ONE single continuous full-frame 9:16 cinematic film — each shot occupies the complete 9:16 vertical screen edge-to-edge.
+
+15-second premium luxury product commercial reel. A pristine white Nike Air Force 1 Low sneaker — iconic chunky midsole, perforated toe box, clean white tumbled leather upper, white rubber outsole, silver eyelets, white laces tied crisp. Bot&Dolly motion-control precision camera throughout. Palette: pure white #FFFFFF, jet black #0A0A0A, warm silver #C0C0C0.
+
+CHOREOGRAPHY:
+
+0-2.5s SHOT 1: ENTIRE 9:16 frame fills with extreme macro of the perforated toe-box leather texture, each punch-hole catching hard rim light from frame-right. Camera: Imperceptible dolly push-in 3cm over 2.5s with parallax FG leather 100% / MG stitching 75% / BG void 50%. Light: single hard directional from upper-right, raking across leather grain, specular highlights on silver eyelet edge.
+
+TRANSITION 2.5s: DRAMATIC PUSH-THROUGH — camera dives forward through the eyelet hole into dimensional black void behind over 0.4s.
+
+2.5-5s SHOT 2: ENTIRE 9:16 frame fills with the Air Force 1 hero floating mid-air against pitch-black void, 3/4 angle, slow rotation revealing the iconic chunky midsole profile. Camera: programmed orbital sweep 45° around the shoe at constant velocity. Light: studio three-point — soft key upper-left, hard rim frame-right catching midsole edge, subtle fill from below.
+
+TRANSITION 5s: DRAMATIC OBJECT MORPH — shoe silhouette dissolves through chrome dust particles, reassembling into outsole tread pattern over 0.5s.
+
+5-7.5s SHOT 3: ENTIRE 9:16 frame fills with extreme macro of rubber outsole pivot-point tread pattern, deep sculptural grooves catching volumetric shaft light. Camera: surgical crane descent 4cm vertical Y-axis. Light: single volumetric beam from above cutting through atmospheric haze.
+
+TRANSITION 7.5s: DRAMATIC LIGHT SWEEP — warm silver ray sweeps frame from left revealing next scene over 0.4s.
+
+7.5-10s SHOT 4: ENTIRE 9:16 frame fills with dynamic low-angle hero shot — Air Force 1 levitating above reflective black surface, shoe tilted 15° showing full side profile. Subtle dust particles drift upward around it. Camera: mechanical lift-and-rotate 30°, robotic precision. Light: hard overhead spotlight creating sharp shadow beneath shoe on reflective surface.
+
+TRANSITION 10s: Bot&Dolly snap — programmed move terminates with frame-perfect lock.
+
+10-12.5s SHOT 5: ENTIRE 9:16 frame fills with medium shot of both shoes paired, one slightly forward, against gradient void transitioning from black to deep charcoal. Camera: Drift lock-on — camera holds steady, micro horizon tilt 1°. Light: clean directional key from upper-left, soft cinematic shadows. ONE single full-frame composition occupying the entire screen edge-to-edge.
+
+TRANSITION 12.5s: DRAMATIC PARTICLE DISSOLVE — shoe pair disperses into silver chrome particles that converge into wordmark over 0.5s.
+
+12.5-13.7s SHOT 6: ENTIRE 9:16 frame fills with bold white typography reading EXACTLY 'AIR FORCE 1' centered against pitch-black void, clean massive sans-serif. Camera: locked. Light: soft ambient glow behind letterforms. THIS FINAL SHOT IS A SINGLE FULL-FRAME COMPOSITION FILLING THE ENTIRE 9:16 SCREEN.
+
+13.7-15s MANDATORY SILENT TAIL PAUSE: hold final composition pixel-identical. Frame remains at full brightness and full saturation. Camera motionless.
+
+Audio: deep resonant bass thump at 0.5s macro reveal, subtle leather creak at 1.5s, atmospheric whoosh at 2.5s push-through, crystalline chime at 5s morph, low rumble building 7.5-10s, sharp impact hit at 10s snap, specular flash chime at 12.5s wordmark lock, ambient drone holding to tail. The audio track is finished SFX-only — speech tracks remain absent throughout.
+
+All apparel marks, wordmarks, and brand identifiers in the video are original generic designs — athletic/product design only, every visible mark is fictional.
+
+FINAL OUTPUT REMINDER: ONE single continuous full-frame cinematic film. Each shot is a complete fullscreen scene with motion-control camera precision and DRAMATIC MATCH-CUT TRANSITIONS between scenes (DRAMATIC PUSH-THROUGH, DRAMATIC OBJECT MORPH, DRAMATIC LIGHT SWEEP, Bot&Dolly snap, DRAMATIC PARTICLE DISSOLVE).
+Execution
+python
+
+higgsfield_generate(requests=[{
+    "type": "generation",
+    "media_type": "video",
+    "model": "seedance_2_0",
+    "params": {
+        "prompt": "<prompt above>",
+        "aspect_ratio": "9:16",
+        "duration": 15,
+        "generate_audio": True
+    }
+}])
+Variants
+Colorway swap: Replace "pristine white" with "Triple Black" (all-black leather, black midsole, black outsole) and adjust palette to #0A0A0A, #1A1A1A, #333333
+Horizontal: Change aspect ratio to 16:9 for YouTube / website hero
+Short cut: Trim to 10s by dropping shots 3 and 5, adjusting timecodes
+With product photo: Upload reference image, add to medias as media_input with @Image1 anchor

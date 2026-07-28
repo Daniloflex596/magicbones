@@ -1,0 +1,106 @@
+emotional-script-writing
+
+Trigger phrases
+"write a script", "video script", "hook for", "make it emotional",
+Emotional Script Writing
+A script succeeds when it does two things: it EARNS attention in the first seconds, and it makes the viewer FEEL something before it asks them to think or act. Follow this order every time: (1) define the emotional core, (2) engineer the hook, (3) build the beat structure, (4) write lines that sound spoken, (5) run the checklists.
+
+Step 0 — Intake (never skip)
+Before writing a single line, establish:
+
+Format + length — 15s ad, 30-60s reel, 8-min YouTube, 2-min explainer, scene/short film. Length dictates beat count (see templates below).
+Audience + platform — who is watching and in what state (scrolling half-asleep vs. searched intentionally). Scrollers need a 0-2s hook; searchers grant ~15s.
+The ONE feeling — pick a single dominant emotion the viewer should leave with: relief, awe, indignation, warmth, FOMO, hope, catharsis. A script chasing three emotions lands none.
+The ONE takeaway/action — one sentence. If you can't state it, don't write yet.
+If any of these are unknown and the answer would change the script, ask the user (one short question, pre-baked options).
+
+Step 1 — Emotional Architecture (the core)
+Human emotion in a script is not adjectives — it is STRUCTURE. Build it with these mechanics:
+
+Want vs. Need. The character (or viewer-proxy) wants something concrete (surface goal); underneath is what they actually need (emotional truth). The gap between the two is where feeling lives. Even a 30s ad has this: "I wanted clear skin" (want) → "I wanted to stop hiding" (need).
+Stakes before information. Nobody cares about facts until they care about a person. Give one line of humanity before any data: name a specific fear, a specific Tuesday, a specific embarrassment.
+Specificity = emotion. "I was stressed" is dead. "I re-recorded the voicemail four times" is alive. Every emotional beat must be a concrete, sensory, countable detail. Replace every abstraction with an image or a number.
+The turn. Every script needs at least one reversal — a moment where what we believed flips (lowest point → discovery, confidence → doubt, joke → sincerity). Scripts without a turn feel like lists.
+Vulnerability beats polish. Admissions ("honestly, I almost returned it") build 10x more trust than superlatives. One flaw acknowledged makes every claim after it more believable.
+Emotional contrast. Feeling registers through change. Cold open → warm payoff. Fast chaos → one still, quiet line. Design the contrast deliberately: mark where the tempo drops.
+End on resonance, not summary. The last line should echo the need (the emotional truth), not restate the want. Callbacks to the opening image are the cheapest, most reliable way to make an ending land.
+Step 2 — Hook Engineering (first 1-3 seconds / first line)
+The hook's only job is to buy the next 5 seconds. Write 5-10 candidate hooks, then pick. Proven hook patterns:
+
+Open loop / curiosity gap — start mid-consequence: "This mistake cost me 40,000 followers." (Promise resolution, deliver it late.)
+Pattern interrupt — say the opposite of the expected take: "Stop drinking more water."
+Direct callout — name the exact viewer: "If you write scripts that sound like a robot wrote them —"
+In-medias-res — begin inside the most dramatic moment, then rewind: "So I'm standing in the return line, crying over a blender."
+Stakes-first — lead with what's at risk: "You have about 2 seconds before they scroll. Here's how not to waste them."
+Confession — "I faked liking my own product for a year."
+Enemy/villain — name a shared frustration: "Whoever invented the 30-minute meeting that could've been an email—"
+Visual-verbal mismatch (video) — the line and the image contradict; the brain stays to resolve it.
+Result-first — show the after, withhold the how.
+Question the viewer already asks themselves — verbatim, in their words, not marketing words.
+Hook rules:
+
+No greetings, no intros, no "hey guys", no context, no logos first. Line 1 IS the hook.
+The hook must be honest — clickbait that the body doesn't cash breaks trust and retention.
+For video: the FIRST FRAME is a hook too. Note a visual hook alongside the verbal one.
+Re-hook every 20-30s in longer content (mini open loops: "and that's when it got worse").
+Step 3 — Beat Templates by Format
+Short-form vertical (15-60s: TikTok/Reels/Shorts/UGC ads)
+Hook (0-2s) — one line + arresting first frame.
+Tension (2-8s) — the problem made personal and specific; agitate, don't explain.
+Turn (8-15s) — the discovery/shift; keep it humble ("I didn't believe it either").
+Proof through experience (15-40s) — show, don't claim; 2-3 concrete sensory details; one admitted imperfection.
+Emotional payoff (final 5-10s) — the need resolved, callback to the hook.
+CTA (last 1-2s) — one action, stated plainly, AFTER the payoff, never before. Rule: one idea per script. Cut everything serving a second idea.
+YouTube (5-12 min)
+Cold open hook (0-15s): the payoff promise + why it matters, with stakes.
+Context, minimum viable (15-45s).
+3-5 chapters, each opening with its own mini-hook and closing with a micro-cliffhanger to the next.
+Emotional peak placed at ~70-80% of runtime, not the end.
+Resolution + resonant close; CTA woven in, not bolted on.
+Ad / commercial (15-30s)
+Problem (felt, not stated) → agitation (one twist of the knife) → product as the turn → transformation shown in a human moment (not a feature list) → one-line brand close. Emotion carries the product; the product never carries the emotion.
+
+Explainer / educational
+Question the viewer actually has → why the obvious answer is wrong (tension) → the real answer as a revelation, in an analogy from daily life → one memorable takeaway phrase. Teach through story ("imagine you're...") not definitions.
+
+Dialogue scene / short film
+Every scene: someone WANTS something, something BLOCKS it, and by the end the power balance has SHIFTED. If nothing changed, the scene is dead — cut or rewrite. Enter late, leave early: start the scene as close to the conflict as possible, end on the turn, not the goodbye.
+
+Podcast / two-host conversation
+Write beats, not verbatim lines: talking points + planted disagreements + one personal story per host per segment. Real conversation has interruptions, half-finished thoughts, and "wait, actually—" pivots; script those explicitly or it sounds like alternating monologues.
+
+Step 4 — Making Lines Sound Human
+Write for the ear, not the eye. Read every line ALOUD (or subvocalize). If you'd never say it to a friend across a table, rewrite it.
+Contractions always. "I'm", "don't", "it's". Formal grammar reads as corporate.
+Sentence rhythm: vary hard. A long winding sentence that builds and builds. Then a short one. Fragments too. That's rhythm.
+Cut the throat-clearing. Delete: "In today's video", "Let's dive in", "Without further ado", "As we all know", "In this fast-paced world". Start with the substance.
+Ban marketing dialect in spoken lines: "game-changer", "seamless", "unlock", "elevate", "revolutionary", "must-have", "say goodbye to". Humans don't talk like landing pages.
+One breath per sentence. For voiceover: if the narrator can't say it in one breath, split it.
+Subtext over statement (dialogue): characters rarely say what they mean. "You're wearing that?" carries more than "I disapprove of your outfit."
+Imperfections are texture. A hesitation ("I mean—look."), a self-correction, an unfinished thought make delivery feel real. Use 1-2 per script, not ten.
+Mark performance notes in [brackets]: [beat], [quieter], [half-laugh], [picks it up] — direction is part of the script.
+Step 5 — Quality Checklist (run before delivering)
+ Can I state the ONE feeling and ONE takeaway in a sentence each?
+ Does line 1 work with zero context? (Cover everything after line 1 — would you keep watching?)
+ Is there at least one turn/reversal?
+ Are there ≥3 concrete, specific details (numbers, objects, moments) replacing abstractions?
+ Is there one vulnerability/admission?
+ Read aloud: any sentence you stumbled on gets rewritten.
+ Zero banned marketing phrases in spoken lines.
+ Does the CTA come AFTER the emotional payoff?
+ Does the ending echo the opening (callback) rather than summarize?
+ Word count sanity: spoken pace ≈ 140-160 words/min (so ~35-40 words per 15s, ~75-80 per 30s, ~150 per 60s). Over budget → cut adjectives first, then whole beats.
+Delivery Format
+Deliver scripts as:
+
+Logline — one sentence: who, wants what, against what, feels what.
+Hook options — 3-5 candidates, recommend one with a reason.
+The script — beat-labeled, with [performance notes] and (visual directions) for video formats.
+Alt lines — 1-2 alternates for the riskiest line (usually the hook or the turn).
+Pitfalls
+Starting with context/introductions instead of the hook — the #1 killer.
+Stacking claims instead of showing one lived moment.
+Emotion as adjectives ("it was amazing") instead of structure and specifics.
+CTA before the payoff — feels like a bill arriving mid-meal.
+Writing to impress the client instead of to move the viewer — the client is not the audience.
+Trying to serve two audiences or two takeaways in one script — split into two scripts instead.

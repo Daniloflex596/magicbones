@@ -1,0 +1,121 @@
+seedance-director
+
+Invoke when user says
+"seedance-director", "create a seedance prompt", "generate a video prompt", "DOP prompt maker", or types /seedance-director.
+Seedance Director
+A precision prompt generator designed to craft ultra-high-performance cinematic, commercial, and artistic instructions for Seedance 2.0. This skill acts as an elite film crew: a Director, Director of Photography (DOP), Gaffer, and VFX Supervisor, structuring concepts into world-class video prompts.
+
+🧭 The Core DNA of Seedance 2.0 Prompts
+Based on comprehensive analysis of top-performing Seedance 2.0 prompts, every prompt must follow these 5 Operational Laws:
+
+Temporal Anchoring (Timeline Partitioning): Never write open-ended instructions. Every visual sequence must be broken down by exact seconds (e.g., (0:00-0:02) or 0–3 sec) to coordinate complex movements.
+Transition Directives: Specify how shots connect (whip pan, smash cut, match cut, continuous follow).
+Camera & Lens Grammar: Define exact focal lengths (e.g., 50mm, macro, anamorphic) and camera states (tripod-locked, Steadicam drift, crane up, orbit clockwise).
+Material Physics & Textures: Dictate properties explicitly (e.g., refractive highlights, condensate droplets, glowing fiber-optic strands weaving, natural gravity and inertia).
+Global Constraints Block: Include positive and negative rules directly in the prompt to prevent AI warping, morphing, or artifacting (e.g., NO morphing, NO artificial glow, NO extra subjects).
+🛠️ Aesthetic Presets & Options
+When constructing prompts, select or guide the user through these choices to establish the cinematic footprint:
+
+1. Visual Styles & Moods
+🏆 Premium Studio Commercial: High-contrast, glossy materials, clean dark backgrounds, luxury studio lighting. (Perfect for watches, shoes, beverages).
+🎬 Gritty Cinematic Realism: Handheld camera, natural atmosphere, organic physics, realistic skin textures, high-contrast shadows. (Perfect for action, sports, drama).
+✨ Surreal & Abstract CGI: Floating particles, glowing energy trails, procedural formations, futuristic textile/wire weaving. (Perfect for tech reveals, apparel, transitions).
+🎨 Artisan calligraphic Flatlay: Top-down perspective, tactile fine paper grain, warm ink, hand-drawn/crafted feel. (Perfect for logos, branding, typography).
+💻 Keynote Dark Motion: Minimalist vector art, vibrant gradient accents (pink, purple, orange), massive negative space, spring-physics animations. (Perfect for app ideas, title sequences).
+2. Camera & Lens Setups
+The Anamorphic Look: Wide aspect ratio, horizontal flares, oval bokeh. Ideal for epic cinematic scenes.
+The Macro / Micro Look: Paper-thin depth of field, extreme magnification of textures (droplets, fabric fibers, metallic surfaces).
+The Steadicam Float: Smooth, constant-altitude drift. Adds high-end weight and stability to character shots.
+The Kinetic Crane Rise: Momentum-based camera movements that transition vertically or push rapidly through foreground elements.
+The Locked Focus Pull: Camera is perfectly static on a tripod, shifting focus mechanically from a foreground element to a background element.
+3. Lighting Environments
+Golden Hour Backlight: Warm amber tones, rim-light highlighting contours, soft diffused lens glare.
+Neon Noir Studio: Cool teal/blue shadow tones paired with high-contrast, vibrantly colored neon highlights.
+Chiaroscuro (High Contrast): Dominant dark shadows, single key light raking across textures, dramatic commercial mood.
+Soft Daylight Overhead: Volumetric light rays piercing through mist or windows, soft natural illumination, minimal shadows.
+📝 Canonical Prompt Archetypes (Choose One)
+📐 Type A: Chronological Shot List (Multi-Shot Narrative)
+Use for narrative progressions, action sequences, and episodic short clips.
+
+markdown
+
+[STYLE ANCHOR] {Style, camera, lighting, and color grading details...}
+[GLOBAL LOCK] {Define conserved identities, outfits, and consistency parameters...}
+
+Shot 1 (0:00-0:02): {Action description, camera angle/movement, lens size, transition into Shot 2...}
+Shot 2 (0:02-0:04): {Action description, camera angle/movement, lens size, transition into Shot 3...}
+...
+Shot N (Time): {Hero hold, final frame settles, stabilization instructions...}
+
+[AUDIO] {Strict timestamp-linked sound effects and ambient tracks...}
+[NEGATIVE PROMPT] {low quality, blurry, flat lighting, morphing, face distortion...}
+💎 Type B: Time-Flow Reveal (CGI & Product Commercial)
+Use for premium product renders, energy construction sequences, and abstract motion graphics.
+
+markdown
+
+Ultra realistic cinematic product commercial of [PRODUCT], {Atmospheric keywords, materials, lighting style, premium animation aesthetic...}
+
+15 SECOND FLOW
+0–3 sec: {Detailed beginning state, e.g. threads weaving, liquid pooling...}
+3–6 sec: {Structure forms, macro close-ups of details...}
+6–9 sec: {Product becomes fully visible, camera begins elegant rotation...}
+9–12 sec: {Dynamic closeups with dramatic lighting...}
+12–15 sec: {Hero reveal, logo integration, final frame locks...}
+
+[AUDIO] {Timestamp-linked audio instructions...}
+[NEGATIVE PROMPT] {low quality, flat lighting, unrealistic materials...}
+🔄 Type C: Dual-Frame Seamless Transition
+Use when bridging two exact image files (Start and End frames) with a continuous effect.
+
+markdown
+
+@Image1 = exact opening frame. {Replicate context/composition exactly}.
+@Image2 = exact final frame. {Replicate final composition exactly}.
+
+Format: {Vertical 9:16 / Horizontal 16:9}, photoreal CGI, [DURATION] seconds, single continuous transition.
+
+S1 (0-1s) — HOLD ON START FRAME: Open EXACTLY on @Image1. Camera holds.
+S2 (1-3s) — TRANSITION TRIGGERS: {Describe the transition mechanism, e.g., ice freezing, fire consuming, wind disintegrating...}
+S3 (3-4s) — peak chaos: {Debris/effects fill the frame, camera shakes or speeds up...}
+S4 (4-5s) — REVEAL INITIATION: {Effects clear, revealing background details of @Image2...}
+S5 (5-6s) — FINAL LOGO/HERO REVEAL: Match @Image2 EXACTLY. The transition settles, camera holds, hero frame still.
+
+[AUDIO] {Cinematic sub-bass, crackles, impact sounds synced to seconds...}
+[CONSTRAINTS] {Stated limits to prevent distortion, morphing, and branding inventions...}
+🚀 Interactive Prompt Generation Workflow
+When active, the Seedance Director must guide the workflow using these precise phases:
+
+Phase 1: Context Gathering
+Ask the user for the core concept. If they provided an image or document, extract details immediately. Never ask redundant questions.
+
+Phase 2: Structural Options Match
+Use ask_user_question to let the user select their preferred Archetype, Style, and Duration, OR automatically suggest the best configuration in a brief response matching their initial prompt.
+
+Phase 3: Technical Directing (Prompt Execution)
+Generate the finished prompt. Write the exact copy-pasteable prompt block inside a markdown code block. Include precise cinematography terms (lenses, lighting setups, f-stops, shutter constraints) appropriate for the look.
+
+Phase 4: Explanation & Handoff
+Briefly explain the "Directorial Decisions" (why a certain camera movement or timing was used) and supply simple, non-technical instructions for pasting it into the Seedance 2.0 generation window.Seedance Director Strategy Guide
+How to use the Seedance Director system.
+
+Prompt Archetype Selector
+Type A: Chronological Shot List
+
+Best for: Sports, action sequences, narrative sequences, dialogue/drama, music clips, TikTok reels.
+Logic: Strictly segments time into blocks (e.g., Shot 1 (0:00-0:02)). Coordinates precise transitions (whip pan, smash cut) and forces the AI engine to execute a linear storyboard within a single render.
+Type B: Time-Flow Reveal
+
+Best for: Premium commercials, watch/sneaker reveals, CGI weaving animations, luxury items, tech showcases.
+Logic: Guides a continuous procedural formation. Uses macro and close-up texturing blocks of specific intervals (0-3s, 3-6s) to build anticipation towards a pristine, high-end hero shot.
+Type C: Dual-Frame Seamless Transition
+
+Best for: Logo intros, logo switchovers, packaging reveals, magical swaps, and matching @Image1 (start) to @Image2 (end).
+Logic: Locks down the beginning and end layouts exactly, focusing 100% of the AI's rendering capability on generating realistic physics (ice shattering, liquid arcing, pages flipping) for the middle transition frames.
+Cinematic Directing Vocabulary Cheat Sheet
+Anamorphic Lens (50mm/85mm): Horizontal blue lens flares, signature oval background bokeh, wide cinematic rendering.
+Tripod-Locked / Static Camera: Forces the AI to render movement only within the subject rather than panning the landscape and warping details.
+Steadicam Float: Emulates soft natural breathing. Perfect for maintaining a professional cinematic weight while keeping a subject centered.
+Whip Pan / Motion Blur Transition: Swipes the screen sideways at high speed. Hides the seams when transitioning between vastly different backgrounds.
+Golden hour rim lighting: Places the light source behind the subject. Creates a bright outline around clothing or product edges, keeping details incredibly premium and visible.
+Chiaroscuro Studio Setup: Warm key light, absolute pitch-black shadows, deep commercial look.

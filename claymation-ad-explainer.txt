@@ -1,0 +1,132 @@
+claymation-ad-explainer
+
+version
+1.0
+single music bed
+Seedance 2.0 clips generated SFX-ONLY (no per-clip music), one
+policy-safe educational ad. Extends the video-explainer-workflow with
+3-layer audio
+Claymation Ad Explainer (30s, cohesive soundtrack)
+Markets campaign? Read references/markets-campaign.md FIRST — brand palette hexes, logo element id + diegetic rule, narrator voice_id, the Gray World engine (gray→brand-color awakening format), and Meta script guardrails live there. Choosing/prompting a visual style? references/style-recipes.md — seven proven style-key recipes, their failure modes (incl. Minecraft-vs-GTA low-poly distinction), and the cross-style dopamine rules.
+
+Structure: N blocks × 10s Seedance clips (typically N=3 → 30s). One style key locks the look; clips carry ONLY diegetic SFX; one continuous music bed + per-block VO are mixed in post. Result: music flows across cuts instead of resetting every 10s.
+
+Not just claymation. The pipeline is style-agnostic across handcrafted stop-motion aesthetics — swap ONLY the Phase-1 style key and the STYLE tokens in clip prompts; everything else is identical. Proven keys (full prompts in references/style-keys.md): pastel claymation, retro action-figure sketch-comedy (Robot Chicken-adjacent), vintage marionette/supermarionation noir, felt-and-plush kaiju miniature. When the target look evokes a known show/franchise, DESCRIBE the aesthetic (materials, joints, lighting, era) — never name the show — passes IP moderation while landing the look. Match the music-bed prompt to the style's genre (sitcom tuba/pizzicato for toy comedy, spy-jazz for noir heist, taiko toy-orchestra for kaiju) and, when the visuals have an arc (e.g. day→night→sunrise), write that same arc into the one music-bed prompt.
+
+Phase 0 — Ask (unless already specified)
+Duration (blocks), language, mascot vs faceless, aspect (9:16 for paid social), subtitles on/off, brand/CTA vs purely educational. Pick narrator voice ONCE via ask_user_question entity picker (type: voice); reuse the same voice_id everywhere.
+
+Phase 1 — Style key (reusable across the whole campaign)
+higgsfield_generate_image, model nano_banana_pro, target aspect (e.g. 9:16). Claymation swatch prompt: abstract plasticine shapes, visible fingerprints, warm pastel palette (mint green, butter yellow, coral, sky blue) on cream, matte finish, miniature diorama tabletop, soft diffused lighting, no characters/text/logos. Keep the job id — it is the role:"image" media on EVERY clip. Reuse the SAME key for every angle/variant in the campaign so the world stays consistent.
+
+Phase 2 — Script (ad-policy guardrails)
+One plain spoken line per block, sized ≤ ~9.5s of speech (~18-24 words). Rules:
+
+No jargon; even the product-category name can be omitted (describe the mechanic).
+ALWAYS pair upside with downside in the same breath: "moves your way, you earn; against you, you lose." Never promise profit; "can earn", never "will earn".
+State loss risk plainly once: "you can lose what you put in."
+Close educational: "start small and learn first."
+Brand mention (optional): ONE natural mention in the final block, e.g. "That's how good traders on begin." No CTA pressure, no urgency.
+Plain text only, no parentheticals; spell numbers out.
+Leverage/multiplied-exposure USP (riskiest ad category): frame as mechanism ("you can multiply your exposure", "one stake can move like ten"), never as aspiration ("imagine 10x-ing your position"). Give the downside EQUAL screen time and its own dramatic beat ("it shrinks ten times faster too; one dip can wipe out your stake"). Naming a real ticker is allowed but flag to the client: real-ticker ads draw extra review scrutiny and may require regulator-mandated disclosures on the landing page. State why the stock is hot factually (no price prediction, no "get in now" urgency).
+Comedy variant: absurd deadpan sketch structure sells education — Block 1 = absurd status quo played straight (man carries whole house; heist crew plans for months), Block 2 = effortless contrast (floating past on the price line; bathrobe puppet in and out in seconds), Block 3 = the cocky character eats the downside as the funniest beat (chart drops him on his face), then warm learn-first resolve. Making the RISK beat the biggest laugh makes the disclaimer memorable instead of buried — reviewers and viewers both reward it.
+Phase 3 — Clip prompts (Seedance 2.0, SFX-ONLY audio)
+One prompt per block. Template essentials:
+
+@Image1 is a STYLE reference only — NOT the first frame. Do not open the video on it or reproduce it. Copy ONLY its rendering style: <claymation tokens>.
+Style & Mood / Narrative Summary / Dynamic Description / Static Description / Motion sections. Visual metaphors carry the concept (coin surfing a chart line, vault, signpost up/down, magnifying glass, calendar loop, book + lightbulb close).
+Hook block = highest energy: snap zooms, whip-pans, confetti bursts, squash-and- stretch. Celebrate BOTH directions if the concept is "earn up and down".
+Dopamine visual mechanics (user-validated — apply when asked for "stimulating" / "dopamine" / "engaging" visuals):
+Near-miss staging for FOMO beats: put the reward inches from the character (coins piling on the windowsill by a dangling hand; the phone buzzing right next to fingers) and speed-ramp on the gap. Missing by a mile reads flat; missing by millimeters stings.
+Reward burst on every key action: each tap/win triggers a micro-firework — sparkle arc, coin fountain, confetti halo. Slot-machine cadence of small variable rewards, not one big payoff.
+Loss-as-spectacle: make the mandatory risk beat the most beautiful shot (slow-mo golden glitter burst, satisfying fizz-dissolves) so it gets rewatched instead of skipped — keeps policy balance AND retention.
+Craft carries the dopamine, script stays balanced: gloss, physics, ASMR-crisp SFX, speed ramps in the VISUALS; the SCRIPT keeps earn/lose paired and risk explicit. Never move the hype into the words.
+AUDIO line: "ONLY natural diegetic sound effects from the on-screen actions — . NO music, NO soundtrack, NO melody, no voice, no dialogue."
+NEGATIVE must include: music, background music, soundtrack, melody, opening on the reference image, photorealism, live-action, lip-sync, captions, on-screen text, letters, numbers, logos, watermark. (No text in clips — captions are burned in post.) For risk scenes add: scary imagery, fire, explosion — keep losses cute (token poofs into a soft cloud, deflates like a whoopee cushion).
+Params: duration: 10, resolution: "1080p", aspect_ratio: "9:16", medias [{value: <style key job id>, role: "image"}].
+Moderation note: Seedance can false-flag innocent prompts (a seesaw/lever scene was flagged nsfw once). If a job returns nsfw, reword the metaphor and resubmit — do not fight the same wording twice.
+Phase 4 — Audio (submit in parallel with clips)
+VO: higgsfield_audio_generate, type: "seed_audio", same voice_id per block.
+Music bed: higgsfield_generate_game_audio, model seed_audio, ONE request: "A thirty second continuous instrumental soundtrack for a playful stop-motion claymation ad: bouncy marimba, light ukulele strums, soft woodblock percussion, toy piano accents. Cheerful opening, builds in the middle, resolves warm at the end. Instrumental only, no vocals, mixed to sit under a voiceover." (State the length in the prompt — seed_audio has no duration param.) seed_audio music false-flags: orchestral/documentary-score prompts get rejected as nsfw repeatedly even after rewording (observed 3x on innocent prompts). After ONE rewording attempt fails, switch to the dedicated music model: higgsfield_generate_game_audio with model: "sonilo_music", duration: 30 (it HAS a duration param) — same prompt style, returns .m4a (convert: ffmpeg -i music.m4a -ar 48000 music.wav). Don't fight seed_audio more than twice.
+Special-register narrators (documentary, theatrical): pick a dedicated voice via the entity picker instead of the campaign default — the register carries the piece. Expect slow registers to run LONG (a naturalist take of ~20 words came back 13-17s): budget ~10-14 words per 10s block for slow registers, add speech_rate: 10-12, and re-measure caption timings from the final takes.
+Poll all jobs together with higgsfield_job_status(job_ids=[...]).
+Phase 5 — Assemble (3-layer mix, ffmpeg)
+Download all assets with curl (sequential &&, NOT shell & backgrounding). Check VO durations with ffprobe. If a take > ~9.6s, speed it: atempo=1.04-1.06 (keep result ≤ ~9.4s so it fits the 10s window with padding).
+
+Per block (VO centered-ish via adelay; SFX kept at reduced level):
+
+
+ffmpeg -y -i clipN.mp4 -i voN.wav -filter_complex \
+ "[0:v]trim=duration=10,setpts=PTS-STARTPTS[v];\
+  [0:a]atrim=duration=10,asetpts=PTS-STARTPTS,volume=0.55[sfx];\
+  [1:a]adelay=PAD|PAD,apad[vo];\
+  [sfx][vo]amix=inputs=2:duration=first:normalize=0[a]" \
+ -map "[v]" -map "[a]" -c:v libx264 -crf 17 -preset medium -pix_fmt yuv420p \
+ -c:a aac -b:a 192k -ar 48000 -t 10 blockN.mp4
+PAD (ms) ≈ (10000 − vo_ms) / 2, tweaked so lines start on the action (hook block: smaller pad, ~200-800ms). SFX volume 0.55 when no music baked in clips; use 0.28-0.30 if clips accidentally contain music.
+
+Concat then lay the music bed under everything at 0.32 with an end fade:
+
+
+ffmpeg -f concat -safe 0 -i list.txt -c copy no_music.mp4
+ffmpeg -i no_music.mp4 -i music.wav -filter_complex \
+ "[1:a]volume=0.32,afade=t=out:st=28:d=2[m];\
+  [0:a][m]amix=inputs=2:duration=first:normalize=0[a]" \
+ -map 0:v -map "[a]" -c:v copy -c:a aac -b:a 192k -ar 48000 master.mp4
+Phase 6 — Captions (burned, styled, REAL timings)
+Do NOT estimate caption times from word counts — extract real phrase timings:
+
+audio_analyze each VO wav: "Transcribe verbatim with timestamps at each phrase boundary, 0.1s precision, format: [start - end] text."
+Cross-check with ffmpeg silence detection: ffmpeg -i voN.wav -af silencedetect=noise=-35dB:d=0.2 -f null - (silence gaps = phrase boundaries; trust these over the LLM when they differ).
+SRT line N's time = block_start_offset + adelay_pad + phrase_start. Hold each caption until the next phrase starts (no gaps mid-block). Write the SRT from those measured times, then burn with the sandbox-safe DejaVu font (Whisper/caption scripts may be absent):
+
+ffmpeg -i master.mp4 -vf "subtitles=subs.srt:force_style='FontName=DejaVu Sans,\
+Bold=1,FontSize=13,PrimaryColour=&H00FFFFFF,OutlineColour=&H00463A2E,Outline=2.2,\
+Shadow=0.8,BackColour=&H80000000,MarginV=52,Alignment=2'" \
+ -c:v libx264 -crf 17 -preset medium -pix_fmt yuv420p -c:a copy final_subbed.mp4
+MarginV=52 clears platform UI at 9:16; verify output is 1080x1920.
+
+Phase 7 — Deliver
+higgsfield_upload the final MP4 and present via MEDIA:<cdn_url>. Pause between angles/assets if producing a multi-asset campaign (user preference may require it).
+
+Pitfalls
+assemble_blocks.sh from video-explainer-workflow may not exist in the sandbox — the ffmpeg commands above replace it fully.
+Seedance ignores "no music" occasionally; if a clip comes back with melody, lower its SFX layer to ~0.3 and let the bed dominate.
+Terminal blocks & backgrounding in foreground mode — chain curls with &&.
+Keep total = N × 10s exact; never stretch video, only atempo the VO.
+Stability vs spectacle: ONE spectacle beat per block. Overloading a clip with simultaneous effects (confetti + coins + crowds + speed-ramps) causes morphing bodies, outfit drift, and scale wobble. Spend the effects budget on one money shot; keep cameras locked/slow, one action per vignette, and pin the recurring character's exact painted description in EVERY prompt. Negatives must ban by name: morphing, warping, melting, appearance change, extra limbs, scale drift.
+If a VO take swap happens, re-measure captions from the NEW take (audio timestamps + silencedetect). Never reuse the old take's caption rhythm — that desyncs mid-block.
+Chart direction is semantic — when the VO says crash/dip, spell the line's geometry out (starts top-left, plunges to bottom-right, arrowhead DOWN) and ban the opposite ("rising line, upward arrow") in the negative. The model defaults to up-and-to-the-right.
+Brand worlds: when a brand palette exists, make "the world coming alive" turn INTO the brand colors (hex codes in the prompt). Logos must be diegetic — printed decal on a prop with wear (phone case, mug) — never overlay; ban "floating logo, logo overlay" in negatives.
+Story loop: if block 1 establishes sympathetic characters (hungry devices, gray drones), pay them off in block 3 (they get fed / gain color). Closed loops read as craft and lift completion rates.
+Music beds: Seed Audio false-flags orchestral/cinematic score prompts as nsfw (happened twice, rewording didn't help). Route music beds to the sonilo_music model via higgsfield_generate_game_audio (duration param, m4a out — convert with ffmpeg -i music.m4a -ar 48000 music.wav). Keep seed_audio for VO only.
+Disk-full masquerades as "moov atom not found" in ffmpeg concat/mux. If outputs suddenly fail to probe, check df -h FIRST — the sandbox /home is ~5GB and fills after ~15-20 delivered cuts. Purge working dirs of already- delivered videos (finals live on the CDN); never debug the concat itself.
+Slow character voices run long. Documentary/persona voices pace ~40% slower than the default narrator — cap their lines at ~18 words, use speech_rate 8-18 to trim, and always re-measure. Tighten the SCRIPT before atempo.
+Every block must be kinetic (user standard). No static setup blocks, no "he studies at a desk" endings, no standing-and-watching beats. Cold-open mid-action; deliver exposition over motion; endings are victory laps, not seated study scenes. If a beat can be described as "he sits/stands/waits", rewrite it as movement. Negatives should ban: standing still, static shots.
+One narrator across all blocks for story-driven cuts — switching voices mid-video reads as disjointed; use multi-voice only for interview/confessional formats (mockumentary), where cutaway voices ARE the format.
+New concept = plan first. For a new scenario/angle, present 3-4 written scenario options and let the user pick BEFORE generating — cheaper than re-rolling a wrong concept.
+Music bed false flags: seed_audio (higgsfield_generate_game_audio model seed_audio) repeatedly false-flags rich orchestral/documentary music prompts as nsfw even after rewording. After 1-2 flags, switch to model sonilo_music (pass duration: 30) — same prompt style completes cleanly, returns .m4a (convert: ffmpeg -i music.m4a -ar 48000 music.wav).
+Character voices run long: stylized narrators (documentary/hushed registers) deliver ~40-60% slower than the default voice — first takes can hit 13-17s for a 10s window. Budget ~12-15 words per block for slow voices; TIGHTEN THE SCRIPT to its essential lines rather than atempo-ing past 1.06 (kills the register).
+Mockumentary confessional format (proven): stitched/painted mouths mean no lip-sync is needed — VO reads as interview audio over footage. Grammar per block: ~6s handheld "documentary footage" (snap-zooms, whip-pan to a deadpan look at the lens) + hard cut to ~4s locked-off confessional (plain wall, folding chair, potted plant, stiff gestures). Negatives must ban: moving mouths, lip-sync, talking animation. Works across styles (felt office, low-poly game world).
+ROTATE VISUAL STYLES between cuts — the user rejects style reuse. When asked for "another one", propose a NEW style key rather than defaulting to the last one ("I don't want to do this cloth style again"). Proven recipes in references/style-keys.md. A user reference image → build the style key FROM it (style-only prefix), and translate the campaign's signature beat (world-comes- alive) into that style's native grammar (e.g. low-poly: gray NPC marker blooms gold).
+Seed Audio music-bed prompts can false-flag nsfw on innocuous wording (a 60s bed prompt with "one-shot film ... never stopping" flagged once). Reword neutrally ("for a family-friendly stop-motion animation") and resubmit.
+Batch higgsfield_job_status can return completed WITHOUT the result URL for one job while others carry it — re-poll that job_id individually to get the URL.
+502 on submit = transient origin error; wait ~60s and resubmit the identical request (it will not have been created).
+The same style key image is reusable across a whole multi-angle campaign (and across styles: claymation, action-figure, felt-kaiju, vinyl-toy keys were all one-off nano_banana_pro swatches) — never regenerate a key that already exists.
+Related
+For the "one continuous take" variant of this format (clips chained via extracted last frames instead of parallel blocks), use the single-take-video-chaining skill on top of this pipeline — same audio/caption assembly applies.
+
+VO takes that run >10.5s: do NOT over-atempo (audible chipmunk past ~1.06) — rewrite the line shorter and regenerate (optionally speech_rate 5-8). Happened twice; the re-cut always fit on the first try.
+higgsfield_generate_game_audio rejects a type field inside requests ("invalid parameter type for model 'seed_audio'") — pass only model+prompt. State the desired length IN the prompt text ("thirty second continuous...").
+Transient 502 (Cloudflare origin_bad_gateway) on generate calls: wait ~60s and resubmit just the failed request — not a prompt problem.
+Batch higgsfield_job_status can return a completed job WITHOUT its result URL; re-poll that job_id individually to get the URL.
+Style keys are campaign assets: reuse the same key job id across every angle/ variant in a campaign (claymation, action-figure, marionette, felt, vinyl-candy keys were each reused across multiple videos) — a new style = a new key, a new angle in the same style = same key.
+For a seamless single-take variant of this format, see the single-take-video-chaining skill (last-frame → start-frame chaining).
+higgsfield_generate_game_audio requests take NO type field — passing type: "seed_audio" fails with "Extra inputs are not permitted". Only model, prompt, and the documented audio params.
+Seedance submits can 502 (Cloudflare origin) — wait ~60s and resubmit the SAME prompt; it is transient, not a moderation signal.
+VO takes routinely run long on ~24-word lines (observed 10.8s and 11.8s). If a take exceeds ~9.6s by more than ~1s, REWRITE the line shorter (optionally speech_rate 5-8) and regenerate rather than atempo-ing hard — >1.06 atempo is audible.
+Batch higgsfield_job_status can return a completed job WITHOUT its result URL — re-poll that job_id individually to get the URL.
+
+Copy link
+
+Install

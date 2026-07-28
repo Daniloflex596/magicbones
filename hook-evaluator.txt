@@ -1,0 +1,78 @@
+hook-evaluator
+
+weak hooks with graded alternatives. Trigger phrases
+"is this hook good",
+Hook Evaluator
+Judge a hook the way the feed judges it: a distracted viewer, mid-scroll, gives it well under 2 seconds. The evaluation must be honest, specific, and end with something actionable — never "it's decent."
+
+Step 0 — Intake
+Establish before scoring:
+
+The hook itself — verbatim. If the user gives a whole script/post, isolate the first line (and first visual frame, if video) — that alone is the hook.
+Platform — TikTok/Reels/Shorts (0-2s tolerance), X/Threads (first line before "show more"), LinkedIn (first 2 lines before the fold), YouTube (title + first 15s), Instagram caption (first line above "more").
+Audience — who is scrolling and what do they already care about?
+Goal — views/retention, follows, clicks, replies, or sales? A hook can be great for reach and wrong for conversion.
+If the user gave only the hook with no context, score it anyway with stated assumptions — don't stall with questions for a quick check.
+
+Step 1 — Instant Kill Check
+Fail the hook immediately (score cap: 3/10) if ANY of these are true:
+
+Starts with a greeting or intro — "Hey guys", "Welcome back", "In this video/post...", self-introduction, logo-first.
+Requires context to mean anything — a cold viewer with zero backstory wouldn't parse it.
+Generic-topic opener — announces a subject instead of a tension: "Let's talk about productivity."
+Marketing dialect — "game-changer", "you won't believe", "unlock", "elevate", "revolutionary" in the first line.
+No target — nobody specific would think "that's me / that's for me."
+Front-loaded CTA — asks for a follow/like/click before earning anything.
+Name the exact kill reason(s) in the verdict. One kill = rewrite, not polish.
+
+Step 2 — Scoring Rubric (0-10)
+Score each dimension 0-2, sum to 10:
+
+Scroll-stop force (0-2) — Does it interrupt the pattern? Is there surprise, contradiction, tension, or an unusual specific in the first 5-8 words? (2 = you'd physically stop; 1 = mildly interesting; 0 = wallpaper.)
+Curiosity gap (0-2) — Does it open a loop the viewer needs closed? Is information deliberately withheld — a consequence without a cause, a result without a method? (2 = itch you must scratch; 0 = complete thought, nothing left to learn.)
+Audience lock (0-2) — Would the intended viewer instantly recognize themselves — their words, their fear, their Tuesday? (2 = feels personally addressed; 0 = addressed to "everyone", i.e., no one.)
+Specificity & credibility (0-2) — Concrete numbers, objects, named moments vs. abstractions. Is the promise believable, and can the content actually cash it? (2 = specific AND honest; 1 = specific but borderline clickbait; 0 = vague or a promise the body can't keep.)
+Clarity & speed (0-2) — Understood in one pass, ≤ ~12 words or ~2 seconds spoken, no setup needed, reads at a glance. (2 = instant; 1 = needs a re-read; 0 = confusing or slow.)
+Verdict bands:
+
+9-10 — Post it. Ship as-is; offer one optional micro-tweak at most.
+7-8 — Strong, one fix. Identify the single weakest dimension and fix only that.
+5-6 — Has a spine, needs surgery. The core idea works; the execution leaks attention. Rewrite required.
+0-4 — Rebuild. Wrong foundation; rewriting words won't save it. Re-derive from the content's most surprising element.
+Step 3 — Diagnosis
+For every dimension scoring 0 or 1, state:
+
+WHAT is weak (quote the exact words at fault),
+WHY it loses the viewer (the mechanism: loop already closed, no one addressed, too slow...),
+HOW to fix it (a concrete edit, not advice like "make it punchier").
+For video hooks, evaluate the first frame separately in one line: does the visual hook or contradict/amplify the verbal one? Text-on-screen counts as part of the hook.
+
+Step 4 — Rewrites (mandatory below 9)
+Provide exactly 3 rewritten alternatives, each using a DIFFERENT mechanism, labeled by mechanism, e.g.:
+
+Open loop: start mid-consequence, withhold the cause.
+Direct callout: name the exact viewer in their own words.
+Contrarian flip: assert the opposite of the expected take.
+Result-first: show the after, withhold the how.
+Confession/stakes: lead with an admission or what's at risk.
+Rules for rewrites:
+
+Keep the user's actual content honest — never write a hook the body can't cash.
+Match platform register (LinkedIn ≠ TikTok voice).
+Score each rewrite with the same rubric number so the user sees the delta.
+Recommend ONE and say why in a single sentence.
+Step 5 — Comparing multiple hooks
+When the user brings several candidates: score all with the rubric, present a ranked table (hook / score / one-line reason), declare a winner, and note if two candidates could be A/B tested because they target different mechanisms (curiosity vs. callout).
+
+Output Format
+Verdict line — score X/10 + band ("7/10 — strong, one fix").
+Scorecard — the 5 dimensions with per-dimension score and a ≤1-line note each.
+Diagnosis — only for weak dimensions; quote the guilty words.
+Rewrites — 3 labeled alternatives with scores, one recommended (skip if 9-10).
+Keep the whole evaluation under ~250 words for a single hook. Fast and sharp beats exhaustive.
+Pitfalls
+Grading politely instead of honestly — a 5/10 called "pretty good" wastes the user's reach.
+Judging the hook by the full post's quality — the hook is only the first line/second; great content behind a dead hook still dies.
+Rewriting into clickbait the content can't cash — retention collapse and trust damage cost more than the extra clicks.
+Ignoring platform: a perfect TikTok hook is often a terrible LinkedIn opener and vice versa.
+Giving advice without rewrites — the deliverable is always usable alternatives, not commentary.

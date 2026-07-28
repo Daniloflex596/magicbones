@@ -1,0 +1,84 @@
+premium-ad-posters
+
+Premium Ad and Poster Design
+This skill provides procedural rules and prompts to generate high-end promotional posters, retail/tech ad creatives, Meta Ads, and marketing graphics with text overlays, text integration, and hardware rendering.
+
+Model Route and Fallbacks
+Primary Model: imagegen_2_0 (GPT Image 2.0).
+Posters and advertisements live or die on typography fidelity, hardware precision, layout discipline, and brand alignment.
+Force quality: "high" (crucial for clean text) and resolution: "2k" (or 4k) to get crisp lines on letters, glyphs, and hardware seams.
+Fallback Model: flux_2 (Flux 2) or nano_banana_2.
+Use these models if imagegen_2_0 encounters service rate limits, safety blocks, or is unavailable.
+For flux_2, specify detailed descriptive prompts with embedded layout instructions, as it does not use structural JSON blocks.
+Recommended Aspect Ratios:
+
+1:1 — Square Meta Feed Ads / Carousels
+9:16 — Stories / Reels / Tik Tok Ads
+4:5 — Instagram Feed
+3:4 — Vertical portrait poster
+16:9 — Landscape banner
+Technical & Realism Checklist
+When designing product advertisements with hardware and text integrations, you must actively steer the prompt to avoid common AI glitches:
+
+1. Hardware Integrity & Mechanical Symmetries
+Problem: Smartwatches with asymmetric bezels, dials or crowns that look warped or "melted" into the casing, or strap cords merging seamlessly with the watch chassis.
+Rule: Explicitly instruct the model: "Perfect mechanical symmetry, uniform bezels, clearly defined mechanical parts. The electronic crown/dial must be a distinct physical metal piece with precise ridges, detached from the bezel, and realistic watch strap lugs connecting the band to the chassis."
+2. Screen-Layer UI Integration (No Flat STICKERS)
+Problem: Screen graphics (recording waveforms, digital numbers, or buttons) placed on display glass look completely flat, lack realistic glass-depth, or look poorly composited post-render.
+Rule: Instruct the model: "Render the interface beneath the watch crystal glass. Include subtle natural glare, reflection, and light refraction across the protective glass layer. The illuminated UI elements (waveforms, digits) should realistically emit light from behind the glossy reflective screen glass."
+3. Anatomical Normalcy
+Problem: Wrists that lack bones, mushy transition joints under watches, or distorted fingers when wearing devices.
+Rule: Instruct the model: "Clearly defined wrist bone anatomy (ulnar protrusion), natural knuckles, realistic skin pores, and natural skin textures under soft filtered window daylight."
+4. Background Artifact Safeguards
+Problem: Keyboards, phones, or gadgets in the blurred background having warped keys/buttons or strange proportions, ruining the professional ad vibe.
+Rule: Explicitly direct the background shapes: "Clean uncluttered desk in the background. If any objects like keycaps are in the soft out-of-focus background, they must adhere to standard rectangular forms, or simplify the background to light wooden textures to minimize clutter."
+5. High-Contrast Typography Layouts
+Problem: Captions overlaid directly on light textures (like light-colored wood tables) without enough contrast, making text illegible.
+Rule: Instruct the model: "All text overlay must use clean, modern, dark sans-serif typography with high contrast. Include subtle drop-shadows or ambient occlusions behind the text layers if placed over varied textures for maximum legibility."
+6. Reference Mapping vs. Target Format
+Problem: When users provide an aesthetic reference of a different device (e.g., an iPhone lock screen) but ask for a specific target product (e.g., CarPlay display), generating the referenced device instead of the requested target.
+Rule: Extract and map only the aesthetic properties (typography, color blocking, textures, UI element shapes) strictly onto the requested product's format and environment. Never alter the hero device format to match the reference platform unless explicitly requested.
+Prompt Structure Template
+Structure your prompts logically into distinct segments to help models structure layout and aesthetic requirements correctly:[Subject/Hero]: [Describe the product and hand/model in sharp detail. Add anatomical and structural rules here.]
+
+[Style]: [Premium product photography, soft window light, airy kitchen/office counters, narrow depth of field, calm editorial design, realistic warm tones.]
+
+[Instructions]: [Hardware mechanical symmetries, watch strap lugs definitions, screen depth realism (glare/refraction on crystal), background keyboard shape constraint, clean negative space around headings.]
+
+[Text]: [Specific textual blocks in quotes — headline, subline, subtitle — with exact sizes, weight descriptions, color details, and placement zones (top, bottom, overlay).]
+
+[Constraints]: aspect ratio is [1:1/9:16], no warped buttons, no melted casings, no blurred text, no distorted keys.
+Premium Ad & Poster Prompt Generation Examples
+Here are prompt templates and real verified prompts tailored for maximum hardware, anatomical, and screen realism across image models (imagegen_2_0, flux_2 etc.)
+
+Example 1: 1:1 Smartwatch Meta Ad (Clean Minimalist UI)
+Prompt
+[Subject/Hero]: A premium, macro close-up photograph of a person's wrist wearing a high-end black metal smartwatch. The hand is resting gently flat against a light oak wood home office desk surface, showing natural knuckles, realistic skin pores, fine hand hairs, and a clearly defined wrist bone protrusion (ulna).
+
+[Style]: Ultra-realistic product catalog photography, commercial tech advertisement aesthetic. Soft window daylight casting gentle shadows, airy soft-focus depth of field, calm editorial design, relaxing neutral tones.
+
+[Instructions]: The smartwatch must have perfect mechanical symmetry, a uniform clean black bezel, and a physical digital dial on the right that is a distinct, precision-engineered metal component with ridges, separate from the chassis. The watch band must attach cleanly via realistic watch lugs. Create realistic screen depth: render the glowing interface behind a glossy crystal glass screen, integrating a subtle natural curved window reflection and realistic light refraction across the surface. No distorted keys or clutter on the desk.
+
+[Text]:
+
+On the smartwatch screen (glowing beneath the glass): A dark voice-recording interface showing a glowing soft-purple voice waveform, a small vibrant red "Recording" dot, a digital timer "00:08", a paired minimal pause and a red stop icon.
+At the top header of the graphic: A dominant, bold dark sans-serif headline reading "AI Note Taker" with a smaller "for Smartwatch" underneath.
+In the lower-third zone: A clean high-contrast subtitle "Dump the thought to your watch — clear your head." in modern sans-serif typography.
+On a small, modern translucent pill-shaped glass badge overlay: "Deep-thinking AI" beside a subtle spark glyph.
+In the bottom border: A clean small official "Download on the App Store" badge.
+[Constraints]: aspect ratio 1:1, no melted buttons, no warped circular dial, no asymmetrical watch casings, no garbled letters, no distorted keyboard elements.
+
+Example 2: 9:16 Vertical Story Poster (Smartphone / Tech Drop Ad)
+Prompt
+[Subject/Hero]: Premium studio close-up photograph of a sleek premium smartphone being held vertically by a model's hand, displaying the vivid glossy rear casing glass reflecting warm soft studio colors.
+
+[Style]: Modern cinematic tech poster, luxury editorial aesthetic. Dark indigo and burnished copper color palette, dramatic volumetric studio side-lighting, organic moody reflections, sharp focus on the phone's metallic edges.
+
+[Instructions]: Clean symmetrical smartphone structure. The multiple rear camera lenses must be distinct, perfect circles with deep optics reflections inside them, never distorted. The model's holding fingers must have realistic anatomical nails, knuckles, and accurate proportions. Ensure the background is a smooth, clean dark-textured gradient studio backdrop with zero artifacts or floating shapes.
+
+[Text]:
+
+Main Headline in the top-center zone, in massive bold geometric sans-serif: "REDESIGNED."
+Secondary subhead below the headline: "The Speed of Intellect."
+Bottom footer caption: "Fall 2026. Preorder Now."
+[Constraints]: aspect ratio 9:16, no double hands, no overlapping screens, no warped camera lenses, no messy text halos.

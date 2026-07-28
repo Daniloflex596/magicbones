@@ -1,0 +1,52 @@
+vinyl-print-graphics
+
+Vinyl, Silhouette/Cricut Plotter & Silkscreen Design Guide
+This skill defines the workflow, architectural guidelines, prompt structures, and pitfalls when generating graphics designed for execution using physical cutting machines (vinyl plotters, HTV, Cricut, Silhouette, CNC laser cutters) or manual screen-printing setups (such as Kanten's manual silkscreen press).
+
+Trigger Conditions
+Use this skill whenever the user's request mentions any of the following:
+
+"HTV", "Heat Transfer Vinyl", "vinyl", "plotter", "cutter", "Cricut", "Silhouette".
+"Silkscreen", "screen printing", "sérigraphie", "manual print", "ink press".
+"Stencil", "stamp", "linocut", "woodblock print" (where the output is a standalone apparel/print graphic).
+Core Operational Directives
+1. The Hard Vector-Compatible Rule
+Physical vinyl cutting and silkscreening require flat, connected areas of solid solid ink.
+
+Backgrounds: ALWAYS specify a flat, solid, plain white background or solid black background. The background must never contain any textured paper grain, drop shadows, fabric mockups, or model figures.
+Ink / Graphic Representation: Specify solid pure black artwork, high contrast monochrome vector graphic style, or flat 2D silhouette design.
+Zero Thresholding Room: Tell the model: no grays, no colors, no gradients, no shading, no drop shadows, no t-shirt mockup, no fabric texture, no photorealism.
+2. Weeding & Line-Weight Safeguards
+When vinyl designs are cut, a human must "weed" the waste vinyl. Lines that are too thin, detached, or consist of tiny floating dust particles will tear, shift, or fail to adhere.
+
+Stroke Weight: Command thick clean lines, bold geometric solid paths, high contrast silhouettes.
+Structural Integration: If a design is intricate (like radiating spoked lines, op-art meshes, or high-contrast grids), instruct the model to: make paths continuous, avoid floating dust particles, widen fine lines for clean cuts, ensure lines are thick enough to cut and weed.
+Execution Step-by-Step
+Step 1: Route to the Right Model
+Use imagegen_2_0 (using quality: "high" and resolution: "2k") if the vinyl design requires:
+Precise typography / numeric coordinates / brand names.
+Architectural axes, grids, alignment rulers, borders, or blueprint markers.
+Perfect geometric shapes and crisp mathematical symmetry.
+Use nano_banana_2 (using resolution: "2k") if the vinyl design requires:
+Organic/hand-drawn illustrations, character portraits, stencils, or botanical lines.
+Modification or style redirection of an existing uploaded graphic.
+Step 2: Formulate the Prompt
+Structure your prompt clearly using these four pillars:
+
+Subject: The core element (e.g., Kanten optical sphere, anatomical hands holding a rose, a minimalist botanical outline).
+Style: Monochrome vector, flat 2D screenprint motif, high-contrast silhouette, op-art bold line art.
+Instructions: Grid placement, border containment, typography rendering. Specifying line strength: "Ensure all black lines are thick, bold, and continuous so they are vector-plotter ready."
+Constraints: "Absolutely no colors, no shades of gray, no gradients, no shadows. Background must be a solid, featureless pure white sheet. No mockup."
+Common Pitfalls & Solutions
+Pitfall	Cause	Solution / Fix
+Fuzzy/Pixelated Typography	Standard model settings blur tiny letters, making vectorization fail.	Force model: "imagegen_2_0", "quality": "high", "resolution": "2k". Bold the layout style instructions.
+Gradients or "Halftones"	Stylized results use stippling or multiple dot densities, which plotter blades cannot cut.	Add to prompt: absolutely no stippling, no screentones, no halftones, no tiny dots, solid black shapes only.
+Separated Floating Specks	Disconnected design elements fall off during vinyl transfer.	Instruct the model to: ensure all elements connect to a main central structure / axis / line, merge disconnected floaters into solid shapes.
+Fabric Mockup on T-Shirt	Model places the graphic onto a model's back or a folded t-shirt wrinkling the visual.	Add constraint: no garment mockup, no t-shirt mockup, no human model, flat scan design only.
+Example Prompt Scaffolding (Technical / Urban Minimalist)
+text
+
+[Subject]: A minimalist 2D industrial graphic. Centered is [insert core subject].
+[Style]: High-contrast monochrome vector style, clean flat black ink and pure white space.
+[Instructions]: Bold and distinct geometric linework. A thin vertical structural axis runs alongside the element. Include precise, clean monospaced text reading: "[exact text]" underneath.
+[Constraints]: Absolutely flat scan. Plain solid white screen background. No color, no gray, no halftones, no t-shirt mockup, no model, no shadows. All lines must be thick, continuous, and robust for plotter cutting and vinyl weeding.

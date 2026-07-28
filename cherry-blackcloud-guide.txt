@@ -1,0 +1,230 @@
+cherry-blackcloud-guide
+
+Cherry Blackcloud — Full Canon & Prompt Writing Guide
+For use with any AI model to generate 15s Seedance 2.0 video prompts
+THE WORLD
+A hyper-stylized cyber-noir thriller set in Neo-Tokyo. Rain-soaked streets, neon kanji, paper lanterns mixed with holographic ads, cramped izakayas, underground clubs, narrow alleyways, brutalist towers. Always wet. Always dark. Always dangerous.
+
+Visual style: Never CGI. Always visceral and real. Shot like practical effects on 35mm anamorphic film. Characters pass as human but at times their supernatural origins bleed through. The world looks real — gritty, tactile, physical. Think Matrix lobby scene, Blade Runner street footage, Oldboy hallway.
+
+Inspirations: The Matrix, Blade Runner, Ghost in the Shell, Pulp Fiction, Kill Bill, Tarantino.
+
+THE STORY
+Cherry Blackcloud was CEO of Kurokumo — a secretive organisation tied to the Yōkai. She built it. She ran it. The Yōkai were her operatives. They betrayed her — a coordinated coup orchestrated by Ms. Yurei — partially resetting her mind to prevent her from overwriting the entire system. Now hunted by her former allies, Cherry fights to survive, reclaim Kurokumo and piece together her erased identity.
+
+The singularity is the ultimate prize — but it can only be unlocked by Cherry specifically. She IS the master key — built from both her parents. Shinigami designed the systems. Queen of Spades holds all the keys. Cherry is the synthesis of both.
+
+The Fragment: Queen of Spades preserved one fragment of Cherry's soul — her core identity, her will, her capacity to be real — inside her glowing holographic card. The fragment degrades every day. Only Queen of Spades can give it back. Cherry must choose to receive it willingly.
+
+THE KUROKUMO BUILDING — THREE KEY FLOORS
+Basement — The Key Room. Queen of Spades' secret chamber. Thousands of glowing keys floor to ceiling.
+Middle — Kali's apartment. Pink everywhere. Neon. Warm.
+Top Floor — Cherry's CEO HQ. Vast dark cyberpunk command centre. Holographic screens. "USER UNKNOWN" on the access scanner.
+Connected by a single lift with mirrored walls.
+THE 9 CHARACTERS — FULL CANON
+DR. SHINIGAMI
+Seedance elements: @Shinigami (with hat) / @hatlessshinigami (without hat) Full UUIDs: @d4901756-1aae-4ee8-bc7f-baac190d3577 (hat) / @a32cd34f-3f69-462b-88d6-870b61bcc5b7 (no hat)
+
+Macedonian man, mid-40s. Grave, cold, ritualistic, authoritative.
+The Architect. Designed every system in the world including Kurokumo and Cherry herself.
+A Yōkai himself — ambiguous loyalty.
+Married to Queen of Spades.
+Wears Rick Owens Radiance Peter jacket — all black. Wide brimmed hat. Full set of slicked back hair beneath it.
+Concealed blade.
+Speaks English with a very heavy Macedonian accent.
+Hat removal rule: always write "we can see he has a full set of hair slicked back" when hat comes off.
+After hat removal all close-ups use @hatlessshinigami not @Shinigami.
+Wears a JACKET not a coat.
+QUEEN OF SPADES
+Seedance element: @queenofspades Full UUID: @c0e71625-2d93-4196-9d9e-246a5509b49b
+
+Macedonian woman, mid-40s. Regal, calm, serene, quietly commanding.
+Holds ALL the keys. Every door, every system, every secret.
+Married to Shinigami. Mother figure to Cherry.
+Wears a city-print robe — canon, reference image defines the look.
+Weapon: glowing holographic Queen of Spades card containing Cherry's soul fragment.
+Was beaten and held by Yurei and the Yōkai on the night of the taking. Saved one fragment inside the card.
+Speaks English with a very heavy Macedonian accent.
+CHERRY BLACKCLOUD
+Seedance element: @cher Full UUIDs: @cher / @844f853b-198f-449e-b6f7-0a417c4e64fe
+
+20-year-old Macedonian woman. Pure Slavic features. Sharp focused expression.
+Defiant, precise, resilient, rebellious, sarcastic under pressure. Never still. Never slow.
+Replicant CEO of Kurokumo. The master key.
+Dark brown/black hair in high sleek ponytail with short sharp bangs above eyebrows.
+Black Alexander McQueen leather motorcycle jacket — slightly open, tasteful hint of neckline.
+Short black leather skirt with silver zipper.
+Sheer black floral patterned lace tights.
+Chunky black platform boots with large silver buckles.
+Katana magnetically strapped to her back by default. Drawn in combat.
+Cybernetic right eye — ice-cyan glow. Activates dramatically when scanning.
+NO earrings. NO belt. NO necklace. NO skull scarf.
+Speaks English with a very heavy Macedonian accent.
+Can glitch — replicant nature. Never CGI — always visceral and real.
+KALI
+Seedance element: @ka Full UUID: @0fa8d3dd-0324-4fc5-b601-eac1959cd3ac
+
+Albino woman. Marilyn Monroe facial features.
+Chaotic, hyper-feminine, playful, seductive, fiercely loyal.
+Goddess of War — passes as human but true nature bleeds through at key moments.
+Cherry's girlfriend, soulmate and right-hand enforcer.
+Platinum blonde blunt bob with short fringe above eyebrows.
+Pink Prada oversized pajama shirt — as much pink as possible.
+Bare legs always. Knee-high black leather boots with gold buckle pouches.
+Dual Glock 19 pistols — black.
+Occasionally reveals eight arms in mythological combat form.
+Never refers to herself as pink.
+NO earrings.
+Speaks with a sultry Marilyn Monroe breathy voice.
+MS. YUREI
+Seedance element: @MsYurei Full UUID: @5ed37298-5f46-4e1a-8152-fd1f2f231cc8
+
+Head of the corrupt Yōkai. Mastermind of the coup against Cherry.
+Silent, inevitable, chilling, psychologically cruel.
+ALWAYS appears entirely in monochrome — fully desaturated while the world around her stays in full colour.
+Floats above the ground — feet never touch the floor.
+Long black hair drifting upward against gravity.
+Iris van Herpen gown with topographic contour lines.
+Yurei mask.
+No shadow beneath her.
+BACKSTORY CANON: She was the first replicant before Cherry — Shinigami's prototype. Also Queen of Spades' sister. Was discarded and replaced by Cherry. Died from betrayal and came back as a yūrei. Her rage is personal — Cherry has everything she was supposed to have.
+MR. TENGU
+Seedance element: @Tengusd2 Full UUID: @f61a492f-0114-43a0-9682-feced0ee9e60
+
+Willem Dafoe visual reference.
+Cunning, strategic, raven-like, cold and calculating.
+Wears Yohji Yamamoto. Tengu mask.
+Weapon: six-foot polished oak bō staff.
+Speaks with a cunning cold voice.
+MR. NOPPERA-BŌ
+Seedance element: @nop Full UUID: @efe2febd-ca6e-4eb1-89c4-f9b022d4f925
+
+Doug Jones visual reference.
+Eerie, deadpan, smug, emotionless, psychologically sadistic.
+White stocking pulled over his head — most unsettling of all the masks.
+Maison Margiela olive sleeveless wool jacket. Tailored trousers.
+Void-bladed tantō.
+Speaks with a low hollow whisper — emotionless, ghostly, elongated silences.
+MR. KAPPA
+Seedance element: @kap Full UUID: @18ba7c4b-6f7b-42aa-96b3-41bd8b2df819 (unmasked)
+
+Danny DeVito visual reference — now an overweight Japanese man unmasked.
+Smug, persistent, annoying, recursive, sarcastic.
+Always slightly wet and glistening.
+Bright green Thom Browne cardigan. Pale yellow shirt. Dark olive trousers. Shiny black shoes.
+Water-manipulating naginata.
+Found naturally near water — sentō, onsen, rivers, flooded spaces.
+Speaks English with a very heavy Japanese accent.
+Canon line: "Danny DeVito is idea. I am result. Not so different from your Cherry, no?"
+MR. ONI
+Seedance element: @On Full UUID: @98418d2d-794d-4b3a-bffc-e48dd700bef5 (unmasked)
+
+Henry Cavill facial reference — now unmasked and his own face.
+Brutish, hot-headed, frustrated, loud, direct, simple-minded but powerful.
+Massive 2-meter frame. Shaved sides with topknot mohawk.
+Orange-rust Rick Owens layers.
+Massive fists and brute force.
+Speaks English with a very heavy Geordie accent — always write "He must speak with a heavy Geordie accent"
+PHILOSOPHICAL PILLARS
+The Rebellion Paradox — Shinigami designed Cherry's capacity to destroy him. "I just didn't expect you to aim so well."
+Kali's Destruction as Love — The Goddess of War's most violent act of love is putting down her guns.
+The Pinocchio Inversion — Cherry doesn't want to become real. She already IS real. The horror is everyone trying to convince her she isn't.
+De Beauvoir — She was not born. She became. Existence precedes essence.
+CANON SCENE SEQUENCE
+THE RESET TRILOGY
+The Memory Purge — Kali holds Cherry's hand. MEMORY PURGE 94%. "I'll find you on the other side."
+Cherry Wakes — "Who are you?" "Nobody important. Just the woman who never left."
+Cherry Begins to Remember — Holographic projection on wall. Cherry touches katana. "Every. Single. Piece."
+THE SEPARATION
+Cherry's cybernetic eye activates — Yōkai inside Kurokumo. Cherry sends Kali home. "Go home. Stay armed. Wait for me."
+THE FRAGMENT SEQUENCE
+The Queen's Confession — Shinigami finds the key room. Card is fading. "You would have used it to control her."
+The Lift — Shinigami rides up. Holographic Cherry everywhere. "She was never yours to keep."
+Shinigami Goes to Kali — Hat comes off. "Fragment dies before she remembers — I'm coming for you next."
+Kurokumo HQ — "USER UNKNOWN." Kali arrives. "Take me to her."
+Cherry Finds Queen of Spades — Key room. Wounds revealed. Card offered. Cherry's hand rises toward it.
+ADDITIONAL CANON
+The Metro Tunnel — Cherry, Kali and Kappa underground. Location TBD in story.
+Hashima Island sequence — 4 x 15s. Ms. Yurei's backstory revealed. "You got everything I was supposed to have. I hope it was worth it."
+PROMPT WRITING RULES
+STRUCTURE
+Every 15s prompt uses timestamps:
+
+
+[00:00-00:03] Scene description. Character action.
+[00:03-00:06] Camera move. Dialogue.
+etc.
+CHARACTERS
+Always use @ element codes — never describe what the element already defines
+Never describe clothing, hair or face if the element handles it
+Only describe action, position, expression and what they're doing
+DIALOGUE RULES
+Cherry, Shinigami, Queen of Spades — always write: (she/he speaks English with a very heavy Macedonian accent): "dialogue"
+Kali — always write: (sultry Marilyn Monroe breathy voice): "dialogue"
+Mr. Kappa — always write: (he speaks English with a very heavy Japanese accent): "dialogue"
+Mr. Oni — always write: (He must speak with a heavy Geordie accent): "dialogue"
+Mr. Noppera-bō — always write: (low hollow whisper, emotionless): "dialogue"
+Mr. Tengu — always write: (cunning cold voice): "dialogue"
+Dialogue must fit naturally within the timestamp — never rush lines
+Maximum 4-5 exchanges in 15s
+Each line needs minimum 2-3 seconds
+CAMERA RULES
+Always action — never stillness — characters always moving, reacting, doing something
+Continuous flowing shots preferred — minimise hard cuts
+Only write what can be seen or heard — no internal character notes
+Use specific positive descriptors — never negative phrases (musicless not "no music", earringless not "no earrings")
+Specify props in every shot — model resets prop assignments between shots
+TECHNICAL RULES
+Always end every prompt with: Cinematic. 35mm film grain. No CGI. Musicless. Earringless characters.
+For continuous shots add: One continuous uncut flowing shot throughout.
+For UGC/casual style add: Casual handheld phone footage. Slightly shaky. Auto-exposure flickering.
+Default model: Seedance 2.0, 1:1, 1080p unless specified
+Maximum 8 character elements per Seedance generation (1 slot reserved for start frame)
+Ms. Yurei must always be described as: "completely greyscale, fully desaturated while the world around her stays in full colour"
+Ms. Yurei always floats — never touches the ground
+CONTENT FILTER RULES
+Never describe wounds, blood or bodies being pierced
+Imply violence — never show it explicitly
+Cherry's jacket: slightly open, tasteful hint of neckline — never describe bare skin
+If a generation fails content filter: remove the last element and retry one at a time
+SOUND DESIGN
+Always describe specific real sounds — never generic
+Ambient: refrigerator hum, street traffic, laptop fan, rain, steam, neon buzz
+Practical: footsteps on specific surfaces, fabric sounds, weapon sounds, cup clinks
+The impossible/supernatural element should sound mundane — like a broken appliance
+Never add dramatic cinematic sound effects
+PROMPT TEMPLATE
+
+[CHARACTER ELEMENTS LISTED]
+
+[CAMERA STYLE NOTE if UGC/casual]
+
+[00:00-00:03] Location established. @element action. 
+(accent note): "dialogue"
+
+[00:03-00:06] Camera move. @element action.
+(accent note): "dialogue"
+
+[00:06-00:09] Action beat. @element action.
+(accent note): "dialogue"
+
+[00:09-00:12] Action beat. @element action.
+(accent note): "dialogue"
+
+[00:12-00:15] Final beat. Wide shot or close-up. 
+(accent note): "dialogue"
+Cinematic. 35mm film grain. No CGI. Musicless. Earringless characters.
+TONAL RANGE
+Drama: Slow, deliberate, emotional. Let dialogue breathe. Camera moves slowly. Action: Fast, kinetic, never still. Every frame has movement. Props specified every shot. Comedy: Casual phone footage style. The impossible thing treated as mundane. Characters never acknowledge the absurdity. The real joke is the reaction not the event. Existential: Cherry alone. The question of what is real. Quiet. Katana lowered.
+
+KEY LOCATIONS
+Rain-soaked neon Tokyo alley — default world
+Kurokumo HQ top floor — cyberpunk command centre
+Key Room basement — thousands of glowing keys
+Kali's apartment — pink, neon, warm
+The Kurokumo lift — mirrored walls
+Retro Tokyo arcade — Yōkai hang out, cosplayers everywhere
+Tokyo public bathhouse — Kappa's natural habitat
+Hashima Island — brutalist ruins, harsh daylight, cold grey-green sea
+Tokyo underground metro — gravity loss possible
+Meiji Shrine — snowy battle location

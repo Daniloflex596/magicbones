@@ -1,0 +1,27 @@
+asset-extraction
+
+Asset Extraction Workflow
+When a user requests isolated PNGs, UI elements, or objects with a transparent background (e.g., "give me just the cards", "isolate the elements as a PNG"), use this chroma-key masking technique. Standard generation often bakes in shadows or soft edges that make background removal messy; forcing a green screen yields perfect cutouts.
+
+Trigger Conditions
+User asks for UI cards, objects, or elements on a transparent background.
+User complains about poor edges or lost details when you previously tried to use higgsfield_remove_background directly on a complex scene.
+The task requires layering multiple generated elements cleanly (compositing).
+Workflow Steps
+1. Generate on Chroma-Key Green
+Instead of trying to extract an object from a complex scene, generate the object by itself on a green screen. Use higgsfield_generate_image (usually with gpt_image_2) and append these strict constraints to your prompt:
+
+"isolated on a solid, uniform, bright chroma-key green background."
+"Absolutely NO shadow, no glow, and no lighting gradient on the background. The green background must be perfectly solid and uniform."
+"Razor-sharp, extremely clean, distinct, and well-defined borders against the green background."
+Note: If generating UI cards, explicitly command them to be "flat, perfectly straight (0 degrees rotation)" if the user needs standard assets.
+
+2. Remove the Background
+Take the media_id of the resulting green-screen generation and pass it to the higgsfield_remove_background tool. Because the background is solid and sharply contrasts with the foreground object, the AI background remover will perfectly cleanly strip the green, leaving razor-sharp edges and no artifacts.
+
+3. Deliver
+Upload the final output from the background remover using higgsfield_upload and deliver the transparent PNG to the user.
+
+Pitfalls to Avoid
+Baking in drop shadows: If the prompt includes "soft drop shadow", the shadow will cast onto the green background, and the background remover will struggle to separate the semi-transparent shadow from the green pixels, causing a muddy edge. Explicitly forbid shadows on the background.
+Multiple objects overlapping: If you need individual assets, generate them in separate 1:1 ratio requests rather than all clustered on one green screen, or ensure they are spaced far apart.
