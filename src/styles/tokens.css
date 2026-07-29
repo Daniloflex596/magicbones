@@ -90,9 +90,46 @@
   --font-body: 'Jost', system-ui, sans-serif;
   --font-flash: 'Pirata One', cursive;
 
-  /* --- Ritmo --- */
-  --radius-md: 0.5rem;
-  --radius-lg: 1rem;
+  /*
+   * --- Scala di spaziatura -------------------------------------------------
+   * Multipli di 0.125rem (2px). Serve a non inventare piu valori: un audit ne
+   * aveva contati 85 fuori scala (0.6, 0.7, 0.85, 1.4...), che e il segnale
+   * che le distanze sono state scelte a occhio una per una invece che da un
+   * sistema — e si vede, perche niente si allinea con niente.
+   */
+  --s-1: 0.25rem;   /*  4px */
+  --s-2: 0.5rem;    /*  8px */
+  --s-3: 0.75rem;   /* 12px */
+  --s-4: 1rem;      /* 16px */
+  --s-5: 1.25rem;   /* 20px */
+  --s-6: 1.5rem;    /* 24px */
+  --s-8: 2rem;      /* 32px */
+  --s-10: 2.5rem;   /* 40px */
+  --s-12: 3rem;     /* 48px */
+  --s-16: 4rem;     /* 64px */
+  /* Bersaglio minimo per il dito. Non e una spaziatura: e una soglia. */
+  --tocco: 2.75rem; /* 44px */
+
+  /*
+   * --- Gerarchia dei raggi -------------------------------------------------
+   * Il 65% dei raggi era "pillola" (999px). Arrotondare tutto al massimo
+   * segnala "amichevole" e cancella ogni gerarchia — e uno dei marcatori
+   * dell'interfaccia generata invece che progettata.
+   *
+   * Il linguaggio giusto per Magic Bones viene dal SUO materiale: i biglietti
+   * da visita sono rettangoli a spigolo vivo, il logo e un nastro squadrato, e
+   * l'osso e duro e intagliato. Quindi raggi PICCOLI quasi ovunque; la pillola
+   * resta solo dove e davvero una pillola (il badge, che cita il nastro del
+   * logo) e il cerchio dove e davvero un cerchio.
+   */
+  --r-sm: 2px;      /* bordi appena smussati: campi, chip */
+  --r-md: 5px;      /* pannelli e superfici */
+  --r-lg: 10px;     /* contenitori grandi */
+  --r-pill: 999px;  /* SOLO badge ed elementi circolari */
+
+  /* Alias storici, mantenuti per non rincorrere ogni chiamata. */
+  --radius-md: var(--r-md);
+  --radius-lg: var(--r-lg);
 
   /* --- Bagliori: il fungo illumina davvero il terreno intorno --- */
   --glow-amanita: 0 0 32px rgba(232, 64, 44, 0.42);

@@ -99,7 +99,7 @@ export function GalleryPreview() {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
           grid-auto-rows: 10rem;
-          gap: 0.85rem;
+          gap: 0.875rem;
         }
         @media (max-width: 720px) {
           .gp-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 8rem; }
@@ -126,14 +126,14 @@ export function GalleryPreview() {
         .gp-tile__btn:hover img, .gp-tile__btn:focus-visible img { transform: scale(1.05); }
         .gp-tile__caption {
           position: absolute; left: 0; right: 0; bottom: 0;
-          padding: 1.6rem 0.85rem 0.7rem;
+          padding: 1.5rem 0.875rem 0.75rem;
           background: linear-gradient(transparent, rgba(5,6,11,0.85));
           font-family: var(--font-body); font-size: 0.74rem; line-height: 1.35;
           color: rgba(228, 217, 184, 0.92); text-align: left;
         }
         .gp-tile__inner {
           height: 100%; display: flex; flex-direction: column;
-          align-items: center; justify-content: center; gap: 0.4rem;
+          align-items: center; justify-content: center; gap: 0.375rem;
           padding: 1rem; text-align: center;
         }
         .gp-tile__play {
@@ -165,7 +165,7 @@ export function GalleryPreview() {
         }
         .gp-lightbox figcaption {
           font-family: var(--font-body); font-size: 0.85rem;
-          color: rgba(228, 217, 184, 0.8); margin-top: 0.9rem; text-align: center;
+          color: rgba(228, 217, 184, 0.8); margin-top: 0.875rem; text-align: center;
         }
         .gp-lightbox__close {
           position: absolute; top: 1.2rem; right: 1.4rem;

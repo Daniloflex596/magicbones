@@ -69,7 +69,7 @@ export function ProductGallery({
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          gap: 0.6rem;
+          gap: 0.625rem;
         }
         .gallery__frame img {
           width: 100%;
@@ -91,7 +91,7 @@ export function ProductGallery({
         }
         .gallery__thumbs {
           display: flex;
-          gap: 0.6rem;
+          gap: 0.625rem;
         }
         .gallery__thumb {
           width: 3.25rem;

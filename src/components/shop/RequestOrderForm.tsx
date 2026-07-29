@@ -101,21 +101,21 @@ export function RequestOrderForm({ items, onSent }: { items: CartItem[]; onSent:
       </div>
 
       <style>{`
-        .order-form { display: flex; flex-direction: column; gap: 0.9rem; }
+        .order-form { display: flex; flex-direction: column; gap: 0.875rem; }
         .order-form label {
-          display: flex; flex-direction: column; gap: 0.3rem;
+          display: flex; flex-direction: column; gap: 0.25rem;
           font-family: var(--font-body); font-size: 0.85rem; color: var(--bordeaux);
         }
         .order-form input, .order-form textarea {
           font-family: var(--font-body); font-size: 0.9rem;
-          padding: 0.6rem 0.75rem; border-radius: var(--radius-md);
+          padding: 0.625rem 0.75rem; border-radius: var(--radius-md);
           border: 1px solid rgba(90, 30, 38, 0.25); background: #fffdf9; color: var(--bordeaux);
           resize: vertical;
         }
-        .order-form__actions { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 0.4rem; }
+        .order-form__actions { display: flex; flex-direction: column; gap: 0.625rem; margin-top: 0.375rem; }
         .btn {
           font-family: var(--font-body); font-size: 0.9rem; font-weight: 500;
-          padding: 0.7rem 1rem; border-radius: 999px; cursor: pointer; border: 1px solid transparent;
+          padding: 0.75rem 1rem; border-radius: var(--r-sm); cursor: pointer; border: 1px solid transparent;
         }
         .btn--primary { background: var(--bordeaux); color: var(--paper-warm); }
         .btn--ghost { background: transparent; color: var(--bordeaux); border-color: rgba(90, 30, 38, 0.3); }

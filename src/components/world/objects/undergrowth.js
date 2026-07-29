@@ -53,19 +53,34 @@ export function createUndergrowth(scene, { tier = 'high' } = {}) {
   // --- Terreno ---------------------------------------------------------------
   // Un piano ondulato: le radici e i dislivelli si leggono meglio della
   // superficie piatta, e costano solo qualche vertice.
-  const groundGeo = new THREE.PlaneGeometry(26, 32, 40, 48);
+  // Grande e mosso. Prima era 26x32 e quasi nero: oltre il bordo si vedeva il
+  // vuoto, e il terreno stesso leggeva come un buco. Ora arriva oltre la
+  // nebbia, cosi il suolo finisce dentro la foschia e non su uno spigolo.
+  const groundGeo = new THREE.PlaneGeometry(90, 90, 90, 90);
   const pos = groundGeo.attributes.position;
+  const colori = [];
+  const terra = new THREE.Color(0x3b2f5e);
+  const muschio = new THREE.Color(0x4d4a1e);
   for (let i = 0; i < pos.count; i++) {
     const x = pos.getX(i);
     const y = pos.getY(i);
+    // Dossi a piu frequenze: radici, avvallamenti, grumi. Un piano liscio si
+    // legge come pavimento, non come terreno.
     const h =
-      Math.sin(x * 0.55) * 0.14 +
-      Math.cos(y * 0.42) * 0.11 +
-      (pseudo(i * 1.7) - 0.5) * 0.06;
+      Math.sin(x * 0.55) * 0.16 +
+      Math.cos(y * 0.42) * 0.13 +
+      Math.sin(x * 1.7 + y * 1.3) * 0.07 +
+      (pseudo(i * 1.7) - 0.5) * 0.05;
     pos.setZ(i, h);
+    // Chiazze di muschio dipinte nei vertici: variazione di colore a costo
+    // zero, ed e cio che toglie l'aspetto "moquette viola uniforme".
+    const chiazza = (Math.sin(x * 0.9 + 1.3) * Math.cos(y * 0.7) + 1) / 2;
+    const c = terra.clone().lerp(muschio, chiazza * 0.55 + pseudo(i * 3.3) * 0.2);
+    colori.push(c.r, c.g, c.b);
   }
+  groundGeo.setAttribute('color', new THREE.Float32BufferAttribute(colori, 3));
   groundGeo.computeVertexNormals();
-  const groundMat = makeMat(0x1f1836, { r: 0.96, m: 0 });
+  const groundMat = makeMat(0xffffff, { r: 0.94, m: 0, vertexColors: true });
   const ground = new THREE.Mesh(groundGeo, groundMat);
   ground.rotation.x = -Math.PI / 2;
   ground.position.set(0, -0.02, -1);

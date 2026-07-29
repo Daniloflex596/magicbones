@@ -23,7 +23,7 @@ export function FeaturedStrip({ products }: { products: Product[] }) {
         .featured-grid {
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-          gap: 1.4rem;
+          gap: 1.5rem;
         }
       `}</style>
     </div>

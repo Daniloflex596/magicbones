@@ -48,9 +48,9 @@ export function ProductActions({ product }: { product: Product }) {
       {product.data.isCustom && <p className="actions__note">Personalizzabile: potrai indicare i dettagli nella richiesta.</p>}
 
       <style>{`
-        .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem; margin-bottom: 1rem; }
+        .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.875rem; margin-bottom: 1rem; }
         .actions__qty {
-          display: flex; align-items: center; gap: 0.6rem;
+          display: flex; align-items: center; gap: 0.625rem;
           font-family: var(--font-body); color: var(--bordeaux);
         }
         .actions__qty button {
@@ -59,7 +59,7 @@ export function ProductActions({ product }: { product: Product }) {
         }
         .actions__add {
           font-family: var(--font-body); font-weight: 500; font-size: 0.95rem;
-          padding: 0.8rem 1.5rem; border-radius: 999px; border: none;
+          padding: 0.75rem 1.5rem; border-radius: var(--r-sm); border: none;
           background: var(--bordeaux); color: var(--paper-warm); cursor: pointer;
         }
         .actions__note {

@@ -185,7 +185,7 @@ export function CartDrawer() {
           line-height: 1;
           color: var(--bordeaux);
           cursor: pointer;
-          padding: 0.25rem 0.6rem;
+          padding: 0.25rem 0.625rem;
         }
         .cart-panel__empty {
           font-family: var(--font-body);
@@ -268,8 +268,8 @@ export function CartDrawer() {
           font-family: var(--font-body);
           font-size: 0.9rem;
           font-weight: 500;
-          padding: 0.7rem 1rem;
-          border-radius: 999px;
+          padding: 0.75rem 1rem;
+          border-radius: var(--r-sm);
           cursor: pointer;
           border: 1px solid transparent;
         }

@@ -21,6 +21,7 @@ import { createUndergrowth, pathXAt } from './objects/undergrowth.js';
 import { createAmanita } from './objects/amanita.js';
 import { createBoneColumn } from './objects/bone-column.js';
 import { createJar } from './objects/jar.js';
+import { createForesta } from './objects/foresta.js';
 
 const SOIL_DEEP = 0x0f0b1e;
 
@@ -49,13 +50,19 @@ export function initWorld(canvas, { tier = 'high', dpr = 2, basePath = '/' } = {
 
   // --- Scena ----------------------------------------------------------------
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(SOIL_DEEP);
-  // Stessa tinta del background: la nebbia "mangia" la profondita senza
-  // disegnare un muro colorato.
-  scene.fog = new THREE.FogExp2(SOIL_DEEP, 0.052);
+  // Il fondo NON e nero: e un indaco appena piu chiaro del suolo. Contro il
+  // nero puro ogni sagoma lontana sparisce e il mondo si riduce a pochi oggetti
+  // incollati sul vuoto — che era esattamente il difetto.
+  const ORIZZONTE = 0x191331;
+  scene.background = new THREE.Color(ORIZZONTE);
+  // Nebbia della STESSA tinta del fondo (una tinta diversa disegnerebbe un muro
+  // colorato), ma molto meno densa: a 0.052 il piano intermedio spariva e la
+  // foresta di sfondo non si vedeva proprio. A 0.028 la profondita si legge a
+  // strati invece di essere inghiottita.
+  scene.fog = new THREE.FogExp2(ORIZZONTE, 0.028);
 
   // Ambiente: indaco -> violetto -> nero. E la luce diffusa del sottobosco.
-  const env = makeEnvTexture(renderer, ['#241d3d', '#3a2a5c', '#0f0b1e']);
+  const env = makeEnvTexture(renderer, ['#2c2348', '#453466', '#141029']);
   scene.environment = env;
 
   // --- Camera ---------------------------------------------------------------
@@ -63,14 +70,26 @@ export function initWorld(canvas, { tier = 'high', dpr = 2, basePath = '/' } = {
   const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 60);
 
   // --- Luci ambientali ------------------------------------------------------
-  // Volutamente scarse: la luce vera viene dai funghi e dalle candele.
-  scene.add(new THREE.AmbientLight(0x3a2a5c, 0.55));
-  const moon = new THREE.DirectionalLight(0x8b5fc9, 0.4);
+  // Poche e a costo fisso: la luce di carattere viene dai funghi e dalle
+  // candele, ma senza una base il terreno restava un buco nero e gli oggetti
+  // sembravano incollati sul vuoto.
+  //
+  // HemisphereLight: UNA sola luce, costo trascurabile, e fa il lavoro che
+  // dieci PointLight facevano male — cielo violetto dall'alto, rimbalzo verde
+  // muschio dal basso. E lei a far leggere la MASSA del sottobosco.
+  scene.add(new THREE.HemisphereLight(0x6a4f9e, 0x4a4415, 1.15));
+  scene.add(new THREE.AmbientLight(0x3a2a5c, 0.4));
+  const moon = new THREE.DirectionalLight(0xb49ae0, 0.55);
   moon.position.set(-3, 8, 2);
   scene.add(moon);
 
   // --- Il suolo -------------------------------------------------------------
   const undergrowth = createUndergrowth(scene, { tier });
+
+  // --- Il sottobosco folto ---------------------------------------------------
+  // Centinaia di funghi, felci, erba e tronchi in 6 draw call (InstancedMesh).
+  // Senza questo strato si vedeva il vuoto nero tra un oggetto e l'altro.
+  const foresta = createForesta(scene, { tier });
 
   // --- La volta di amanite --------------------------------------------------
   // Disposte AI LATI del percorso e a quote diverse: la camera ci passa sotto e
@@ -231,6 +250,7 @@ export function initWorld(canvas, { tier = 'high', dpr = 2, basePath = '/' } = {
 
     dispose() {
       undergrowth.dispose();
+      foresta.dispose();
       amanitas.forEach((a) => a.dispose());
       boneColumns.forEach((c) => c.dispose());
       jars.forEach(({ obj }) => obj.dispose());
