@@ -75,6 +75,43 @@ export const STATIONS = [
 ];
 
 /**
+ * ============================================================================
+ *  STAZIONI PER IL RITRATTO — direzione mobile autorata, non derivata
+ * ============================================================================
+ *  Il FOV di una camera prospettica e VERTICALE: quello orizzontale vale
+ *  `2·atan(tan(fov/2)·aspect)`. Su 390×844 (aspect 0.46) restano ~32° contro i
+ *  ~79° del desktop. Una fila di oggetti disposta LATERALMENTE non ci sta, e
+ *  nessuna correzione di FOV la fa entrare: allargare allontana e spinge ai
+ *  bordi, avvicinare fa superare i soggetti. Provate entrambe, misurate
+ *  entrambe, entrambe sbagliate.
+ *
+ *  La cura e cambiare INQUADRATURA. In verticale la camera sta piu arretrata e
+ *  quasi in asse con la fila, cosi i soggetti si impilano in PROFONDITA invece
+ *  che in larghezza — che e esattamente cio che un fotogramma alto sa mostrare.
+ *
+ *  E la regola di `immersive-web-director`: "mobile come DIREZIONE AUTORATA per
+ *  ogni capitolo", non come riduzione geometrica del desktop.
+ * ============================================================================
+ */
+export const STATIONS_RITRATTO = [
+  // 0 · soglia: piu bassa e piu vicina, il sentiero corre via in verticale
+  { p: [0, 1.5, 9.2], l: [0, 1.0, 2.0] },
+  // 1 · ossa: quasi in asse con la fila, arretrata. Le tre colonne si
+  //     susseguono in profondita e ci stanno tutte nel quadro alto.
+  { p: [-0.05, 1.02, 8.6], l: [-0.62, 0.95, 3.4] },
+  // 2 · teschi: i barattoli si allineano davanti invece che di lato
+  { p: [0.15, 0.8, 3.4], l: [0.9, 0.68, -1.8] },
+  // 3 · gioielli: si passa sotto l'arco guardando in alto
+  { p: [0.2, 0.6, -1.6], l: [-0.5, 1.5, -5.0] },
+  // 4 · fuoco: frontale alle candele
+  { p: [-0.5, 0.72, -4.6], l: [0.5, 0.5, -8.4] },
+  // 5 · panoramica
+  { p: [0.2, 2.6, -9.0], l: [0, 0.7, -13.0] },
+  // 6 · contro-campo
+  { p: [0.1, 1.2, -12.6], l: [0.15, 1.0, 2.0] },
+];
+
+/**
  * Mappatura sezione DOM -> stazione. E il contratto che tiene testo e spazio
  * sulla STESSA timeline: quando una sezione e al centro del viewport, la camera
  * e al suo waypoint.

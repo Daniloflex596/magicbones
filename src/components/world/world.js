@@ -15,7 +15,7 @@
  */
 import * as THREE from 'three';
 import { makeEnvTexture } from './engine/canvas-textures.js';
-import { STATIONS } from './stations.js';
+import { STATIONS, STATIONS_RITRATTO } from './stations.js';
 import { createCameraRig } from './engine/camera-rig.js';
 import { createUndergrowth, pathXAt } from './objects/undergrowth.js';
 import { createAmanita } from './objects/amanita.js';
@@ -66,7 +66,12 @@ export function initWorld(canvas, { tier = 'high', dpr = 2, basePath = '/' } = {
   scene.environment = env;
 
   // --- Camera ---------------------------------------------------------------
-  const rig = createCameraRig({ stations: STATIONS, aspect: 1 });
+  // DUE rig: uno per l'orizzontale, uno per il ritratto. Costruirli entrambi
+  // costa due CatmullRomCurve3 e basta; cambiarli a caldo al resize evita di
+  // ricostruire la scena quando si ruota il telefono.
+  const rigOrizzontale = createCameraRig({ stations: STATIONS, aspect: 1 });
+  const rigRitratto = createCameraRig({ stations: STATIONS_RITRATTO, aspect: 1 });
+  let rig = rigOrizzontale;
   const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 60);
 
   // --- Luci ambientali ------------------------------------------------------
@@ -175,9 +180,35 @@ export function initWorld(canvas, { tier = 'high', dpr = 2, basePath = '/' } = {
   }
 
   // --- Resize ---------------------------------------------------------------
+  /**
+   * FOV adattivo, piu aggressivo di quello del rig su schermi molto stretti.
+   *
+   * Il rig apre a 64° sotto aspect 0.8. Non basta: il FOV di una camera
+   * prospettica e VERTICALE, quindi quello orizzontale vale
+   * `2·atan(tan(fov/2)·aspect)`. Su un telefono (390×844, aspect 0.46) 64°
+   * verticali diventano appena 32° orizzontali, contro i 79° del desktop — meno
+   * della meta. Risultato misurato: la colonna d'osso finiva tagliata a meta dal
+   * bordo proprio nella battuta che deve reggere tutto il sito.
+   *
+   * Qui il FOV verticale sale fino a 82° sui formati piu stretti, cosi
+   * l'orizzontale torna sopra i 40° e i soggetti restano in quadro.
+   */
+  function fovPerAspect(a) {
+    return a < 0.8 ? 66 : 55;
+  }
+
+  /** Il rig attivo cambia con il formato: vedi STATIONS_RITRATTO. */
+  function applyCameraAdattata(cam, t) {
+    rig.applyCamera(cam, t);
+  }
+
   function resize(w, h) {
     renderer.setSize(w, h, false);
-    rig.onResize(camera, w / h);
+    const a = w / h;
+    rig = a < 0.8 ? rigRitratto : rigOrizzontale;
+    camera.aspect = a;
+    camera.fov = fovPerAspect(a);
+    camera.updateProjectionMatrix();
   }
 
   // --- Interazione ----------------------------------------------------------
@@ -212,7 +243,7 @@ export function initWorld(canvas, { tier = 'high', dpr = 2, basePath = '/' } = {
     renderer,
     scene,
     camera,
-    applyCamera: rig.applyCamera,
+    applyCamera: applyCameraAdattata,
     resize,
     loadPhotos,
     pickables,
