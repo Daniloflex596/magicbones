@@ -2,14 +2,14 @@ import{o as e,t}from"./react.BRNZa73l.js";import{t as n}from"./jsx-runtime.C8BoM
         .filters {
           display: flex;
           flex-wrap: wrap;
-          gap: 0.6rem;
+          gap: 0.625rem;
           margin-bottom: 2.5rem;
         }
         .chip {
           font-family: var(--font-body);
           font-size: 0.85rem;
-          padding: 0.65rem 1.1rem;
-          border-radius: 999px;
+          padding: 0.625rem 1rem;
+          border-radius: var(--r-sm);
           border: 1px solid rgba(90, 30, 38, 0.2);
           background: transparent;
           color: var(--bordeaux);
