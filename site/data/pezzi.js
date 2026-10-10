@@ -2,7 +2,7 @@
    se non sai cosa fai — è JSON puro tra le due righe. */
 window.MB_DATI = {
  "versione": 1,
- "aggiornato": "2026-10-10T21:00:19.942Z",
+ "aggiornato": "2026-10-10T13:53:51.684Z",
  "categorie": [
   {
    "id": "teschi",
@@ -1039,27 +1039,6 @@ window.MB_DATI = {
      "h": 1200
     }
    ]
-  },
-  {
-   "id": "prova-tecnica-da-cancellare",
-   "creato": "2026-10-10T20:51:54.376Z",
-   "nome": "PROVA tecnica da cancellare",
-   "prezzo": 1,
-   "cat": "reliquie",
-   "unita": "pezzo unico",
-   "descrizione": "Prova di pubblicazione.",
-   "foto": [
-    {
-     "src": "assets/img/pezzi/2026-10/c0ffee00c0ffee00c0ff.webp",
-     "porta": "assets/img/pezzi/2026-10/c0ffee00c0ffee00c0ff-600.webp",
-     "alt": "PROVA tecnica da cancellare: Prova di pubblicazione.",
-     "w": 900,
-     "h": 1200
-    }
-   ],
-   "thumb": "assets/img/pezzi/2026-10/c0ffee00c0ffee00c0ff-mini.webp",
-   "aggiornato": "2026-10-10T21:00:19.942Z",
-   "venduto": true
   }
  ]
 };
