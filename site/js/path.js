@@ -201,15 +201,27 @@
   function caricaUna() {
     if (spento || prossimo >= ordine.length) return;
     var i = ordine[prossimo++];
-    var im = new Image();
-    im.decoding = 'async';
-    im.onload = function () {
-      // decodificata PRIMA di disegnarla: il primo disegno non costa uno scatto
-      var pronta = function () { if (spento) return; quadri[i] = im; arrivata(); caricaUna(); };
-      if (im.decode) im.decode().then(pronta, pronta); else pronta();
-    };
-    im.onerror = caricaUna;                // un'immagine persa non ferma le altre
-    im.src = nome(i);
+    // con fetch e non con <img>: un'immagine creata da script trattiene
+    // l'evento "pagina caricata" finché non arriva (misurato: ~30 s su 4G per
+    // tutto il film), e chi lo aspetta — la striscia dei video — partiva tardi
+    fetch(nome(i)).then(function (r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.blob();
+    }).then(function (b) {
+      return new Promise(function (ok, ko) {
+        var im = new Image();
+        im.onload = function () {
+          // decodificata PRIMA di disegnarla: il primo disegno non costa uno scatto
+          var via = function () { ok(im); };
+          if (im.decode) im.decode().then(via, via); else via();
+        };
+        im.onerror = ko;
+        im.src = URL.createObjectURL(b);
+      });
+    }).then(function (im) {
+      if (spento) return;
+      quadri[i] = im; arrivata(); caricaUna();
+    }, function () { caricaUna(); });    // un'immagine persa non ferma le altre
   }
   function arrivata() {
     if (!acceso) {
