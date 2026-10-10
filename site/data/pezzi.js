@@ -2,7 +2,7 @@
    se non sai cosa fai — è JSON puro tra le due righe. */
 window.MB_DATI = {
  "versione": 1,
- "aggiornato": "2026-10-10T20:51:54.376Z",
+ "aggiornato": "2026-10-10T21:00:19.942Z",
  "categorie": [
   {
    "id": "teschi",
@@ -1058,7 +1058,8 @@ window.MB_DATI = {
     }
    ],
    "thumb": "assets/img/pezzi/2026-10/c0ffee00c0ffee00c0ff-mini.webp",
-   "aggiornato": "2026-10-10T20:51:54.376Z"
+   "aggiornato": "2026-10-10T21:00:19.942Z",
+   "venduto": true
   }
  ]
 };
