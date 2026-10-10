@@ -38,9 +38,10 @@ Variabili (Settings → Variables and Secrets, tipo **Secret**):
 |----------------|-----------------------------------------------------------------------|
 | `PIN_BOTTEGA`  | il PIN di Claudia (almeno 6 cifre)                                    |
 | `SEGRETO`      | una frase lunga e casuale (firma le "tessere" d'accesso)              |
-| `GITHUB_TOKEN` | token GitHub *fine-grained*: solo questo archivio, *Contents: Read and write* |
+| `CHIAVE_GITHUB` | token GitHub *fine-grained*: solo questo archivio, *Contents: Read and write* |
 
-`GITHUB_REPO` e `GITHUB_BRANCH` sono già in `wrangler.toml`.
+`ARCHIVIO_GITHUB` e `RAMO_GITHUB` sono già in `wrangler.toml`. (Cloudflare non
+accetta segreti che iniziano con `GITHUB_`.)
 
 ## Lavorarci in locale
 
@@ -50,7 +51,7 @@ python strumenti/server.py 8899 rete  # il sito, anche dal telefono sulla stessa
 node strumenti/prova-bottega.mjs      # l'app completa con un finto GitHub (PIN 123456)
 # il motore vero di Cloudflare, collegato al finto GitHub (porta 8792):
 npx wrangler dev --port 8796 --var PIN_BOTTEGA:123456 --var SEGRETO:una-frase-lunga-qualsiasi \
-  --var GITHUB_TOKEN:tok --var GITHUB_REPO:utente/archivio --var GITHUB_API:http://127.0.0.1:8792
+  --var CHIAVE_GITHUB:tok --var ARCHIVIO_GITHUB:utente/archivio --var API_GITHUB:http://127.0.0.1:8792
 ```
 
 Dopo una modifica a css/js, aumenta il `?v=` nelle pagine (`index.html`,

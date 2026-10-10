@@ -18,7 +18,7 @@ const RITARDO_MS = Number(process.env.RITARDO_MS || 8000);
 const SITO = fileURLToPath(new URL('../site/', import.meta.url));
 const ENV = {
   PIN_BOTTEGA: '123456', SEGRETO: 'segreto-solo-per-la-prova-locale',
-  GITHUB_TOKEN: 'tok', GITHUB_REPO: 'utente/archivio', GITHUB_API: 'https://finto'
+  CHIAVE_GITHUB: 'tok', ARCHIVIO_GITHUB: 'utente/archivio', API_GITHUB: 'https://finto'
 };
 const TIPI = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json',
   '.webmanifest': 'application/manifest+json', '.webp': 'image/webp', '.jpg': 'image/jpeg', '.png': 'image/png',
@@ -73,7 +73,7 @@ http.createServer(async (req, res) => {
 
 // il finto GitHub raggiungibile anche da fuori (porta +2): serve per provare le
 // funzioni dentro il vero motore di Cloudflare (wrangler pages dev), con
-// GITHUB_API=http://127.0.0.1:<porta+2>
+// API_GITHUB=http://127.0.0.1:<porta+2>
 http.createServer(async (req, res) => {
   const corpo = await new Promise(ok => { const parti = []; req.on('data', c => parti.push(c)); req.on('end', () => ok(Buffer.concat(parti))); });
   const r = await finto.fetch('https://finto' + req.url, { method: req.method, headers: req.headers, body: corpo.length ? corpo.toString('utf8') : undefined });

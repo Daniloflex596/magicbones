@@ -8,7 +8,7 @@ import { FILE_DATI } from '../lib/github.js';
 import { creaFintoGithub } from './finto-github.mjs';
 
 const DATI = readFileSync(new URL('../site/data/pezzi.js', import.meta.url), 'utf8');
-const ENV = { PIN_BOTTEGA: '482915', SEGRETO: 'segreto-di-prova-abbastanza-lungo', GITHUB_TOKEN: 'tok', GITHUB_REPO: 'utente/archivio', GITHUB_API: 'https://finto' };
+const ENV = { PIN_BOTTEGA: '482915', SEGRETO: 'segreto-di-prova-abbastanza-lungo', CHIAVE_GITHUB: 'tok', ARCHIVIO_GITHUB: 'utente/archivio', API_GITHUB: 'https://finto' };
 const SITO = 'https://magicbones.pages.dev';
 const ORA = () => new Date('2026-10-10T12:00:00Z');
 const b64 = s => Buffer.from(s).toString('base64');

@@ -1,7 +1,7 @@
 # Cloudflare Workers con file statici: il sito è la cartella site/, le
 # richieste /api/… (l'app Bottega) passano da worker.js → lib/api.js.
 # Si pubblica da solo a ogni commit su main (Workers Builds: npx wrangler deploy).
-# I valori segreti (PIN_BOTTEGA, SEGRETO, GITHUB_TOKEN) NON stanno qui: si
+# I valori segreti (PIN_BOTTEGA, SEGRETO, CHIAVE_GITHUB) NON stanno qui: si
 # impostano nel pannello di Cloudflare → Settings → Variables and Secrets.
 name = "magicbones"
 main = "worker.js"
@@ -16,5 +16,6 @@ not_found_handling = "404-page"
 run_worker_first = ["/api/*", "/assets/video/*", "/assets/reel/*"]
 
 [vars]
-GITHUB_REPO = "Daniloflex596/magicbones"
-GITHUB_BRANCH = "main"
+# (Cloudflare non accetta nomi che iniziano con GITHUB_)
+ARCHIVIO_GITHUB = "Daniloflex596/magicbones"
+RAMO_GITHUB = "main"

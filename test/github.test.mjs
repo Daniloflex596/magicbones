@@ -77,5 +77,5 @@ test('chiave sbagliata: errore chiaro, nessun commit', async () => {
 });
 
 test('senza configurazione non parte', () => {
-  assert.throws(() => creaGithub({ token: '', repo: 'a/b' }), /GITHUB_TOKEN/);
+  assert.throws(() => creaGithub({ token: '', repo: 'a/b' }), /CHIAVE_GITHUB/);
 });
