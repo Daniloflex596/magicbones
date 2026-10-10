@@ -5,8 +5,8 @@
 !/README.md
 !/package.json
 !/wrangler.toml
+!/worker.js
 !/site/
-!/functions/
 !/lib/
 !/test/
 !/strumenti/

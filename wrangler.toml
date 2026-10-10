@@ -1,9 +1,19 @@
-# Cloudflare Pages: il sito è la cartella site/, le funzioni online sono in
-# functions/ (usano lib/). I valori segreti (PIN_BOTTEGA, SEGRETO,
-# GITHUB_TOKEN) NON stanno qui: si impostano nel pannello di Cloudflare.
+# Cloudflare Workers con file statici: il sito è la cartella site/, le
+# richieste /api/… (l'app Bottega) passano da worker.js → lib/api.js.
+# Si pubblica da solo a ogni commit su main (Workers Builds: npx wrangler deploy).
+# I valori segreti (PIN_BOTTEGA, SEGRETO, GITHUB_TOKEN) NON stanno qui: si
+# impostano nel pannello di Cloudflare → Settings → Variables and Secrets.
 name = "magicbones"
-pages_build_output_dir = "site"
-compatibility_date = "2024-09-23"
+main = "worker.js"
+compatibility_date = "2025-09-01"
+
+[assets]
+directory = "./site"
+binding = "ASSETS"
+# pagina "Non trovata" vera (site/404.html), con codice 404
+not_found_handling = "404-page"
+# queste richieste passano dal codice (worker.js) prima dei file statici
+run_worker_first = ["/api/*", "/assets/video/*", "/assets/reel/*"]
 
 [vars]
 GITHUB_REPO = "Daniloflex596/magicbones"

@@ -4,11 +4,11 @@ Sito statico (HTML, CSS, JavaScript) con un piccolo motore online per l'app
 **Bottega**, da cui Claudia aggiunge, modifica e vende i pezzi dal telefono.
 
 ```
-site/            il sito pubblicato (Cloudflare Pages lo serve così com'è)
+site/            il sito pubblicato (Cloudflare lo serve così com'è)
   data/pezzi.js    i pezzi del catalogo — lo aggiorna l'app Bottega
   bottega/         l'app di Claudia (si installa sull'iPhone: Condividi → Aggiungi a Home)
-functions/api/   le funzioni online di Cloudflare (accesso, foto, pezzi, venduto)
-lib/             il loro codice: dati.js, github.js, sessione.js, api.js
+worker.js        il "portinaio" su Cloudflare: /api/… → lib/api.js, i video a pezzi (206)
+lib/             le funzioni online: dati.js, github.js, sessione.js, api.js
 test/            le prove automatiche (npm test) e il finto GitHub
 strumenti/       server di prova, preparazione foto, prova completa dell'app
 ```
@@ -27,9 +27,10 @@ sempre vedere chi ha cambiato cosa e tornare indietro.
 
 ## Messa in onda (una volta sola)
 
-Su **Cloudflare** → Workers & Pages → Create → Pages → *Connect to Git* →
-questo archivio. Impostazioni di build: *Framework* nessuno, *Build command*
-vuoto, *Build output directory* `site`.
+Su **Cloudflare** → Workers & Pages → Create → *Import a repository* → questo
+archivio. *Project name* `magicbones` (deve essere uguale a `name` in
+`wrangler.toml`), *Build command* vuoto, *Deploy command* `npx wrangler deploy`.
+Da lì ogni commit su `main` ripubblica il sito da solo (Workers Builds).
 
 Variabili (Settings → Variables and Secrets, tipo **Secret**):
 
@@ -47,6 +48,8 @@ Variabili (Settings → Variables and Secrets, tipo **Secret**):
 npm test                              # 37 prove: dati, accesso, GitHub, funzioni
 python strumenti/server.py 8899 rete  # il sito, anche dal telefono sulla stessa Wi-Fi
 node strumenti/prova-bottega.mjs      # l'app completa con un finto GitHub (PIN 123456)
+# il motore vero di Cloudflare, collegato al finto GitHub (porta 8792):
+npx wrangler dev --port 8796 --var PIN_BOTTEGA:123456 --var SEGRETO:una-frase-lunga-qualsiasi \n  --var GITHUB_TOKEN:tok --var GITHUB_REPO:utente/archivio --var GITHUB_API:http://127.0.0.1:8792
 ```
 
 Dopo una modifica a css/js, aumenta il `?v=` nelle pagine (`index.html`,
