@@ -15,38 +15,52 @@ strumenti/       server di prova, preparazione foto, prova completa dell'app
 
 ## Come funziona la Bottega
 
+Sito online: **https://magicbones.antoniocioffi.workers.dev** · app: `/bottega/`
+
 1. Claudia apre `/bottega/`, mette il PIN (resta valido 6 mesi sul telefono).
 2. Fa o sceglie le foto: il telefono le rimpicciolisce (900 px, 600 px, mini
    240×240) e le manda una alla volta a `/api/foto`.
 3. `/api/pezzo` salva foto + dati in **un solo commit** su questo archivio.
-4. Cloudflare vede il commit e ripubblica il sito da solo (~1 minuto).
-   L'app controlla `data/pezzi.js` e dice "✓ È online".
+4. `worker.js` serve `data/pezzi.js` e le foto dell'app **direttamente dal
+   ramo main** (memoria di 20 s): il pezzo è online in ~10-20 s, senza
+   ripubblicare niente. Se GitHub non risponde, il sito usa l'ultima copia.
 
 Ogni modifica di Claudia è un commit ("Bottega: nuovo pezzo «…»"): si può
-sempre vedere chi ha cambiato cosa e tornare indietro.
+sempre vedere chi ha cambiato cosa e tornare indietro (`git revert`).
 
-## Messa in onda (una volta sola)
+## Pubblicare una modifica al codice o alla grafica
 
-Su **Cloudflare** → Workers & Pages → Create → *Import a repository* → questo
-archivio. *Project name* `magicbones` (deve essere uguale a `name` in
-`wrangler.toml`), *Build command* vuoto, *Deploy command* `npx wrangler deploy`.
-Da lì ogni commit su `main` ripubblica il sito da solo (Workers Builds).
+Le modifiche di Claudia NON hanno bisogno di questo. Per il resto (pagine,
+css, js, video) va ripubblicato il sito, dalla copia esatta dell'archivio:
 
-Variabili (Settings → Variables and Secrets, tipo **Secret**):
+```bash
+git push                                     # prima si salva su GitHub
+git worktree add ../mb-pubblica HEAD         # copia pulita (niente file del PC)
+cd ../mb-pubblica && npx wrangler deploy     # serve `npx wrangler login` una volta
+cd - && git worktree remove --force ../mb-pubblica
+```
 
-| nome           | cosa                                                                  |
-|----------------|-----------------------------------------------------------------------|
-| `PIN_BOTTEGA`  | il PIN di Claudia (almeno 6 cifre)                                    |
-| `SEGRETO`      | una frase lunga e casuale (firma le "tessere" d'accesso)              |
+(La ripubblicazione automatica GitHub → Cloudflare non partiva: misurato.)
+
+## Configurazione su Cloudflare (Workers, progetto `magicbones`)
+
+Segreti (Settings → Variables and Secrets, tipo **Secret**, oppure
+`npx wrangler secret put NOME --name magicbones`):
+
+| nome            | cosa                                                                  |
+|-----------------|-----------------------------------------------------------------------|
+| `PIN_BOTTEGA`   | il PIN di Claudia                                                     |
+| `SEGRETO`       | una frase lunga e casuale (firma le "tessere" d'accesso)              |
 | `CHIAVE_GITHUB` | token GitHub *fine-grained*: solo questo archivio, *Contents: Read and write* |
 
-`ARCHIVIO_GITHUB` e `RAMO_GITHUB` sono già in `wrangler.toml`. (Cloudflare non
-accetta segreti che iniziano con `GITHUB_`.)
+`ARCHIVIO_GITHUB` e `RAMO_GITHUB` sono in `wrangler.toml` (Cloudflare non
+accetta segreti che iniziano con `GITHUB_`). Il token ha una scadenza: quando
+scade l'app dice "Qualcosa non ha funzionato" → rigenerarlo e rimetterlo.
 
 ## Lavorarci in locale
 
 ```bash
-npm test                              # 38 prove: dati, accesso, GitHub, funzioni
+npm test                              # 45 prove: dati, accesso, GitHub, funzioni
 python strumenti/server.py 8899 rete  # il sito, anche dal telefono sulla stessa Wi-Fi
 node strumenti/prova-bottega.mjs      # l'app completa con un finto GitHub (PIN 123456)
 # il motore vero di Cloudflare, collegato al finto GitHub (porta 8792):
