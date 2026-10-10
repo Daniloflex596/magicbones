@@ -57,6 +57,18 @@ test('le foto tolte vengono cancellate; se una non c\'è già più si salva lo s
   assert.equal(leggiDati(finto.leggi(FILE_DATI)).pezzi.find(p => p.id === 'mandala').venduto, true);
 });
 
+test('GitHub in ritardo dopo un salvataggio: due modifiche di fila entrano entrambe', async () => {
+  const finto = creaFintoGithub({ file: { [FILE_DATI]: DATI }, ritardoRef: 2 });
+  const attese = [];
+  const gh = creaGithub({ token: 'tok', repo: 'utente/archivio', api: 'https://finto', fetch: finto.fetch, attendi: ms => { attese.push(ms); } });
+  await gh.aggiornaDati(d => ({ dati: segnaVenduto(d, 'mandala', true, ORA) }), { messaggio: 'primo' });
+  await gh.aggiornaDati(d => ({ dati: segnaVenduto(d, 'spell-jar', true, ORA) }), { messaggio: 'secondo' });
+  const d = leggiDati(finto.leggi(FILE_DATI));
+  assert.equal(d.pezzi.find(p => p.id === 'mandala').venduto, true, 'la prima modifica non va persa');
+  assert.equal(d.pezzi.find(p => p.id === 'spell-jar').venduto, true);
+  assert.ok(attese.length >= 1 && attese.every((ms, i) => i === 0 || ms > attese[i - 1]), 'tra un tentativo e l\'altro si aspetta sempre di più');
+});
+
 test('chiave sbagliata: errore chiaro, nessun commit', async () => {
   const finto = creaFintoGithub({ file: { [FILE_DATI]: DATI } });
   const gh = creaGithub({ token: 'sbagliato', repo: 'utente/archivio', api: 'https://finto', fetch: finto.fetch });

@@ -440,7 +440,10 @@
       inviando = false;
       chiudiPannello();
       if (!m.id) try { localStorage.removeItem(BOZZA); } catch (e) {}
-      return carica().catch(function () {}).then(function () { vistaFatto(esito); });
+      // i dati appena salvati arrivano nella risposta: rileggerli subito da GitHub
+      // potrebbe dare ancora la versione di prima (succede per ~1 s)
+      if (esito.dati) stato.dati = esito.dati;
+      vistaFatto(esito);
     }, function (err) {
       inviando = false;
       chiudiPannello();
@@ -456,10 +459,9 @@
     pannello(venduto ? 'Segno come venduto…' : 'Lo rimetto in vendita…', 0.5);
     api('POST', 'venduto', { id: m.id, venduto: venduto }).then(function (esito) {
       chiudiPannello();
-      return carica().catch(function () {}).then(function () {
-        esito.id = m.id; esito.nome = m.campi.nome; esito.venduto = venduto;
-        vistaFatto(esito);
-      });
+      if (esito.dati) stato.dati = esito.dati;
+      esito.id = m.id; esito.nome = m.campi.nome; esito.venduto = venduto;
+      vistaFatto(esito);
     }, function (err) { chiudiPannello(); if (!err.accesso) mostraAvviso(err.message); });
   }
 

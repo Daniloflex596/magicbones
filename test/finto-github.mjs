@@ -4,7 +4,10 @@
 // nessuna prova tocca mai l'archivio vero.
 import { createHash } from 'node:crypto';
 
-export function creaFintoGithub({ repo = 'utente/archivio', ramo = 'main', token = 'tok', file = {} } = {}) {
+// `ritardoRef`: come il GitHub vero, subito dopo un aggiornamento del ramo le
+// prossime N letture del ramo danno ancora il commit di prima (misurato: ~1 s).
+export function creaFintoGithub({ repo = 'utente/archivio', ramo = 'main', token = 'tok', file = {}, ritardoRef = 0 } = {}) {
+  let vecchio = null, lettureVecchie = 0;
   const blobs = new Map();     // sha → Buffer
   const alberi = new Map();    // sha → Map(percorso → sha blob)
   const commit = new Map();    // sha → { tree, parents, message }
@@ -34,7 +37,10 @@ export function creaFintoGithub({ repo = 'utente/archivio', ramo = 'main', token
     const p = u.pathname.slice(base.length);
     const corpo = opts.body ? JSON.parse(opts.body) : null;
 
-    if (metodo === 'GET' && p === `git/ref/heads/${ramo}`) return json({ object: { sha: ref[ramo] } });
+    if (metodo === 'GET' && p === `git/ref/heads/${ramo}`) {
+      if (lettureVecchie > 0) { lettureVecchie--; return json({ object: { sha: vecchio } }); }
+      return json({ object: { sha: ref[ramo] } });
+    }
     if (metodo === 'GET' && p.startsWith('git/commits/')) {
       const c = commit.get(p.slice('git/commits/'.length));
       return c ? json({ sha: p.slice(12), tree: { sha: c.tree }, parents: c.parents.map(s => ({ sha: s })) }) : json({ message: 'Not Found' }, 404);
@@ -68,6 +74,7 @@ export function creaFintoGithub({ repo = 'utente/archivio', ramo = 'main', token
       const c = commit.get(corpo.sha);
       if (!c) return json({ message: 'Object does not exist' }, 422);
       if (!corpo.force && c.parents[0] !== ref[ramo]) return json({ message: 'Update is not a fast forward' }, 422);
+      if (ritardoRef) { vecchio = ref[ramo]; lettureVecchie = ritardoRef; }
       ref[ramo] = corpo.sha;
       return json({ object: { sha: corpo.sha } });
     }

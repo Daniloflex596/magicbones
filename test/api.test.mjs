@@ -129,7 +129,9 @@ test('dati sbagliati: 400 con le spiegazioni, niente commit', async () => {
 test('venduto e di nuovo in vendita', async () => {
   const { chiama, dati } = prepara();
   await chiama('POST', 'accedi', { pin: '482915' });
-  assert.equal((await chiama('POST', 'venduto', { id: 'mandala', venduto: true })).stato, 200);
+  const r1 = await chiama('POST', 'venduto', { id: 'mandala', venduto: true });
+  assert.equal(r1.stato, 200);
+  assert.equal(r1.corpo.dati.pezzi.find(p => p.id === 'mandala').venduto, true, 'la risposta porta già i dati nuovi');
   assert.equal(dati().pezzi.find(p => p.id === 'mandala').venduto, true);
   assert.equal((await chiama('POST', 'venduto', { id: 'mandala', venduto: false })).stato, 200);
   assert.equal(dati().pezzi.find(p => p.id === 'mandala').venduto, undefined);
