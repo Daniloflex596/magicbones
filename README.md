@@ -49,7 +49,8 @@ npm test                              # 38 prove: dati, accesso, GitHub, funzion
 python strumenti/server.py 8899 rete  # il sito, anche dal telefono sulla stessa Wi-Fi
 node strumenti/prova-bottega.mjs      # l'app completa con un finto GitHub (PIN 123456)
 # il motore vero di Cloudflare, collegato al finto GitHub (porta 8792):
-npx wrangler dev --port 8796 --var PIN_BOTTEGA:123456 --var SEGRETO:una-frase-lunga-qualsiasi \n  --var GITHUB_TOKEN:tok --var GITHUB_REPO:utente/archivio --var GITHUB_API:http://127.0.0.1:8792
+npx wrangler dev --port 8796 --var PIN_BOTTEGA:123456 --var SEGRETO:una-frase-lunga-qualsiasi \
+  --var GITHUB_TOKEN:tok --var GITHUB_REPO:utente/archivio --var GITHUB_API:http://127.0.0.1:8792
 ```
 
 Dopo una modifica a css/js, aumenta il `?v=` nelle pagine (`index.html`,
