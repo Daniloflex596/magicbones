@@ -1,0 +1,25 @@
+# Netlify: per quanto tempo il browser tiene i file in memoria (dalla seconda
+# visita il sito si apre senza riscaricarli). Le pagine .html no: Netlify le
+# ricontrolla sempre, così le modifiche si vedono subito.
+
+# css e js cambiano indirizzo a ogni versione (?v=… nelle pagine): un anno
+/css/*
+  Cache-Control: public, max-age=31536000, immutable
+/js/*
+  Cache-Control: public, max-age=31536000, immutable
+/assets/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# foto e video: una settimana (se ne rimpiazzi uno tenendo lo stesso nome,
+# chi è già passato dal sito lo vede aggiornato entro 7 giorni)
+/assets/img/*
+  Cache-Control: public, max-age=604800
+/assets/video/*
+  Cache-Control: public, max-age=604800
+/assets/reel/*
+  Cache-Control: public, max-age=604800
+
+# l'app di Claudia non si può incorporare in altri siti
+/bottega/*
+  X-Frame-Options: DENY
+  Referrer-Policy: same-origin

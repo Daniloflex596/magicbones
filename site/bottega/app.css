@@ -1,0 +1,122 @@
+/* Bottega — l'app di Claudia. Chiara e funzionale, pensata per l'iPhone.
+   I campi sono a 17px: sotto i 16px Safari ingrandisce la pagina quando li tocchi. */
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --fondo:#f4f1ea; --carta:#fff; --testo:#211c16; --tenue:#6e675b; --linea:#dcd5c7;
+  --bosco:#13120A; --oro:#ebc97f; --rosso:#a6402f; --rosso-chiaro:#f5e4e0;
+  --verde:#2f7a3d; --verde-chiaro:#e2f1e5; --giallo:#9a6400; --giallo-chiaro:#fbefd5;
+}
+html{-webkit-text-size-adjust:100%; scroll-padding:80px 0 110px}
+body{margin:0; background:var(--fondo); color:var(--testo);
+  font:17px/1.45 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  padding-bottom:env(safe-area-inset-bottom)}
+h1,h2{line-height:1.2}
+h1{font-size:1.45rem; margin:0}
+h2{font-size:1.05rem; margin:1.6rem 0 .6rem; color:var(--tenue); text-transform:uppercase; letter-spacing:.06em}
+button,input,textarea{font:inherit; color:inherit}
+a{color:var(--rosso)}
+.nascosto{display:none !important}
+
+/* ---- barra in alto ---- */
+.testa{position:sticky; top:0; z-index:10; display:flex; align-items:center; gap:10px;
+  padding:calc(env(safe-area-inset-top) + 10px) 14px 10px; background:var(--bosco); color:#f3ead2}
+.testa__titolo{flex:1; min-width:0; font-weight:700; letter-spacing:.02em; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.testa__titolo small{display:block; font-weight:400; font-size:.75rem; color:var(--oro); letter-spacing:.12em; text-transform:uppercase}
+.testa button,.testa a{min-height:40px; padding:0 12px; border:1px solid rgba(235,201,127,.45); border-radius:10px; background:transparent; color:#f3ead2; text-decoration:none; display:inline-flex; align-items:center; cursor:pointer}
+
+.pagina{max-width:760px; margin:0 auto; padding:16px 16px 120px}
+
+/* ---- tasti ---- */
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:50px; padding:0 18px;
+  border:1px solid var(--linea); border-radius:12px; background:var(--carta); font-weight:600; cursor:pointer; text-decoration:none; color:inherit}
+.btn:disabled{opacity:.45; cursor:default}
+.btn--primario{background:var(--rosso); border-color:var(--rosso); color:#fff}
+.btn--largo{display:flex; width:100%}
+.btn--piccolo{min-height:38px; padding:0 12px; font-size:.9rem}
+.btn:focus-visible,.scelta input:focus-visible + span,.riga:focus-visible{outline:3px solid #2a6fdb; outline-offset:2px}
+
+/* ---- accesso ---- */
+.accesso{max-width:420px; margin:12vh auto 0; padding:24px 20px; text-align:center}
+.accesso img{width:120px; height:120px; border-radius:24px}
+.accesso h1{margin:16px 0 4px}
+.accesso p{color:var(--tenue)}
+.pin{display:block; width:100%; margin:18px 0 12px; padding:14px; font-size:28px; letter-spacing:.4em; text-align:center;
+  border:1px solid var(--linea); border-radius:12px; background:var(--carta)}
+
+/* ---- elenco ---- */
+.schede{display:flex; gap:8px; margin:4px 0 12px}
+.schede button{flex:1; min-height:44px; border:1px solid var(--linea); border-radius:999px; background:var(--carta); font-weight:600; cursor:pointer}
+.schede button[aria-pressed="true"]{background:var(--testo); border-color:var(--testo); color:#fff}
+.cerca{display:block; width:100%; padding:12px 14px; border:1px solid var(--linea); border-radius:12px; background:var(--carta); font-size:17px}
+.riga{display:flex; align-items:center; gap:12px; width:100%; padding:10px; margin:0 0 8px; border:1px solid var(--linea); border-radius:14px;
+  background:var(--carta); text-align:left; cursor:pointer}
+.riga img,.riga .vuota{flex:none; width:64px; height:64px; border-radius:10px; object-fit:cover; background:#e6e0d4}
+.riga__testo{flex:1; min-width:0}
+.riga__nome{display:block; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.riga__sotto{display:block; color:var(--tenue); font-size:.92rem}
+.bollino{display:inline-block; padding:2px 8px; border-radius:999px; font-size:.78rem; font-weight:600; background:#ebe6dc; color:var(--tenue)}
+.bollino--venduto{background:var(--rosso-chiaro); color:var(--rosso)}
+.vuoto{color:var(--tenue); text-align:center; padding:30px 10px}
+
+.piede{position:fixed; left:0; right:0; bottom:0; z-index:10; display:flex; gap:10px;
+  padding:10px 14px calc(10px + env(safe-area-inset-bottom)); background:rgba(244,241,234,.96); border-top:1px solid var(--linea);
+  -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px)}
+.piede .btn{flex:1}
+
+/* ---- scheda del pezzo ---- */
+.foto{display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:10px}
+.foto__una{position:relative; margin:0; border-radius:12px; overflow:hidden; background:#e6e0d4; aspect-ratio:3/4}
+.foto__una img{display:block; width:100%; height:100%; object-fit:cover}
+.foto__cop{position:absolute; top:6px; left:6px; padding:3px 8px; border-radius:999px; background:rgba(0,0,0,.72); color:#ffd76a; font-size:.78rem; font-weight:700}
+.foto__stato{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; padding:10px; text-align:center;
+  background:rgba(255,255,255,.78); font-size:.9rem; font-weight:600}
+.foto__stato--errore{background:rgba(166,64,47,.88); color:#fff}
+.foto__comandi{position:absolute; left:0; right:0; bottom:0; display:flex; justify-content:space-between; gap:4px; padding:6px;
+  background:linear-gradient(transparent, rgba(0,0,0,.6))}
+.foto__comandi button{width:38px; height:38px; border:0; border-radius:10px; background:rgba(255,255,255,.92); font-size:1rem; font-weight:700; cursor:pointer}
+.foto__comandi button:disabled{opacity:.35}
+.foto__aggiungi{display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; aspect-ratio:3/4; border:2px dashed var(--linea);
+  border-radius:12px; background:var(--carta); color:var(--tenue); font-weight:600; cursor:pointer; text-align:center; padding:10px}
+.foto__aggiungi span{font-size:2rem; line-height:1; color:var(--rosso)}
+.foto__aggiungi input{position:absolute; width:1px; height:1px; opacity:0}
+.foto__nota{color:var(--tenue); font-size:.9rem; margin:.5rem 0 0}
+
+.campo{display:block; margin:0 0 18px; padding:0; border:0; min-width:0}
+.campo > span,.campo > legend{display:block; margin-bottom:6px; font-weight:600; padding:0}
+.campo i{font-weight:400; color:var(--tenue); font-style:normal}
+.campo input[type=text],.campo textarea{display:block; width:100%; padding:12px; border:1px solid var(--linea); border-radius:10px;
+  background:var(--carta); font-size:17px}
+.campo textarea{resize:vertical; min-height:96px}
+.campo input:focus,.campo textarea:focus,.cerca:focus,.pin:focus{outline:none; border-color:var(--rosso); box-shadow:0 0 0 3px var(--rosso-chiaro)}
+.campo--errore input,.campo--errore .scelte,.campo--errore .foto{box-shadow:0 0 0 3px var(--rosso-chiaro); border-radius:12px}
+.prezzo{display:flex; align-items:center; gap:8px}
+.prezzo b{font-size:1.2rem; color:var(--tenue)}
+.spunta{display:flex; align-items:flex-start; gap:10px; margin-top:10px; color:var(--tenue); font-size:.95rem}
+.spunta input{flex:none; width:22px; height:22px; margin-top:1px}
+
+.scelte{display:flex; flex-wrap:wrap; gap:8px}
+.scelta{position:relative}
+.scelta input{position:absolute; opacity:0; width:1px; height:1px}
+.scelta span{display:inline-flex; align-items:center; min-height:44px; padding:0 14px; border:1px solid var(--linea); border-radius:999px; background:var(--carta); cursor:pointer}
+.scelta input:checked + span{background:var(--testo); border-color:var(--testo); color:#fff}
+.campo input[name=nuovaCategoria]{margin-top:10px}
+
+.errori{margin:0 0 16px; padding:12px 14px; border-radius:12px; background:var(--rosso-chiaro); color:var(--rosso); font-weight:600}
+.errori ul{margin:.3rem 0 0; padding-left:1.2rem; font-weight:400}
+.stato-pezzo{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin:0 0 14px}
+.zona-vendita{margin-top:28px; padding-top:18px; border-top:1px solid var(--linea)}
+
+/* ---- invio e fatto ---- */
+.invio{position:fixed; inset:0; z-index:30; display:flex; align-items:center; justify-content:center; padding:24px; background:rgba(19,18,10,.72)}
+.invio__box{width:100%; max-width:380px; padding:24px; border-radius:18px; background:var(--carta); text-align:center}
+.invio__barra{height:8px; margin:16px 0 6px; border-radius:99px; background:#ebe6dc; overflow:hidden}
+.invio__barra i{display:block; height:100%; width:0; background:var(--rosso); transition:width .3s}
+.fatto{text-align:center; padding-top:8vh}
+.fatto__segno{width:84px; height:84px; margin:0 auto 12px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:2.4rem; background:var(--verde-chiaro); color:var(--verde)}
+.fatto__online{margin:18px 0; padding:12px 14px; border-radius:12px; background:var(--giallo-chiaro); color:var(--giallo); font-weight:600}
+.fatto__online--si{background:var(--verde-chiaro); color:var(--verde)}
+
+.avviso{position:fixed; left:50%; bottom:calc(88px + env(safe-area-inset-bottom)); transform:translateX(-50%); z-index:40;
+  max-width:calc(100% - 32px); padding:10px 16px; border-radius:10px; background:#211c16; color:#fff; font-size:.95rem; text-align:center}
+.avviso[hidden]{display:none}

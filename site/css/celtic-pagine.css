@@ -1,0 +1,280 @@
+/* ==========================================================================
+   MAGIC BONES — pagine celtiche: catalogo e pezzo
+   Usa i token --c-* e i componenti (arco, altare, bottoni, nodi) di
+   css/celtic.css. Qui: impaginazione delle due pagine, porte del catalogo,
+   galleria del pezzo.
+   ========================================================================== */
+
+body.cel-page{
+  font-family:var(--c-body); font-size:clamp(1.12rem, .5vw + 1rem, 1.3rem); line-height:1.6; font-weight:500;
+  color:var(--c-mist);
+  background:
+    radial-gradient(ellipse 60% 30% at 50% 0%, rgba(188,214,110,.07), transparent 70%),
+    radial-gradient(ellipse 40% 25% at 10% 40%, rgba(164,138,207,.06), transparent 70%),
+    radial-gradient(ellipse 40% 25% at 90% 70%, rgba(239,177,92,.06), transparent 70%),
+    var(--c-bg);
+}
+:where(.cel-page) p{margin:0}
+.cel-page :focus-visible{outline:2px solid var(--c-fae); outline-offset:4px}
+.cel-page main{position:relative; z-index:2}
+
+/* ============================================================ CATALOGO == */
+.cel-cathead{position:relative; overflow:hidden; isolation:isolate; text-align:center; padding:clamp(4.5rem, 10vw, 7.5rem) 0 clamp(3.5rem, 7vw, 5rem)}
+.cel-cathead__crown{
+  position:absolute; left:50%; top:50%; z-index:-1; pointer-events:none;
+  width:min(84vh, 110vw); aspect-ratio:1; transform:translate(-50%,-50%); opacity:.28;
+}
+.cel-cathead__crown > div{position:absolute; inset:0}
+.cel-cathead__ogham{color:var(--c-fae); opacity:.8}
+.cel-cathead__title{
+  margin-top:.8rem; font-family:var(--c-disp); font-weight:400; letter-spacing:normal; line-height:.98;
+  font-size:clamp(2.6rem, 7.5vw, 6rem);
+  background:linear-gradient(180deg, #FFF8E4 8%, #F4D59A 50%, #C98A45 100%);
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 24px rgba(239,177,92,.35)) drop-shadow(0 4px 2px rgba(0,0,0,.6));
+}
+.cel-cathead__lede{margin:1.2rem auto 0; max-width:36rem; font-style:italic; font-size:clamp(1.15rem, .8vw + 1rem, 1.4rem)}
+/* sul telefono la corona grande stava dietro al testo, tagliata ai lati:
+   qui diventa un piccolo sigillo sopra il titolo, e la testata si accorcia */
+@media (max-width:760px){
+  .cel-cathead{padding:1.9rem 0 1.2rem}
+  .cel-cathead__crown{position:relative; left:auto; top:auto; z-index:0; transform:none; width:104px; margin:0 auto .3rem; opacity:.7}
+  .cel-cathead__title{margin-top:.45rem; font-size:2.4rem}
+  .cel-cathead__lede{margin-top:.75rem; font-size:1.08rem; line-height:1.5}
+  .cel-catalog{padding-top:2.4rem}
+}
+
+/* pietre runiche */
+.cel-filters{display:flex; flex-wrap:wrap; justify-content:center; gap:.9rem 1.1rem; margin-top:2.6rem}
+.cel-filter{
+  display:inline-flex; align-items:center; gap:.7rem; cursor:pointer; min-height:54px;
+  padding:.6rem 1.3rem .6rem .75rem; color:var(--c-paper);
+  font-family:var(--c-caps); font-weight:600; font-size:.72rem; letter-spacing:.16em; text-transform:uppercase;
+  border:1px solid rgba(235,201,127,.22);
+  border-radius:44% 56% 40% 60% / 62% 50% 50% 38%;
+  background:var(--grain), linear-gradient(100deg, #151C17 0%, #283129 58%, #445046 100%);
+  box-shadow:inset -10px -8px 16px rgba(0,0,0,.5), inset 6px 4px 10px rgba(255,255,255,.04), 0 12px 24px -14px #000;
+  transition:transform var(--t-micro) var(--ease), border-color 300ms, box-shadow 400ms var(--ease-out), color 300ms;
+}
+.cel-filter:hover{transform:translateY(-3px); border-color:rgba(235,201,127,.5)}
+.cel-filter__rune{width:28px; height:28px; flex:none; color:var(--c-fae); opacity:.3; transition:opacity 400ms, filter 400ms}
+.cel-filter__rune .sym-svg path{stroke-width:5}
+.cel-filter__n{
+  display:grid; place-items:center; min-width:24px; height:24px; padding:0 .35rem; border-radius:999px;
+  font-family:var(--c-body); font-size:.9rem; letter-spacing:0; color:var(--c-mist-dim); border:1px solid rgba(235,201,127,.25);
+}
+.cel-filter.is-on{color:var(--c-gold-lit); border-color:rgba(235,201,127,.8); box-shadow:inset -10px -8px 16px rgba(0,0,0,.5), 0 0 0 4px rgba(188,214,110,.08), 0 0 34px -6px rgba(188,214,110,.45)}
+.cel-filter.is-on .cel-filter__rune{opacity:1; filter:drop-shadow(0 0 5px var(--c-fae)) drop-shadow(0 0 12px var(--c-fae))}
+.cel-filter.is-on .cel-filter__n{color:#1B1408; background:var(--c-gold); border-color:var(--c-gold)}
+/* sul computer: due file da tre pietre invece di cinque più una sola */
+@media (min-width:761px){ .cel-filters{max-width:46rem; margin-inline:auto} }
+/* sul telefono le pietre stanno in una fila sola che si scorre col dito:
+   impilate (una per riga) spingevano i pezzi mezzo schermo più in giù */
+@media (max-width:760px){
+  .cel-filters{
+    flex-wrap:nowrap; justify-content:flex-start; gap:.65rem; overflow-x:auto; overscroll-behavior-x:contain;
+    margin:1.1rem calc(-1 * var(--gutter)) 0; padding:.9rem var(--gutter) 1.1rem;
+    scroll-snap-type:x proximity; scroll-padding-inline:var(--gutter); scrollbar-width:none;
+    -webkit-mask-image:linear-gradient(90deg, transparent 0, #000 var(--gutter), #000 calc(100% - var(--gutter)), transparent 100%);
+            mask-image:linear-gradient(90deg, transparent 0, #000 var(--gutter), #000 calc(100% - var(--gutter)), transparent 100%);
+  }
+  .cel-filters::-webkit-scrollbar{display:none}
+  .cel-filter{flex:none; scroll-snap-align:start; min-height:48px; gap:.55rem; padding:.5rem 1rem .5rem .6rem; font-size:.68rem; letter-spacing:.13em}
+  .cel-filter:hover{transform:none}
+  .cel-filter__rune{width:24px; height:24px}
+  /* bagliore più raccolto: quello largo veniva tagliato dai bordi della fila */
+  .cel-filter.is-on{box-shadow:inset -10px -8px 16px rgba(0,0,0,.5), 0 0 0 3px rgba(188,214,110,.08), 0 0 14px -4px rgba(188,214,110,.5)}
+}
+
+/* la cornice del codice: doppio filetto, nodi agli angoli, colonne a treccia */
+.cel-catalog{padding:clamp(3.5rem, 7vw, 5.5rem) 0 clamp(4rem, 8vw, 6rem)}
+.cel-frame{
+  position:relative; padding:clamp(2.4rem, 5vw, 4rem) clamp(1rem, 5vw, 4.5rem);
+  border:1px solid rgba(235,201,127,.32); border-radius:30px;
+  outline:1px solid rgba(235,201,127,.12); outline-offset:9px;
+  background:
+    radial-gradient(ellipse 60% 30% at 50% 0%, rgba(239,177,92,.06), transparent 70%),
+    radial-gradient(ellipse 60% 30% at 50% 100%, rgba(188,214,110,.06), transparent 70%),
+    rgba(255,255,255,.012);
+}
+.cel-frame__corner{position:absolute; width:64px; height:64px; z-index:2; filter:drop-shadow(0 0 10px rgba(239,177,92,.4))}
+.cel-frame__corner--tl{top:-22px; left:-22px}
+.cel-frame__corner--tr{top:-22px; right:-22px}
+.cel-frame__corner--bl{bottom:-22px; left:-22px}
+.cel-frame__corner--br{bottom:-22px; right:-22px}
+.cel-frame__pillar{position:absolute; top:70px; bottom:70px; width:18px; opacity:.75}
+.cel-frame__pillar--l{left:14px}
+.cel-frame__pillar--r{right:14px}
+@media (max-width:760px){
+  .cel-frame{padding-inline:.9rem; border-radius:22px}
+  .cel-frame__pillar{display:none}
+  .cel-frame__corner{width:48px; height:48px}
+  .cel-frame__corner--tl,.cel-frame__corner--tr{top:-16px}
+  .cel-frame__corner--bl,.cel-frame__corner--br{bottom:-16px}
+  .cel-frame__corner--tl,.cel-frame__corner--bl{left:-16px}
+  .cel-frame__corner--tr,.cel-frame__corner--br{right:-16px}
+}
+
+/* gruppi */
+.cel-group + .cel-group{margin-top:clamp(3.5rem, 7vw, 5rem)}
+.cel-group[hidden],.cel-doors__item[hidden]{display:none}
+.cel-group__title{
+  display:flex; align-items:center; gap:1rem; margin:0 0 clamp(2rem, 4vw, 2.8rem);
+  font-family:var(--c-disp); font-weight:400; letter-spacing:normal; font-size:clamp(1.6rem, 3.2vw, 2.4rem); line-height:1.1; color:var(--c-gold-lit);
+}
+.cel-group__title::before,.cel-group__title::after{content:""; flex:1; height:1px; background:linear-gradient(90deg, transparent, rgba(235,201,127,.6))}
+.cel-group__title::after{background:linear-gradient(90deg, rgba(235,201,127,.6), transparent)}
+.cel-group__num{
+  order:-1; display:grid; place-items:center; width:2.5rem; height:2.5rem; flex:none; font-size:1.05rem; color:var(--c-gold);
+  border:1px solid rgba(235,201,127,.55); border-radius:50%;
+}
+.cel-group__title::before{order:-2}
+.cel-empty{margin:1rem 0; text-align:center; font-style:italic; color:var(--c-mist-dim)}
+
+/* ------------------------------------------------- le porte (le schede) -- */
+.cel-doors{
+  list-style:none; margin:0; padding:0; display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(min(100%, 168px), 1fr));
+  gap:clamp(2.2rem, 4vw, 3rem) clamp(1rem, 2.6vw, 2.2rem);
+}
+@media (max-width:420px){ .cel-doors{grid-template-columns:repeat(2, minmax(0, 1fr)); gap:2.2rem .9rem} }
+.cel-doors__item{margin:0}
+.cel-doors__item.is-summoned{animation:summon 700ms var(--ease-out) var(--summon, 0ms) both}
+@keyframes summon{from{opacity:0; transform:translateY(16px) scale(.94); filter:blur(6px)} to{opacity:1; transform:none; filter:none}}
+
+.cel-door{
+  position:relative; display:flex; flex-direction:column; align-items:center; text-align:center;
+  text-decoration:none; color:inherit;
+  transition:transform 500ms var(--ease-out);
+}
+.cel-door::before{                  /* bagliore ai piedi della porta */
+  content:""; position:absolute; left:10%; right:10%; top:40%; height:55%; z-index:-1; pointer-events:none;
+  background:radial-gradient(ellipse at 50% 40%, rgba(239,177,92,.14), transparent 70%); opacity:.6; transition:opacity 500ms;
+}
+.cel-door__frame{position:relative; display:block; width:100%; padding:8px}
+.cel-door__frame::before,.cel-door__frame::after{
+  content:""; position:absolute; pointer-events:none; background:var(--c-arch-line) center / 100% 100% no-repeat;
+}
+.cel-door__frame::before{inset:0; filter:drop-shadow(0 0 5px rgba(235,201,127,.3)); transition:filter 500ms}
+.cel-door__frame::after{inset:-7px; opacity:.4}
+.cel-door__arch img{transition:transform 1s var(--ease-out)}
+.reveal.is-in .cel-door__arch img{transform:scale(1)}
+.cel-door__flag{
+  position:absolute; left:50%; bottom:12%; translate:-50% 0; white-space:nowrap; z-index:2;
+  padding:.3rem .7rem; border-radius:999px; color:var(--c-gold-lit);
+  font-family:var(--c-caps); font-weight:600; font-size:.56rem; letter-spacing:.18em; text-transform:uppercase;
+  background:radial-gradient(circle at 35% 30%, #C4523E, #7E2A1E); box-shadow:inset 0 0 0 1px rgba(235,201,127,.6), 0 6px 14px -6px #000;
+}
+.cel-door__more{
+  position:absolute; right:12%; top:34%; z-index:2; padding:.15rem .5rem; border-radius:999px;
+  font-family:var(--c-caps); font-size:.55rem; letter-spacing:.14em; text-transform:uppercase; color:var(--c-fae);
+  background:rgba(19,18,10,.75); border:1px solid rgba(188,214,110,.4);
+}
+.cel-door__name{margin-top:.9rem; font-family:var(--c-disp); font-size:clamp(1.02rem, 1.3vw, 1.18rem); line-height:1.15; color:var(--c-paper)}
+.cel-door__price{margin-top:.3rem; font-family:var(--c-caps); font-weight:600; font-size:.82rem; letter-spacing:.14em; color:var(--c-gold)}
+.cel-door__price em{font-style:normal; font-size:.62rem; letter-spacing:.18em; text-transform:uppercase; color:var(--c-mist-dim)}
+.cel-door:hover,.cel-door:focus-visible{transform:translateY(-6px)}
+.cel-door:hover::before{opacity:1}
+.cel-door:hover .cel-door__frame::before{filter:drop-shadow(0 0 9px rgba(247,207,140,.75))}
+.cel-door:hover .cel-door__arch img{transform:scale(1.06)}
+.cel-door:hover .cel-arch::after{opacity:1}
+
+/* su misura */
+.cel-pact{
+  display:grid; grid-template-columns:auto minmax(0,1fr); align-items:center; gap:clamp(1.6rem, 5vw, 3.6rem);
+  margin-top:clamp(4.5rem, 9vw, 6.5rem); padding:clamp(1.8rem, 4vw, 3rem);
+  border:1px solid rgba(235,201,127,.3); border-radius:28px;
+  background:radial-gradient(ellipse 40% 80% at 10% 50%, rgba(188,214,110,.10), transparent 70%), rgba(255,255,255,.015);
+}
+.cel-pact__seal{display:block; width:clamp(110px, 15vw, 170px); aspect-ratio:1; filter:drop-shadow(0 0 14px rgba(239,177,92,.4))}
+.cel-pact__title{margin:.8rem 0 .8rem; font-family:var(--c-disp); font-weight:400; letter-spacing:normal; font-size:clamp(1.9rem, 3.8vw, 2.9rem); line-height:1.05; color:var(--c-paper)}
+.cel-pact__p{max-width:34rem; font-style:italic}
+.cel-pact .btn{margin-top:1.6rem}
+.cel-note{margin-top:2.6rem; text-align:center; font-style:italic; color:var(--c-mist-dim)}
+@media (max-width:760px){ .cel-pact{grid-template-columns:1fr; text-align:center} .cel-pact__seal{margin-inline:auto} .cel-pact__p{margin-inline:auto} }
+
+/* =============================================================== PEZZO == */
+.cel-crumbs{
+  display:flex; flex-wrap:wrap; align-items:center; gap:.4rem .8rem; padding:1.6rem 0 0;
+  font-family:var(--c-caps); font-size:.68rem; letter-spacing:.2em; text-transform:uppercase; color:var(--c-mist-dim);
+}
+.cel-crumbs a{color:var(--c-fae); text-decoration:none}
+.cel-crumbs a:hover{color:var(--c-gold-lit)}
+.cel-crumbs > span[aria-hidden]{color:var(--c-gold); font-size:.6rem}
+
+.cel-piece{
+  display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,1fr); align-items:start;
+  gap:clamp(2rem, 5vw, 4.5rem); padding:clamp(2.2rem, 5vw, 3.6rem) 0 clamp(4rem, 8vw, 6rem);
+}
+.cel-piece__gallery{position:sticky; top:84px}
+.cel-shrine--gallery{width:min(100%, 520px); margin-inline:auto; position:relative}
+
+/* la galleria dentro l'arco: si scorre col dito, foto intera su sfondo sfocato */
+.cel-gallery{background:#0B0D05}
+.cel-gallery__track{
+  position:absolute; inset:0; display:flex; overflow-x:auto; overflow-y:hidden;
+  scroll-snap-type:x mandatory; scrollbar-width:none; overscroll-behavior-x:contain;
+}
+.cel-gallery__track::-webkit-scrollbar{display:none}
+.cel-gallery__track:focus-visible{outline:2px solid var(--c-fae); outline-offset:-6px}
+.cel-gallery__slide{position:relative; flex:0 0 100%; margin:0; scroll-snap-align:center; overflow:hidden}
+.cel-gallery__bg{position:absolute; inset:-10%; width:120%; height:120%; max-width:none; object-fit:cover; filter:blur(22px) brightness(.45) saturate(1.2)}
+.cel-gallery__img{position:relative; width:100%; height:100%; object-fit:contain}
+.cel-shrine--gallery .cel-arch img{transform:none}
+
+.cel-gallery__nav{display:flex; align-items:center; justify-content:center; gap:1.2rem; margin-top:1.1rem}
+.cel-gallery__arrow{
+  width:46px; height:46px; display:grid; place-items:center; cursor:pointer; line-height:1;
+  font-size:1.6rem; color:var(--c-gold-lit); background:rgba(19,18,10,.6);
+  border:1px solid rgba(235,201,127,.55); border-radius:50%; transition:background var(--t-micro), opacity var(--t-micro);
+}
+.cel-gallery__arrow:hover:not(:disabled){background:rgba(235,201,127,.14)}
+.cel-gallery__arrow:disabled{opacity:.3; cursor:default}
+.cel-gallery__count{font-family:var(--c-caps); font-size:.8rem; letter-spacing:.2em; color:var(--c-mist-dim)}
+.cel-gallery__count b{color:var(--c-gold-lit); font-weight:600}
+.cel-gallery__thumbs{display:flex; flex-wrap:wrap; justify-content:center; gap:.8rem; margin-top:1rem}
+.cel-gallery__thumb{
+  width:58px; padding:3px; cursor:pointer; background:none; border:0; opacity:.55;
+  transition:opacity 300ms, transform 300ms var(--ease-out);
+}
+.cel-gallery__thumb .cel-arch img{transform:none}
+.cel-gallery__thumb:hover{opacity:.85; transform:translateY(-2px)}
+.cel-gallery__thumb[aria-current="true"]{opacity:1; filter:drop-shadow(0 0 6px rgba(247,207,140,.7))}
+
+.cel-piece__info{padding-top:clamp(0rem, 3vw, 2.5rem)}
+.cel-piece__title{
+  margin:.8rem 0 .4rem; font-family:var(--c-disp); font-weight:400; letter-spacing:normal;
+  font-size:clamp(2.4rem, 5vw, 4rem); line-height:1; color:var(--c-paper);
+}
+.cel-piece__nota{margin:-.4rem 0 1rem; font-style:italic; font-size:1.25rem; color:var(--c-amber)}
+.cel-piece__nota::before{content:"— "; color:var(--c-gold)}
+.cel-piece__desc{margin-bottom:1.8rem; color:var(--c-mist)}
+.cel-piece__facts{list-style:none; margin:2.2rem 0 0; padding:1.4rem 0 0; display:grid; gap:.9rem; border-top:1px solid rgba(235,201,127,.2)}
+.cel-piece__facts li{display:grid; grid-template-columns:8.5rem minmax(0,1fr); gap:1rem; align-items:baseline; font-size:1.08rem}
+.cel-piece__facts span{font-family:var(--c-caps); font-weight:600; font-size:.68rem; letter-spacing:.2em; text-transform:uppercase; color:var(--c-fae)}
+.cel-piece__small{margin-top:1.6rem; font-size:.98rem; font-style:italic; color:var(--c-mist-dim)}
+.cel-missing{grid-column:1 / -1; text-align:center; padding:3rem 0; display:grid; justify-items:center; gap:1rem}
+.cel-missing__sigil{width:70px; height:70px; color:var(--c-gold)}
+
+@media (max-width:860px){
+  .cel-piece{grid-template-columns:1fr; gap:2.4rem}
+  .cel-piece__gallery{position:static}
+  .cel-shrine--gallery{width:min(100%, 430px)}
+  .cel-piece__facts li{grid-template-columns:1fr; gap:.15rem}
+}
+
+/* altri pezzi */
+.cel-more{padding-bottom:clamp(4rem, 8vw, 6rem)}
+.cel-more__title{
+  margin:clamp(3rem, 6vw, 4.5rem) 0 2.4rem; text-align:center;
+  font-family:var(--c-disp); font-weight:400; letter-spacing:normal; font-size:clamp(1.7rem, 3vw, 2.4rem); color:var(--c-gold);
+}
+.cel-more__title::before,.cel-more__title::after{content:"❦"; margin:0 .8em; font-size:.6em; vertical-align:middle; color:var(--c-fae)}
+.cel-doors--row{grid-template-columns:repeat(4, minmax(0, 1fr)); max-width:900px; margin-inline:auto}
+@media (max-width:760px){ .cel-doors--row{grid-template-columns:repeat(2, minmax(0, 1fr))} }
+.cel-more__all{margin-top:2.6rem; text-align:center}
+
+@media (prefers-reduced-motion: reduce){
+  .cel-door,.cel-door__arch img,.cel-filter,.cel-gallery__thumb{transition:none}
+  .cel-doors__item.is-summoned{animation:none}
+}

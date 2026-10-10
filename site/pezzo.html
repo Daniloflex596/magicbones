@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Il pezzo — Magic Bones</title>
+<meta name="description" content="Un pezzo unico di Magic Bones: trovato nel bosco, pulito e dipinto a mano da Claudia Capitani. Roma.">
+<meta name="theme-color" content="#0F1106">
+
+<link rel="icon" href="assets/img/logo/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/img/logo/magic-bones-180.webp">
+
+<!-- caratteri ospitati nel sito (css/tokens.css): si caricano subito quelli della prima schermata -->
+<link rel="preload" href="assets/fonts/uncial-antiqua-normal-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/cormorant-garamond-normal-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/cinzel-normal-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/tokens.css?v=55">
+<link rel="stylesheet" href="css/base.css?v=55">
+<link rel="stylesheet" href="css/cart.css?v=55">
+<link rel="stylesheet" href="css/celtic.css?v=55">
+<link rel="stylesheet" href="css/celtic-pagine.css?v=55">
+
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body class="cel-page">
+
+<a class="skip-link" href="#pezzo">Vai al pezzo</a>
+
+<header class="cel-topbar" id="topbar">
+  <div class="cel-topbar__inner">
+    <a class="cel-topbar__brand" href="index.html">
+      <span class="cel-topbar__sigil" data-knot="triquetra" aria-hidden="true"></span>
+      <span>Magic&nbsp;Bones</span>
+    </a>
+    <button class="cel-topbar__toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="siteNav">Menu</button>
+    <nav class="cel-topbar__nav" id="siteNav" aria-label="Il sito">
+      <a href="index.html#cammino">La storia</a>
+      <a href="index.html#vetrina">I pezzi</a>
+      <a href="catalogo.html" class="is-here">Il catalogo</a>
+      <a href="index.html#contatti">Scrivimi</a>
+    </nav>
+  </div>
+</header>
+
+<main id="pezzo">
+  <div class="wrap">
+    <nav class="cel-crumbs" aria-label="Sei qui">
+      <a href="index.html">Il bosco</a><span aria-hidden="true">✦</span><a href="catalogo.html" id="crumbCat">Il catalogo</a><span aria-hidden="true">✦</span><span id="crumbName" aria-current="page"></span>
+    </nav>
+
+    <!-- la scheda la costruisce js/pezzo.js leggendo js/pezzi.js (pezzo.html?id=…) -->
+    <article class="cel-piece" id="celPiece"></article>
+    <noscript>
+      <p class="cel-empty">Per vedere il pezzo serve JavaScript. Torna al <a href="catalogo.html">catalogo</a> o scrivimi su WhatsApp al <a href="tel:+393283632440">+39 328 363 2440</a>.</p>
+    </noscript>
+  </div>
+
+  <section class="cel-more" id="celMore" aria-labelledby="more-h" hidden>
+    <div class="knotband" aria-hidden="true"></div>
+    <div class="wrap">
+      <h2 class="cel-more__title" id="more-h">Altri pezzi dal bosco</h2>
+      <ul class="cel-doors cel-doors--row" id="celMoreList"></ul>
+      <p class="cel-more__all"><a class="cel-go" href="catalogo.html">Tutto il catalogo <em aria-hidden="true">→</em></a></p>
+    </div>
+  </section>
+</main>
+
+<footer class="cel-footer">
+  <div class="knotband" aria-hidden="true"></div>
+  <div class="cel-footer__marquee" aria-hidden="true"><div class="footer__marquee-track" id="marqueeTrack"></div></div>
+  <div class="wrap cel-footer__inner">
+    <div class="cel-footer__seal">
+      <img src="assets/img/logo/magic-bones.webp" alt="Logo Magic Bones." width="110" height="110" loading="lazy" decoding="async">
+      <div class="cel-footer__ogham" data-knot="ogham" data-text="MAGIC BONES · ROMA" aria-hidden="true"></div>
+    </div>
+    <nav class="cel-footer__nav" aria-label="Il sito, in fondo">
+      <a href="index.html#cammino">La storia</a>
+      <a href="index.html#vetrina">I pezzi</a>
+      <a href="catalogo.html" class="is-here">Il catalogo</a>
+      <a href="index.html#contatti">Scrivimi</a>
+    </nav>
+    <p class="cel-footer__meta">Magic&nbsp;Bones — Claudia Capitani · Roma<br>Ogni pezzo lo trovo, lo pulisco e lo dipingo io.</p>
+  </div>
+</footer>
+
+<button class="cartfab" id="cartFab" type="button" aria-expanded="false" aria-controls="cartPanel" hidden>
+  <span class="cartfab__sigil" data-knot="triquetra" aria-hidden="true"></span>
+  <span class="cartfab__label">La tua raccolta</span>
+  <span class="cartfab__badge" id="cartCount">0</span>
+</button>
+
+<div class="cart" id="cart" hidden>
+  <div class="cart__backdrop" id="cartBackdrop"></div>
+  <aside class="cart__panel" id="cartPanel" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
+    <header class="cart__head">
+      <h2 id="cartTitle">La tua raccolta</h2>
+      <button class="cart__close" id="cartClose" type="button" aria-label="Chiudi la raccolta">×</button>
+    </header>
+    <div class="cart__body" id="cartBody"></div>
+    <footer class="cart__foot">
+      <label class="cart__note-label" for="cartNote">Un messaggio per Claudia <span>(facoltativo)</span></label>
+      <textarea class="cart__note" id="cartNote" rows="2" placeholder="Es. vorrei una personalizzazione, o chiedo la spedizione a…"></textarea>
+      <p class="cart__total">Totale indicativo <strong id="cartTotal">€ 0</strong></p>
+      <a class="btn btn--wa cart__send" id="cartSend" href="#" rel="noopener">Invia su WhatsApp</a>
+      <button class="btn btn--ghost btn--sm cart__copy" id="cartCopy" type="button">Copia il messaggio</button>
+    </footer>
+  </aside>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="js/config.js?v=55"></script>
+<script src="data/pezzi.js"></script>
+<script src="js/pezzi.js?v=55"></script>
+<script src="js/catalogo-cel.js?v=55"></script>
+<script src="js/pezzo.js?v=55"></script>
+<script src="js/ui.js?v=55"></script>
+<script src="js/knots.js?v=55"></script>
+<script src="js/celtic.js?v=55"></script>
+<script src="js/cart.js?v=55"></script>
+</body>
+</html>

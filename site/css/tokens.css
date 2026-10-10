@@ -1,0 +1,128 @@
+/* ==========================================================================
+   MAGIC BONES — design tokens: L'UNICO POSTO PER COLORI E FONT
+   Tutto il sito (home, vetrina, catalogo, pagina del pezzo, raccolta) legge
+   da qui. Per cambiare palette o caratteri si tocca solo questo file.
+
+   I colori vengono dal bosco dorato del film d'apertura: la luce del sole tra
+   le foglie (oro miele e ambra), il verde delle foglie e del muschio, la
+   corteccia, la lavanda, il rosso delle amanite e la carta crema del
+   biglietto da visita.
+
+   Font:
+   · titoli   → Uncial Antiqua (la scrittura dei manoscritti irlandesi)
+   · etichette→ Cinzel (maiuscole incise)
+   · testo    → Cormorant Garamond
+   · firme    → Caveat (ospitato in locale)
+   Tutti ospitati in assets/fonts/ (niente Google Fonts: il sito non chiede
+   niente a server esterni). Di Uncial, Cinzel e Cormorant ci sono solo gli
+   alfabeti latino e latino esteso; Cinzel e Cormorant sono "variabili": un
+   file vale per tutti i pesi. Playfair e Jost non sono più usati.
+   ========================================================================== */
+
+@font-face{font-family:'Caveat';src:url('../assets/fonts/caveat-600.woff2') format('woff2');font-weight:600;font-style:normal;font-display:swap}
+@font-face{font-family:'Cinzel';src:url('../assets/fonts/cinzel-normal-400-latin-ext.woff2') format('woff2');font-style:normal;font-weight:400;font-display:swap;unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Cinzel';src:url('../assets/fonts/cinzel-normal-400-latin.woff2') format('woff2');font-style:normal;font-weight:400;font-display:swap;unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Cinzel';src:url('../assets/fonts/cinzel-normal-400-latin-ext.woff2') format('woff2');font-style:normal;font-weight:600;font-display:swap;unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Cinzel';src:url('../assets/fonts/cinzel-normal-400-latin.woff2') format('woff2');font-style:normal;font-weight:600;font-display:swap;unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Cormorant Garamond';src:url('../assets/fonts/cormorant-garamond-italic-400-latin-ext.woff2') format('woff2');font-style:italic;font-weight:400;font-display:swap;unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Cormorant Garamond';src:url('../assets/fonts/cormorant-garamond-italic-400-latin.woff2') format('woff2');font-style:italic;font-weight:400;font-display:swap;unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Cormorant Garamond';src:url('../assets/fonts/cormorant-garamond-italic-400-latin-ext.woff2') format('woff2');font-style:italic;font-weight:500;font-display:swap;unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Cormorant Garamond';src:url('../assets/fonts/cormorant-garamond-italic-400-latin.woff2') format('woff2');font-style:italic;font-weight:500;font-display:swap;unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Cormorant Garamond';src:url('../assets/fonts/cormorant-garamond-normal-400-latin-ext.woff2') format('woff2');font-style:normal;font-weight:400;font-display:swap;unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Cormorant Garamond';src:url('../assets/fonts/cormorant-garamond-normal-400-latin.woff2') format('woff2');font-style:normal;font-weight:400;font-display:swap;unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Cormorant Garamond';src:url('../assets/fonts/cormorant-garamond-normal-400-latin-ext.woff2') format('woff2');font-style:normal;font-weight:500;font-display:swap;unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Cormorant Garamond';src:url('../assets/fonts/cormorant-garamond-normal-400-latin.woff2') format('woff2');font-style:normal;font-weight:500;font-display:swap;unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Cormorant Garamond';src:url('../assets/fonts/cormorant-garamond-normal-400-latin-ext.woff2') format('woff2');font-style:normal;font-weight:600;font-display:swap;unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Cormorant Garamond';src:url('../assets/fonts/cormorant-garamond-normal-400-latin.woff2') format('woff2');font-style:normal;font-weight:600;font-display:swap;unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Uncial Antiqua';src:url('../assets/fonts/uncial-antiqua-normal-400-latin-ext.woff2') format('woff2');font-style:normal;font-weight:400;font-display:swap;unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Uncial Antiqua';src:url('../assets/fonts/uncial-antiqua-normal-400-latin.woff2') format('woff2');font-style:normal;font-weight:400;font-display:swap;unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+
+:root{
+  /* --- Il bosco (dal film) --- */
+  --forest-deep: #13120A;   /* il buio più fondo: barra, piè di pagina, video */
+  --forest:      #1B1B0F;   /* il fondo delle sezioni */
+  --forest-soft: #25261A;
+  --forest-card: #2D2D1D;
+  --moss:        #5E6638;
+  --moss-lit:    #8E9460;
+
+  /* --- Il biglietto da visita --- */
+  --brand-red:   #A6402F;   /* il rosso di MAGIC BONES */
+  --brand-red-lit:#C4523E;
+  --brand-brown: #7F4C39;
+  --paper:       #EDE4CE;   /* la carta crema */
+  --paper-warm:  #E0D5B8;
+  --sage:        #9AAC8E;
+
+  /* --- Oro e luci --- */
+  --gold:        #EBC97F;   /* l'oro dei nodi e dei filetti */
+  --gold-lit:    #F8E4AE;
+  --amber:       #EFB15C;   /* la luce delle finestre della casa */
+  --amber-lit:   #F7CF8C;
+  --fae:         #BCD66E;   /* le foglie al sole: etichette, sigilli, tralcio */
+  --fae-dim:     #6F8B37;
+  --violet:      #A48ACF;   /* la lavanda del sottobosco */
+
+  /* --- Testo --- */
+  --mist:        #DDD6BF;
+  --mist-dim:    #A39C82;
+  --ink:         #241A12;   /* testo sulla carta */
+  --ink-soft:    #5A4634;
+
+  /* --- Tipografia --- */
+  --disp: 'Uncial Antiqua', 'Iowan Old Style', Georgia, serif;
+  --caps: 'Cinzel', 'Trajan Pro', Georgia, serif;
+  --body: 'Cormorant Garamond', 'Iowan Old Style', Georgia, serif;
+  --hand: 'Caveat', cursive;
+
+  --fs-hero:  clamp(2.7rem, 9.6vw, 7.6rem);
+  --fs-h2:    clamp(2.3rem, 5.4vw, 4.4rem);
+  --fs-h3:    clamp(1.4rem, 2.4vw, 1.9rem);
+  --fs-body:  clamp(1.12rem, .5vw + 1rem, 1.3rem);
+  --fs-small: .9rem;
+  --tracking-caps: .3em;
+
+  /* --- Ritmo --- */
+  --gutter: clamp(1.15rem, 4vw, 3rem);
+  --wrap:   1240px;
+  --section-y: clamp(4.5rem, 10vw, 8.5rem);
+
+  /* --- Motion --- */
+  --t-micro: 160ms;
+  --t-reveal: 460ms;
+  --t-morph: 720ms;
+  --ease: cubic-bezier(.22,.75,.25,1);
+  --ease-out: cubic-bezier(.16,1,.3,1);
+
+  /* --- Materia --- */
+  --radius: 12px;
+  --radius-sm: 6px;
+  --shadow-lift: 0 20px 44px -22px rgba(0,0,0,.92);
+  --shadow-paper: 5px 7px 0 rgba(15,17,6,.32);
+
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E");
+
+  /* --- Nomi brevi usati dai componenti celtici: puntano ai valori sopra,
+         NON cambiarli qui (cambia i colori in alto) --- */
+  --c-bg:        var(--forest);
+  --c-gold:      var(--gold);
+  --c-gold-lit:  var(--gold-lit);
+  --c-amber:     var(--amber);
+  --c-amber-lit: var(--amber-lit);
+  --c-fae:       var(--fae);
+  --c-fae-dim:   var(--fae-dim);
+  --c-paper:     var(--paper);
+  --c-mist:      var(--mist);
+  --c-mist-dim:  var(--mist-dim);
+  --c-red:       var(--brand-red);
+  --c-disp:      var(--disp);
+  --c-caps:      var(--caps);
+  --c-body:      var(--body);
+
+  /* colori dei nastri dei nodi (letti da js/knots.js) */
+  --k1: var(--gold-lit); --k2: var(--amber); --k3: var(--gold); --k-halo: var(--forest);
+
+  /* l'arco elfico delle foto: maschera e filetto d'oro */
+  --c-arch: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 133' preserveAspectRatio='none'%3E%3Cpath d='M0 133V52C0 24 20 6 50 0C80 6 100 24 100 52V133Z'/%3E%3C/svg%3E");
+  --c-arch-line: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 133' preserveAspectRatio='none'%3E%3Cpath d='M.5 133V52C.5 24 20 6.5 50 .6C80 6.5 99.5 24 99.5 52V133' fill='none' stroke='%23EBC97F' stroke-width='1.4' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
+}

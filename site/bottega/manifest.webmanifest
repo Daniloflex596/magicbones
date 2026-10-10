@@ -1,0 +1,17 @@
+{
+  "name": "Bottega · Magic Bones",
+  "short_name": "Bottega",
+  "description": "Aggiungi, modifica e vendi i pezzi del catalogo Magic Bones.",
+  "start_url": "/bottega/",
+  "scope": "/bottega/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#13120A",
+  "theme_color": "#13120A",
+  "lang": "it",
+  "icons": [
+    { "src": "icona-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icona-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icona-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

@@ -1,0 +1,336 @@
+/* ==========================================================================
+   MAGIC BONES — componenti celtici condivisi da tutte le pagine
+   · nodi, ogham, simboli e fasce intrecciate (disegnati da js/knots.js)
+   · barra in alto e piè di pagina
+   · la vetrina "sentiero" della home: tralcio che scende, sigilli, foto a
+     porta, porta di pietra verso il catalogo
+   Colori, font e la forma dell'arco stanno in tokens.css.
+   ========================================================================== */
+
+/* ---------------------------------------------- nodi, ogham, simboli -- */
+.knot-svg,.ogham-svg{display:block; width:100%; height:100%; overflow:visible}
+.k-halo,.k-line{stroke:var(--k-halo)}
+.k-frame{fill:none; stroke:var(--k1); stroke-width:.7; opacity:.75}
+.k-dot{fill:var(--k1)}
+.o-stem{fill:none; stroke:currentColor; stroke-width:.55}
+.o-marks{fill:none; stroke:currentColor; stroke-width:1.15; stroke-linecap:round}
+.sym-svg{display:block; width:100%; height:100%; overflow:visible}
+.sym-svg path{fill:none; stroke:currentColor; stroke-width:3; stroke-linecap:round; stroke-linejoin:round}
+
+/* fascia intrecciata fra le sezioni (il disegno lo mette js/knots.js) */
+.knotband{
+  position:relative; z-index:2; height:26px; background-color:var(--c-bg);
+  background-repeat:repeat-x; background-position:center; background-size:auto 26px;
+  -webkit-mask:linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  mask:linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+.knotband--v{
+  height:auto; background-color:transparent; background-repeat:repeat-y; background-size:100% auto; background-position:center top;
+  -webkit-mask:linear-gradient(180deg, transparent, #000 10%, #000 90%, transparent);
+  mask:linear-gradient(180deg, transparent, #000 10%, #000 90%, transparent);
+}
+
+/* ==========================================================================
+   BARRA IN ALTO (uguale su tutte le pagine)
+   Nella home è "a scomparsa": resta nascosta mentre si cammina nel film e
+   compare dopo (la classe is-on la mette js/ui.js).
+   ========================================================================== */
+.cel-topbar{
+  position:sticky; top:0; z-index:80;
+  background:linear-gradient(180deg, rgba(19,18,10,.94), rgba(19,18,10,.78));
+  backdrop-filter:blur(10px) saturate(1.2); -webkit-backdrop-filter:blur(10px) saturate(1.2);
+  border-bottom:1px solid rgba(235,201,127,.22);
+}
+.cel-topbar__inner{width:min(100% - var(--gutter) * 2, var(--wrap)); margin-inline:auto; display:flex; align-items:center; justify-content:space-between; gap:1rem; min-height:64px}
+.cel-topbar__brand{display:flex; align-items:center; gap:.7rem; text-decoration:none; font-family:var(--c-disp); font-size:1.3rem; color:var(--c-gold-lit)}
+.cel-topbar__sigil{width:34px; height:34px; color:var(--c-gold)}
+/* il menu: uguale su tutte le pagine; "Il catalogo" è la pillola d'oro */
+.cel-topbar__nav{display:flex; align-items:center; gap:1.7rem}
+.cel-topbar__nav a{
+  position:relative; padding:.5rem 0; text-decoration:none; white-space:nowrap;
+  font-family:var(--caps); font-weight:600; font-size:.72rem; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--mist); transition:color var(--t-micro);
+}
+.cel-topbar__nav a::after{
+  content:""; position:absolute; left:0; right:0; bottom:.15rem; height:1px; background:var(--gold);
+  transform:scaleX(0); transition:transform 300ms var(--ease-out);
+}
+.cel-topbar__nav a:hover{color:var(--gold-lit)}
+.cel-topbar__nav a:hover::after,.cel-topbar__nav a[aria-current="page"]::after,.cel-topbar__nav a.is-here::after{transform:scaleX(1)}
+.cel-topbar__nav a[aria-current="page"],.cel-topbar__nav a.is-here{color:var(--gold-lit)}
+.cel-topbar__nav a[href$="catalogo.html"]{
+  padding:.62rem 1.15rem; border-radius:999px; color:var(--gold-lit);
+  border:1px solid rgba(235,201,127,.6); transition:background var(--t-micro), box-shadow var(--t-micro);
+}
+.cel-topbar__nav a[href$="catalogo.html"]::after{display:none}
+.cel-topbar__nav a[href$="catalogo.html"]:hover,
+.cel-topbar__nav a[href$="catalogo.html"][aria-current="page"],
+.cel-topbar__nav a[href$="catalogo.html"].is-here{background:rgba(235,201,127,.14); box-shadow:0 0 24px -6px rgba(235,201,127,.5)}
+.cel-topbar__toggle{
+  display:none; cursor:pointer; min-height:42px; padding:.5rem 1rem; border-radius:999px;
+  font-family:var(--caps); font-weight:600; font-size:.7rem; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--gold-lit); background:transparent; border:1px solid rgba(235,201,127,.6);
+}
+@media (max-width:760px){
+  .cel-topbar__toggle{display:inline-flex; align-items:center}
+  .cel-topbar__nav{
+    position:absolute; top:100%; right:var(--gutter); left:var(--gutter);
+    flex-direction:column; align-items:stretch; gap:0; padding:.6rem 1.2rem 1rem;
+    background:linear-gradient(180deg, rgba(19,18,10,.98), rgba(22,26,15,.98));
+    border:1px solid rgba(235,201,127,.3); border-top:0; border-radius:0 0 18px 18px;
+    box-shadow:0 30px 50px -30px #000;
+    opacity:0; visibility:hidden; transform:translateY(-6px);
+    transition:opacity 260ms var(--ease), transform 260ms var(--ease), visibility 0s 260ms;
+  }
+  .cel-topbar.is-menu .cel-topbar__nav{opacity:1; visibility:visible; transform:none; transition:opacity 260ms var(--ease), transform 260ms var(--ease)}
+  .cel-topbar__nav a{padding:.95rem .2rem; border-bottom:1px solid rgba(235,201,127,.12)}
+  .cel-topbar__nav a:last-child{border-bottom:0}
+  .cel-topbar__nav a::after{display:none}
+  .cel-topbar__nav a[href$="catalogo.html"]{margin:.6rem 0; text-align:center}
+}
+@media (max-width:480px){
+  .cel-topbar__brand{font-size:1.08rem; gap:.5rem}
+  .cel-topbar__sigil{width:28px; height:28px}
+}
+
+.cel-topbar--float{position:fixed; inset:0 0 auto; transform:translateY(-110%); transition:transform 420ms var(--ease-out); padding-top:env(safe-area-inset-top)}
+.cel-topbar--float.is-on{transform:none}
+@media (prefers-reduced-motion: reduce){ .cel-topbar--float{transition:none} }
+
+/* ==========================================================================
+   PIÈ DI PAGINA (uguale su tutte le pagine)
+   ========================================================================== */
+.cel-footer{position:relative; z-index:2; background:#0B0D05; padding:0 0 calc(env(safe-area-inset-bottom) + 3rem)}
+.cel-footer__inner{display:flex; flex-direction:column; align-items:center; gap:1rem; text-align:center; padding-top:3rem}
+.cel-footer__seal{position:relative; width:160px; height:160px; display:grid; place-items:center}
+.cel-footer__seal img{width:98px; height:98px; border-radius:50%; box-shadow:0 0 0 1px rgba(235,201,127,.5), 0 0 40px rgba(239,177,92,.25)}
+.cel-footer__ogham{position:absolute; inset:0; color:var(--c-fae); opacity:.7}
+.cel-footer__nav{display:flex; flex-wrap:wrap; justify-content:center; gap:.5rem 1.8rem}
+.cel-footer__nav a{
+  font-family:var(--caps); font-weight:600; font-size:.7rem; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--fae); text-decoration:none; padding:.4rem 0; border-bottom:1px solid transparent;
+}
+.cel-footer__nav a:hover,.cel-footer__nav a[aria-current="page"],.cel-footer__nav a.is-here{color:var(--gold-lit); border-bottom-color:var(--gold)}
+.cel-footer__meta{color:var(--c-mist-dim); font-style:italic}
+
+.cel-footer__marquee{padding:1.6rem 0 .4rem; overflow:hidden; border-bottom:1px solid rgba(235,201,127,.14)}
+.cel-footer__marquee .footer__marquee-track{
+  display:flex; gap:2.5rem; white-space:nowrap; width:max-content;
+  font-family:var(--disp); font-size:clamp(1.6rem, 4.6vw, 2.9rem); letter-spacing:.02em;
+  color:transparent; -webkit-text-stroke:1px rgba(235,201,127,.4); paint-order:stroke fill;
+  animation:marquee 48s linear infinite;
+}
+@keyframes marquee{from{transform:translateX(0)} to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion: reduce){ .cel-footer__marquee .footer__marquee-track{animation:none} }
+@media (max-width:700px){ .cel-footer{padding-bottom:calc(env(safe-area-inset-bottom) + 6rem)} }
+
+/* ==========================================================================
+   LA VETRINA
+   ========================================================================== */
+.cel{
+  font-family:var(--c-body); font-size:clamp(1.12rem, .5vw + 1rem, 1.3rem); line-height:1.6; font-weight:500;
+  color:var(--c-mist);
+  background:
+    radial-gradient(ellipse 50% 22% at 15% 14%, rgba(164,138,207,.07), transparent 70%),
+    radial-gradient(ellipse 50% 22% at 85% 42%, rgba(188,214,110,.06), transparent 70%),
+    radial-gradient(ellipse 40% 20% at 20% 70%, rgba(239,177,92,.06), transparent 70%),
+    radial-gradient(ellipse 50% 18% at 50% 96%, rgba(188,214,110,.07), transparent 70%),
+    var(--c-bg);
+}
+/* :where() tiene la specificità bassa: le classi cel- sotto vincono senza !important */
+:where(.cel) p{margin:0}
+.cel :focus-visible{outline:2px solid var(--c-fae); outline-offset:4px}
+
+.cel-eyebrow{
+  display:inline-block; font-family:var(--c-caps); font-weight:600; font-size:.78rem;
+  letter-spacing:.38em; text-transform:uppercase; color:var(--c-fae);
+}
+.cel-eyebrow::before{content:"✦"; margin-right:.9em; color:var(--c-gold); letter-spacing:0}
+.cel-h2{
+  margin-top:.7rem; font-family:var(--c-disp); font-weight:400; letter-spacing:normal;
+  font-size:clamp(2.3rem, 5.4vw, 4.4rem); line-height:1.02;
+  background:linear-gradient(180deg, #FFF6DE 10%, #F7CF8C 55%, #C78B49 100%);
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 2px 18px rgba(239,177,92,.18));
+}
+.cel-lede{margin-top:1.2rem; max-width:36rem; font-style:italic; font-size:clamp(1.2rem, .8vw + 1rem, 1.45rem); color:var(--c-mist)}
+
+/* ==========================================================================
+   IL SENTIERO DEI PEZZI
+   ========================================================================== */
+.cel-path{position:relative; margin-top:clamp(3.5rem, 7vw, 6rem)}
+
+/* il tralcio: due nastri intrecciati, con foglie, che crescono con lo scroll */
+.cel-vine{position:absolute; top:0; bottom:0; left:50%; width:80px; translate:-50% 0; pointer-events:none}
+.cel-vine svg{display:block}
+.cel-vine path{fill:none}
+.cel-vine .v-halo{stroke:var(--c-bg); stroke-width:7.5}
+.cel-vine .v-body{stroke:url(#celVineG); stroke-width:3.6}
+.cel-vine .v-line{stroke:var(--c-bg); stroke-width:.8}
+.cel-vine .v-ghost .v-body{stroke:var(--c-fae); opacity:.10}
+.cel-vine .v-ghost .v-halo,.cel-vine .v-ghost .v-line{display:none}
+.cel-vine .v-leaf{fill:var(--c-fae-dim); opacity:.85}
+.cel-vine .v-tip{fill:#FFF6DE; filter:drop-shadow(0 0 6px var(--c-fae)) drop-shadow(0 0 16px var(--c-amber)); transition:opacity .3s}
+
+.cel-stops{list-style:none; margin:0; padding:0; display:grid; gap:clamp(5rem, 13vw, 11rem)}
+.cel-stop{display:grid; grid-template-columns:minmax(0,1fr) 128px minmax(0,1fr); align-items:center; position:relative; scroll-margin-top:90px}
+
+/* il sigillo sul tralcio: si disegna e si accende quando la punta lo raggiunge */
+.cel-stop__sigil{
+  grid-column:2; grid-row:1; justify-self:center; z-index:2;
+  width:92px; height:92px; padding:14px; border-radius:50%; color:var(--c-gold);
+  background:radial-gradient(circle, var(--c-bg) 64%, transparent 66%);
+  filter:drop-shadow(0 0 4px rgba(235,201,127,.25));
+  transition:filter 800ms var(--ease-out), color 800ms;
+}
+.cel-stop__sigil .sym-svg path{stroke-width:2.6; stroke-dasharray:1; stroke-dashoffset:1; transition:stroke-dashoffset 1.8s var(--ease-out)}
+.cel-stop__sigil .sym-svg path:nth-child(2){transition-delay:.2s}
+.cel-stop__sigil .sym-svg path:nth-child(3){transition-delay:.4s}
+.cel-stop__sigil .sym-svg path:nth-child(n+4){transition-delay:.6s}
+.cel-stop.is-lit .cel-stop__sigil{color:var(--c-gold-lit); filter:drop-shadow(0 0 8px rgba(235,201,127,.6)) drop-shadow(0 0 22px rgba(188,214,110,.35))}
+.cel-stop.is-lit .cel-stop__sigil .sym-svg path{stroke-dashoffset:0}
+html:not(.js) .cel-stop__sigil .sym-svg path{stroke-dashoffset:0}
+
+.cel-stop__media{position:relative; display:block; margin:0; width:min(100%, 390px); color:inherit; text-decoration:none; border-radius:50% 50% 8px 8px / 30% 30% 8px 8px}
+.cel-stop[data-side="left"] .cel-stop__media{grid-column:1; grid-row:1; justify-self:end}
+.cel-stop[data-side="left"] .cel-stop__text{grid-column:3; grid-row:1; justify-self:start}
+.cel-stop[data-side="right"] .cel-stop__media{grid-column:3; grid-row:1; justify-self:start}
+.cel-stop[data-side="right"] .cel-stop__text{grid-column:1; grid-row:1; justify-self:end}
+
+/* foto ad arco elfico con doppio filetto d'oro */
+.cel-arch{
+  position:relative; display:block; aspect-ratio:3 / 4; overflow:hidden; background:#10140B;
+  -webkit-mask:var(--c-arch) center / 100% 100% no-repeat; mask:var(--c-arch) center / 100% 100% no-repeat;
+}
+.cel-arch img{width:100%; height:100%; object-fit:cover; transform:scale(1.08); transition:transform 1.6s var(--ease-out)}
+.reveal.is-in .cel-arch img{transform:scale(1)}
+.cel-arch::after{                  /* lanterna sotto il puntatore */
+  content:""; position:absolute; inset:0; pointer-events:none; mix-blend-mode:soft-light; opacity:0;
+  background:radial-gradient(circle at var(--lx, 50%) var(--ly, 40%), rgba(255,246,222,.85), transparent 48%);
+  transition:opacity 400ms var(--ease);
+}
+.cel-stop__media:hover .cel-arch::after,.cel-stop__media:focus-visible .cel-arch::after{opacity:1}
+.cel-stop__media:hover .cel-arch img{transform:scale(1.05)}
+.cel-stop__media:not(.cel-shrine)::before,.cel-stop__media:not(.cel-shrine)::after{
+  content:""; position:absolute; pointer-events:none; background:var(--c-arch-line) center / 100% 100% no-repeat;
+}
+.cel-stop__media:not(.cel-shrine)::before{inset:-12px; opacity:.9; filter:drop-shadow(0 0 6px rgba(235,201,127,.35))}
+.cel-stop__media:not(.cel-shrine)::after{inset:-22px; opacity:.35}
+
+
+
+/* il pezzo del mese: la stessa porta degli altri, più grande e con un
+   alone caldo dietro. Nessuna decorazione sopra o attorno al pezzo. */
+.cel-shrine{display:block; width:min(100%, 440px); padding:4%}
+.cel-shrine__halo{
+  position:absolute; inset:-8% -10%; pointer-events:none; z-index:-1;
+  background:radial-gradient(ellipse 52% 46% at 50% 46%, rgba(247,207,140,.24), rgba(188,214,110,.08) 48%, transparent 72%);
+}
+.cel-shrine__door{position:relative; display:block}
+.cel-shrine__door::before,.cel-shrine__door::after{
+  content:""; position:absolute; pointer-events:none; background:var(--c-arch-line) center / 100% 100% no-repeat;
+}
+.cel-shrine__door::before{inset:-12px; filter:drop-shadow(0 0 8px rgba(235,201,127,.5))}
+.cel-shrine__door::after{inset:-24px; opacity:.5}
+
+
+/* testo della tappa */
+.cel-stop__text{max-width:30rem}
+.cel-stop__eyebrow{
+  display:flex; align-items:center; gap:.9rem;
+  font-family:var(--c-caps); font-weight:600; font-size:.74rem; letter-spacing:.3em; text-transform:uppercase; color:var(--c-fae);
+}
+.cel-stop__num{
+  font-family:var(--c-disp); font-size:1.5rem; letter-spacing:0; color:var(--c-gold);
+  min-width:2.4rem; height:2.4rem; padding:0 .3rem; display:grid; place-items:center; flex:none;
+  border:1px solid rgba(235,201,127,.5); border-radius:999px;
+}
+.cel-stop__title{
+  margin:.8rem 0 1rem; font-family:var(--c-disp); font-weight:400; letter-spacing:normal;
+  font-size:clamp(1.9rem, 3.4vw, 2.9rem); line-height:1.05; color:var(--c-paper);
+}
+.cel-stop--feature .cel-stop__title{font-size:clamp(2.3rem, 4.4vw, 3.6rem)}
+.cel-quote{
+  margin:0 0 1.2rem; padding-left:1.2rem; border-left:2px solid var(--c-red);
+  font-style:italic; font-size:clamp(1.25rem, 1vw + 1rem, 1.5rem); line-height:1.4; color:var(--c-amber-lit);
+}
+.cel-stop__p{color:var(--c-mist)}
+/* capolettera miniato, come nel Libro di Kells */
+.cel-illum::first-letter{
+  float:left; font-family:var(--c-disp); font-size:3.3em; line-height:.86;
+  margin:.08em .16em 0 0; padding:.12em .14em .06em;
+  color:var(--c-gold-lit); text-shadow:0 0 14px rgba(247,207,140,.55);
+  background:radial-gradient(circle at 32% 28%, #8E3424 0%, #5A1C12 70%);
+  border:1px solid var(--c-gold); border-radius:3px;
+  box-shadow:inset 0 0 0 3px #4E170E, inset 0 0 0 4px rgba(235,201,127,.55), 0 6px 18px -8px #000;
+}
+.cel-price{display:flex; align-items:baseline; gap:.9rem; margin:1.4rem 0 1.3rem}
+.cel-price span{font-family:var(--c-disp); font-size:2.1rem; color:var(--c-gold-lit); text-shadow:0 0 18px rgba(247,207,140,.35)}
+.cel-stop--feature .cel-price span{font-size:2.5rem}
+.cel-price em{font-family:var(--c-caps); font-style:normal; font-size:.72rem; letter-spacing:.24em; text-transform:uppercase; color:var(--c-mist-dim)}
+.cel-price--venduto span{color:var(--brand-red-lit); text-shadow:none}
+.cel-actions{display:flex; flex-wrap:wrap; gap:1rem}
+.cel-go{
+  display:inline-flex; align-items:center; gap:.7rem; padding:.4rem 0 .5rem; text-decoration:none;
+  font-family:var(--c-caps); font-weight:600; font-size:.8rem; letter-spacing:.24em; text-transform:uppercase; color:var(--c-fae);
+  border-bottom:1px solid rgba(188,214,110,.35); transition:color 300ms, border-color 300ms;
+}
+.cel-go em{font-style:normal; transition:transform 400ms var(--ease-out)}
+.cel-go:hover{color:var(--c-gold-lit); border-color:var(--c-gold)}
+.cel-go:hover em{transform:translateX(8px)}
+
+@media (max-width:860px){
+  .cel-vine{left:30px}
+  .cel-stop{grid-template-columns:60px minmax(0,1fr); row-gap:2.6rem; align-items:start}
+  .cel-stop__sigil{grid-column:1 !important; grid-row:1; width:60px; height:60px; padding:9px}
+  .cel-stop[data-side] .cel-stop__media{grid-column:2; grid-row:1; justify-self:center; width:min(78%, 320px); margin-top:1.4rem}
+  .cel-stop[data-side] .cel-shrine{width:min(100%, 360px); margin-top:.4rem}
+  .cel-stop[data-side] .cel-stop__text{grid-column:2; grid-row:2; justify-self:start}
+}
+
+/* ------------------------------------------- fine del sentiero: la porta -- */
+.cel-dolmen{
+  display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr); align-items:center;
+  gap:clamp(2rem, 5vw, 4rem); margin-top:clamp(4rem, 8vw, 6rem); padding:clamp(1.6rem, 4vw, 3.2rem);
+  text-decoration:none; color:inherit; border-radius:28px; position:relative;
+  border:1px solid rgba(235,201,127,.22);
+  background:radial-gradient(ellipse 50% 70% at 28% 70%, rgba(188,214,110,.10), transparent 70%), rgba(255,255,255,.015);
+  transition:border-color 400ms, box-shadow 600ms var(--ease-out);
+}
+.cel-dolmen:hover,.cel-dolmen:focus-visible{border-color:rgba(235,201,127,.6); box-shadow:0 40px 90px -40px rgba(188,214,110,.35)}
+/* chiave di volta: il nodo dove finisce il tralcio */
+.cel-dolmen__keystone{
+  position:absolute; left:50%; top:0; width:84px; height:84px; translate:-50% -50%; z-index:3;
+  border-radius:50%; background:radial-gradient(circle, var(--c-bg) 62%, transparent 64%);
+  filter:drop-shadow(0 0 12px rgba(239,177,92,.45));
+}
+.cel-dolmen__keystone{transition:filter 900ms var(--ease-out)}
+/* quando il tralcio arriva alla porta: la chiave si accende e le rune si svegliano */
+.cel-dolmen.is-lit .cel-dolmen__keystone{filter:drop-shadow(0 0 14px rgba(247,207,140,.8)) drop-shadow(0 0 34px rgba(188,214,110,.5))}
+/* ---- la casetta nel bosco ----
+   Il disegno è in assets/img/casetta.svg (generato da strumenti/casetta.py)
+   e porta con sé i suoi stili e le sue animazioni. js/celtic.js lo inserisce
+   nella pagina quando ci si avvicina: così la porta si apre al passaggio del
+   mouse e le luci si accendono quando arriva il tralcio. */
+.cel-cottage{position:relative; display:block; width:100%; justify-self:center}
+.cel-cottage > img,.cel-cottage > svg{
+  display:block; width:100%; height:auto;
+  /* la scena sfuma nel fondo della cornice, come dipinta */
+  -webkit-mask:radial-gradient(ellipse 66% 66% at 50% 54%, #000 60%, transparent 100%);
+  mask:radial-gradient(ellipse 66% 66% at 50% 54%, #000 60%, transparent 100%);
+}
+.cel-dolmen__body{display:flex; flex-direction:column; gap:.9rem}
+.cel-dolmen__title{font-family:var(--c-disp); font-size:clamp(2.1rem, 4.2vw, 3.4rem); line-height:1; color:var(--c-gold-lit)}
+.cel-dolmen__desc{color:var(--c-mist)}
+.cel-dolmen__go{font-family:var(--c-caps); font-weight:600; font-size:.8rem; letter-spacing:.24em; text-transform:uppercase; color:var(--c-fae)}
+.cel-dolmen__go em{display:inline-block; font-style:normal; transition:transform 400ms var(--ease-out)}
+.cel-dolmen:hover .cel-dolmen__go em{transform:translateX(8px)}
+@media (max-width:860px){
+  .cel-dolmen__keystone{left:30px; width:60px; height:60px}
+}
+@media (max-width:760px){ .cel-dolmen{grid-template-columns:1fr; text-align:center} .cel-dolmen__body{align-items:center} }
+
+@media (prefers-reduced-motion: reduce){
+  .cel-arch img,.cel-stop__sigil{transition:none}
+  .cel-stop__sigil .sym-svg path{transition:none}
+}

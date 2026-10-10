@@ -1,0 +1,10 @@
+# Cloudflare Pages: il sito è la cartella site/, le funzioni online sono in
+# functions/ (usano lib/). I valori segreti (PIN_BOTTEGA, SEGRETO,
+# GITHUB_TOKEN) NON stanno qui: si impostano nel pannello di Cloudflare.
+name = "magicbones"
+pages_build_output_dir = "site"
+compatibility_date = "2024-09-23"
+
+[vars]
+GITHUB_REPO = "Daniloflex596/magicbones"
+GITHUB_BRANCH = "main"

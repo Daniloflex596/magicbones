@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Magic Bones — Il bosco di Claudia Capitani</title>
+<meta name="description" content="Ossa e teschi trovati nel bosco, puliti e dipinti a mano da Claudia Capitani. Pezzi unici, personalizzazioni su richiesta. Roma.">
+<meta name="theme-color" content="#0F1106">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Magic Bones — Il bosco di Claudia">
+<meta property="og:description" content="Ossa trovate nel bosco, dipinte a mano. Ogni pezzo esiste una volta sola.">
+<meta property="og:image" content="assets/img/posters/og-image.jpg">
+<meta property="og:locale" content="it_IT">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="assets/img/logo/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/img/logo/magic-bones-180.webp">
+<link rel="preload" as="image" href="assets/img/posters/bosco-start.webp" fetchpriority="high">
+
+<!-- caratteri ospitati nel sito (css/tokens.css): si caricano subito quelli della prima schermata -->
+<link rel="preload" href="assets/fonts/uncial-antiqua-normal-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/cormorant-garamond-normal-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/cinzel-normal-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/tokens.css?v=55">
+<link rel="stylesheet" href="css/base.css?v=55">
+<link rel="stylesheet" href="css/sections.css?v=55">
+<link rel="stylesheet" href="css/cart.css?v=55">
+<link rel="stylesheet" href="css/celtic.css?v=55">
+
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+
+<a class="skip-link" href="#vetrina">Vai ai pezzi</a>
+
+<!-- ============================== TOPBAR ============================== -->
+<header class="cel-topbar cel-topbar--float" id="topbar">
+  <div class="cel-topbar__inner">
+    <a class="cel-topbar__brand" href="#top">
+      <span class="cel-topbar__sigil" data-knot="triquetra" aria-hidden="true"></span>
+      <span>Magic&nbsp;Bones</span>
+    </a>
+    <button class="cel-topbar__toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="siteNav">Menu</button>
+    <nav class="cel-topbar__nav" id="siteNav" aria-label="Il sito">
+      <a href="#cammino">La storia</a>
+      <a href="#vetrina">I pezzi</a>
+      <a href="catalogo.html">Il catalogo</a>
+      <a href="#contatti">Scrivimi</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ==================== IL CAMMINO — film + storia ==================== -->
+  <section class="path" id="cammino" aria-label="Il cammino verso la bottega di Claudia">
+    <div class="path__track" id="pathTrack">
+      <div class="path__stage" id="pathStage">
+
+        <!-- Baseline: senza JS, reduced-motion o rete lenta resta questo -->
+        <picture class="path__poster" id="pathPoster">
+          <source media="(max-width: 780px)" srcset="assets/img/posters/bosco-start-9x16.webp">
+          <img src="assets/img/posters/bosco-start.webp"
+               alt="Un sentiero tra le radici in un bosco dorato dal sole, tra felci, candele e funghi rossi, verso una casetta col tetto di muschio e le finestre accese."
+               width="1280" height="720" fetchpriority="high" decoding="async">
+        </picture>
+
+        <div class="path__film" id="pathFilm" aria-hidden="true"></div>
+        <div class="path__scrim"></div>
+        <div class="path__landing" id="pathLanding" aria-hidden="true"></div>
+
+        <!-- Titolo d'apertura: è il biglietto da visita, vivo.
+             La fascia di carta col nome in serif rosso è presa di peso dal
+             biglietto di Claudia. -->
+        <div class="path__intro" id="pathIntro">
+          <h1 class="path__title"><span class="path__label">Magic Bones</span></h1>
+          <p class="path__sub">Raccolgo quello che il bosco lascia andare<br>e gli ridò una vita.</p>
+          <p class="path__cue" id="pathCue">
+            <span class="path__cue-text">Scorri e cammina con me</span>
+            <span class="path__cue-arrow" aria-hidden="true"></span>
+          </p>
+        </div>
+
+        <!-- I post-it della storia: uno per tappa, montati da js/path.js -->
+        <div class="path__notes" id="pathNotes" aria-hidden="true"></div>
+
+        <!-- Arrivo alla casa -->
+        <div class="path__arrival" id="pathArrival" aria-hidden="true">
+          <p class="path__arrival-eyebrow">Siamo arrivati</p>
+          <h2 class="path__arrival-title">Benvenuto<br>a casa mia</h2>
+          <a class="btn path__arrival-cta" href="#vetrina">Entra, ti faccio vedere</a>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Versione accessibile e senza JS della stessa storia -->
+    <div class="path__fallback" id="pathFallback">
+      <div class="wrap path__fallback-inner">
+        <p class="eyebrow">La mia storia</p>
+                <ol class="path__fallback-list">
+          <li><h2>Non cerco. Trovo.</h2><p>Cammino fuori Roma, dove il sentiero si chiude. Un cranio tra le felci, una vertebra sbiancata dalla pioggia: raccolgo quello che il bosco ha già lasciato andare.</p></li>
+          <li><h2>Poi viene l'attesa</h2><p>Pulisco, sbianco, aspetto. A volte per settimane. Un osso non si affretta: decide lui quando è pronto a farsi guardare.</p></li>
+          <li><h2>E allora arriva il colore</h2><p>Turchesi cuciti uno a uno, mandala tracciati senza matita, fiori secchi, piccole teche. Comincio la sera e alzo la testa che è mattina.</p></li>
+          <li><h2>Mi chiamo Claudia</h2><p>Ogni pezzo che esce da qui l'ho tenuto in mano per ore. Mi trovi ai mercatini di Roma — o spedisco in tutta Italia, e le cose su misura le facciamo insieme.</p></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== LA VETRINA — il sentiero dei pezzi ====================
+       Struttura del "sentiero" della versione celtica: un tralcio intrecciato
+       scende al centro mentre scorri, a ogni tappa un sigillo che si accende,
+       foto a porta e testo alternati. Cliccando la foto si entra nella
+       pagina del pezzo (pezzo.html?id=…), dove ci sono tutte le foto e il
+       bottone per la raccolta. In fondo il tralcio arriva alla porta di
+       pietra del catalogo.
+       Nodi, trecce e ogham: js/knots.js · tralcio e sigilli: js/celtic.js.
+       Tutte le classi hanno il prefisso cel-: il resto della pagina non cambia. -->
+  <div class="knotband" aria-hidden="true"></div>
+  <section class="section cel" id="vetrina" aria-labelledby="vetrina-h">
+    <div class="wrap">
+      <header class="cel-head reveal">
+        <p class="cel-eyebrow">Il mio banco</p>
+        <h2 class="cel-h2" id="vetrina-h">I pezzi a cui<br>sono più affezionata</h2>
+        <p class="cel-lede">Non sono i più costosi. Sono quelli che mi hanno tenuta sveglia fino a tardi, o che ho quasi tenuto per me.</p>
+      </header>
+
+      <div class="cel-path" id="celPath">
+        <div class="cel-vine" id="celVine" aria-hidden="true"></div>
+
+        <ol class="cel-stops">
+
+          <!-- I · il pezzo del mese: la porta più alta, un piccolo altare -->
+          <li class="cel-stop cel-stop--feature" data-side="left" id="feature">
+            <span class="cel-stop__sigil" data-knot="triskele" aria-hidden="true"></span>
+            <a class="cel-stop__media cel-shrine reveal" href="pezzo.html?id=cinghiale-luxury" data-lantern>
+              <span class="cel-shrine__halo" aria-hidden="true"></span>
+              <span class="cel-shrine__door">
+                <span class="cel-arch"><img src="assets/img/products/cinghiale-luxury-1.webp" alt="Cinghiale luxury: teschio di cinghiale dipinto di nero, con cristalli color rame sulla fronte." width="900" height="1200" loading="lazy" decoding="async"></span>
+              </span>
+            </a>
+            <div class="cel-stop__text reveal">
+              <p class="cel-stop__eyebrow"><span class="cel-stop__num">I</span>Il pezzo del mese</p>
+              <h3 class="cel-stop__title">Cinghiale luxury</h3>
+              <blockquote class="cel-quote">«Piccolo cinghiale, poverino: era giovane.»</blockquote>
+              <p class="cel-stop__p cel-illum">Teschio di cinghiale nero e rame metallizzato, con Swarovski al centro e nero glitterato.</p>
+              <p class="cel-price"><span>€ 95</span><em>pezzo unico</em></p>
+              <a class="cel-go" href="pezzo.html?id=cinghiale-luxury">Entra nel pezzo <em aria-hidden="true">→</em></a>
+            </div>
+          </li>
+
+          <!-- II -->
+          <li class="cel-stop" data-side="right">
+            <span class="cel-stop__sigil" data-knot="spiral" aria-hidden="true"></span>
+            <a class="cel-stop__media reveal" href="pezzo.html?id=cinghiale-fashion" data-lantern>
+              <span class="cel-arch"><img src="assets/img/products/cinghiale-fashion-1.webp" alt="Cinghiale fashion: teschio di cinghiale dipinto di rosa shocking, con serpenti neri disegnati sopra." width="900" height="1200" loading="lazy" decoding="async"></span>
+            </a>
+            <div class="cel-stop__text reveal">
+              <p class="cel-stop__eyebrow"><span class="cel-stop__num">II</span>Femminile, ma stregato</p>
+              <h3 class="cel-stop__title">Cinghiale fashion</h3>
+              <p class="cel-stop__p cel-illum">Mezzo teschio di cinghiale rosa shocking, con serpenti neri dipinti.</p>
+              <p class="cel-price"><span>€ 65</span><em>pezzo unico</em></p>
+              <a class="cel-go" href="pezzo.html?id=cinghiale-fashion">Entra nel pezzo <em aria-hidden="true">→</em></a>
+            </div>
+          </li>
+
+          <!-- III -->
+          <li class="cel-stop" data-side="left">
+            <span class="cel-stop__sigil" data-knot="triquetra" aria-hidden="true"></span>
+            <a class="cel-stop__media reveal" href="pezzo.html?id=rosa-stregata" data-lantern>
+              <span class="cel-arch"><img src="assets/img/products/rosa-stregata-1.webp" alt="Rosa stregata: osso con un serpente disegnato, da cui escono una rosa nera, piume e un velo." width="900" height="1200" loading="lazy" decoding="async"></span>
+            </a>
+            <div class="cel-stop__text reveal">
+              <p class="cel-stop__eyebrow"><span class="cel-stop__num">III</span>Romantico gotico</p>
+              <h3 class="cel-stop__title">Rosa stregata</h3>
+              <p class="cel-stop__p cel-illum">Pezzo di osso con dentro una rosa nera, pelle di serpente, piume vere e finte e foglie disidratate.</p>
+              <p class="cel-price"><span>€ 30</span><em>pezzo unico</em></p>
+              <a class="cel-go" href="pezzo.html?id=rosa-stregata">Entra nel pezzo <em aria-hidden="true">→</em></a>
+            </div>
+          </li>
+
+          <!-- IV -->
+          <li class="cel-stop" data-side="right">
+            <span class="cel-stop__sigil" data-knot="tree" aria-hidden="true"></span>
+            <a class="cel-stop__media reveal" href="pezzo.html?id=vertebra-ametista" data-lantern>
+              <span class="cel-arch"><img src="assets/img/products/vertebra-ametista-1.webp" alt="Vertebra con punta di ametista: vertebra chiara al naturale con una punta di ametista viola incastonata." width="900" height="1200" loading="lazy" decoding="async"></span>
+            </a>
+            <div class="cel-stop__text reveal">
+              <p class="cel-stop__eyebrow"><span class="cel-stop__num">IV</span>Bello da mettere sull'altare</p>
+              <h3 class="cel-stop__title">Vertebra con punta di ametista</h3>
+              <p class="cel-stop__p cel-illum">Vertebra di equino al naturale, con una punta di ametista incastonata. La preparo su richiesta, dai 10 ai 15 cm.</p>
+              <p class="cel-price"><span>€ 25</span><em>a pezzo</em></p>
+              <a class="cel-go" href="pezzo.html?id=vertebra-ametista">Entra nel pezzo <em aria-hidden="true">→</em></a>
+            </div>
+          </li>
+        </ol>
+      </div>
+
+      <!-- fine del sentiero: la porta di pietra verso il catalogo completo -->
+      <a class="cel-dolmen reveal" href="catalogo.html">
+        <span class="cel-dolmen__keystone" data-knot="ring" data-lobes="5" data-r="54" data-a="24" data-w="7" data-frame="no" aria-hidden="true"></span>
+        <!-- la casetta nel bosco: assets/img/casetta.svg (generata da strumenti/casetta.py); js/celtic.js la inserisce viva nella pagina -->
+        <span class="cel-cottage" aria-hidden="true"><img src="assets/img/casetta.svg?v=3" alt="" width="596" height="462" loading="lazy" decoding="async"></span>
+        <span class="cel-dolmen__body">
+          <span class="cel-eyebrow">Ho anche altro</span>
+          <span class="cel-dolmen__title">Attraversa la porta</span>
+          <span class="cel-dolmen__desc">Tutto quello che ho pronto adesso — teschi dipinti, piccole reliquie, portacandele, altarini e cornicette.</span>
+          <span class="cel-dolmen__go">Entra nel catalogo <em aria-hidden="true">→</em></span>
+        </span>
+      </a>
+    </div>
+  </section>
+  <div class="knotband" aria-hidden="true"></div>
+
+  <!-- ==================== LA STRISCIA VIDEO ==================== -->
+  <section class="section strip-sec" id="banco" aria-labelledby="banco-h">
+    <div class="wrap">
+      <p class="eyebrow reveal">Dal banco di lavoro</p>
+      <h2 class="h2 reveal" id="banco-h">Come nasce un pezzo</h2>
+      <p class="lede reveal">Ore di lavoro ridotte a pochi secondi. Trascina pure, con calma.</p>
+    </div>
+
+    <div class="strip" id="strip" aria-label="Video dal laboratorio">
+      <ul class="strip__track" id="stripTrack">
+        <li class="strip__card">
+          <button class="strip__btn" type="button" data-video="assets/reel/reel-DPXQYzLDQjg.mp4" aria-label="Il banco ai mercatini — riproduci il video">
+            <img src="assets/reel/DPXQYzLDQjg.webp" alt="" width="440" height="782" loading="lazy" decoding="async">
+            <span class="strip__play" aria-hidden="true"></span>
+          </button>
+        </li>
+        <li class="strip__card">
+          <button class="strip__btn" type="button" data-video="assets/reel/reel-DJuUiwdNTuT.mp4" aria-label="Un teschio dall'inizio — riproduci il video">
+            <img src="assets/reel/DJuUiwdNTuT.webp" alt="" width="440" height="782" loading="lazy" decoding="async">
+            <span class="strip__play" aria-hidden="true"></span>
+          </button>
+        </li>
+        <li class="strip__card">
+          <button class="strip__btn" type="button" data-video="assets/reel/reel-DHEC4sKN9aZ.mp4" aria-label="Dettagli a mano libera — riproduci il video">
+            <img src="assets/reel/DHEC4sKN9aZ.webp" alt="" width="440" height="782" loading="lazy" decoding="async">
+            <span class="strip__play" aria-hidden="true"></span>
+          </button>
+        </li>
+        <li class="strip__card">
+          <button class="strip__btn" type="button" data-video="assets/reel/reel-DFXqaRvt1uS.mp4" aria-label="Pezzi finiti — riproduci il video">
+            <img src="assets/reel/DFXqaRvt1uS.webp" alt="" width="440" height="782" loading="lazy" decoding="async">
+            <span class="strip__play" aria-hidden="true"></span>
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <p class="strip__hint wrap"><a href="https://www.instagram.com/_magic_bones/" target="_blank" rel="noopener">Tutti i video su Instagram @_magic_bones ↗</a></p>
+  </section>
+
+  <!-- ==================== CONTATTI ==================== -->
+  <section class="section contact" id="contatti" aria-labelledby="contatti-h">
+    <div class="wrap contact__grid">
+      <div>
+        <p class="eyebrow reveal">Scrivimi</p>
+        <h2 class="h2 reveal" id="contatti-h">Rispondo io,<br>Claudia</h2>
+        <p class="lede reveal">Per un pezzo che hai visto, per qualcosa che hai in testa e non esiste ancora, o solo per chiedermi dove l'ho trovato. Ti rispondo io, sempre.</p>
+        <p class="reveal"><a class="btn btn--wa" id="contactWa" href="#" rel="noopener">Scrivimi su WhatsApp</a></p>
+      </div>
+      <div class="contact__card reveal">
+        <span class="contact__corner contact__corner--tl" data-knot="ring" data-lobes="4" data-r="44" data-a="22" data-w="6" data-frame="no" aria-hidden="true"></span>
+        <span class="contact__corner contact__corner--tr" data-knot="ring" data-lobes="4" data-r="44" data-a="22" data-w="6" data-frame="no" aria-hidden="true"></span>
+        <span class="contact__corner contact__corner--bl" data-knot="ring" data-lobes="4" data-r="44" data-a="22" data-w="6" data-frame="no" aria-hidden="true"></span>
+        <span class="contact__corner contact__corner--br" data-knot="ring" data-lobes="4" data-r="44" data-a="22" data-w="6" data-frame="no" aria-hidden="true"></span>
+        <ul class="contact__list">
+        <li><span>WhatsApp</span><a href="tel:+393283632440">+39 328 363 2440</a></li>
+        <li><span>Instagram</span><a href="https://www.instagram.com/_magic_bones/" target="_blank" rel="noopener">@_magic_bones ↗</a></li>
+        <li><span>Vinted</span>magicbones777</li>
+        <li><span>Email</span><a href="mailto:lalla02.capitani@gmail.com">lalla02.capitani@gmail.com</a></li>
+        <li><span>Dove</span>Roma — mercatini e spedizioni in tutta Italia</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="cel-footer">
+  <div class="knotband" aria-hidden="true"></div>
+  <div class="cel-footer__marquee" aria-hidden="true"><div class="footer__marquee-track" id="marqueeTrack"></div></div>
+  <div class="wrap cel-footer__inner">
+    <div class="cel-footer__seal">
+      <img src="assets/img/logo/magic-bones.webp" alt="Logo Magic Bones: una mano che regge un'ampolla con un teschio." width="110" height="110" loading="lazy" decoding="async">
+      <div class="cel-footer__ogham" data-knot="ogham" data-text="MAGIC BONES · ROMA" aria-hidden="true"></div>
+    </div>
+    <nav class="cel-footer__nav" aria-label="Il sito, in fondo">
+      <a href="#cammino">La storia</a>
+      <a href="#vetrina">I pezzi</a>
+      <a href="catalogo.html">Il catalogo</a>
+      <a href="#contatti">Scrivimi</a>
+    </nav>
+    <p class="cel-footer__meta">Magic&nbsp;Bones — Claudia Capitani · Roma<br>Ogni pezzo lo trovo, lo pulisco e lo dipingo io.</p>
+  </div>
+</footer>
+
+<!-- ==================== CARRELLO ==================== -->
+<button class="cartfab" id="cartFab" type="button" aria-expanded="false" aria-controls="cartPanel" hidden>
+  <span class="cartfab__sigil" data-knot="triquetra" aria-hidden="true"></span>
+  <span class="cartfab__label">La tua raccolta</span>
+  <span class="cartfab__badge" id="cartCount">0</span>
+</button>
+
+<div class="cart" id="cart" hidden>
+  <div class="cart__backdrop" id="cartBackdrop"></div>
+  <aside class="cart__panel" id="cartPanel" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
+    <header class="cart__head">
+      <h2 id="cartTitle">La tua raccolta</h2>
+      <button class="cart__close" id="cartClose" type="button" aria-label="Chiudi la raccolta">×</button>
+    </header>
+    <div class="cart__body" id="cartBody"></div>
+    <footer class="cart__foot">
+      <label class="cart__note-label" for="cartNote">Un messaggio per Claudia <span>(facoltativo)</span></label>
+      <textarea class="cart__note" id="cartNote" rows="2" placeholder="Es. vorrei una personalizzazione, o chiedo la spedizione a…"></textarea>
+      <p class="cart__total">Totale indicativo <strong id="cartTotal">€ 0</strong></p>
+      <a class="btn btn--wa cart__send" id="cartSend" href="#" rel="noopener">Invia su WhatsApp</a>
+      <button class="btn btn--ghost btn--sm cart__copy" id="cartCopy" type="button">Copia il messaggio</button>
+    </footer>
+  </aside>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"LocalBusiness",
+  "name":"Magic Bones",
+  "description":"Ossa e teschi animali trovati nel bosco, puliti e dipinti a mano. Pezzi unici e personalizzazioni su richiesta.",
+  "founder":{"@type":"Person","name":"Claudia Capitani"},
+  "telephone":"+39 328 363 2440",
+  "email":"lalla02.capitani@gmail.com",
+  "address":{"@type":"PostalAddress","addressLocality":"Roma","addressCountry":"IT"},
+  "sameAs":["https://www.instagram.com/_magic_bones/"]
+}
+</script>
+
+<script src="js/config.js?v=55"></script>
+<script src="js/ui.js?v=55"></script>
+<script src="js/knots.js?v=55"></script>
+<script src="js/celtic.js?v=55"></script>
+<script src="js/cart.js?v=55"></script>
+<script src="js/strip.js?v=55"></script>
+<script src="js/path.js?v=55"></script>
+</body>
+</html>

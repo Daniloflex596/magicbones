@@ -1,0 +1,24 @@
+# Nell'archivio va SOLO il sito e il suo motore. Tutto il resto della cartella
+# (foto originali, video sorgente, archivi, prove) resta sul PC.
+/*
+!/.gitignore
+!/README.md
+!/package.json
+!/wrangler.toml
+!/site/
+!/functions/
+!/lib/
+!/test/
+!/strumenti/
+!/docs/
+!/prompt-video-bosco.md
+
+# l'app delle schede usata una volta (46 MB di foto): resta solo sul PC
+/site/compila/
+# file di sistema e d'appoggio
+.DS_Store
+Thumbs.db
+desktop.ini
+__pycache__/
+node_modules/
+.wrangler/

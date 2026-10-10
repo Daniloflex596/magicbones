@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Il catalogo — Magic Bones</title>
+<meta name="description" content="Tutti i pezzi disponibili di Magic Bones: teschi dipinti a mano, piccole reliquie, portacandele, altarini e cornicette. Fatti a mano a Roma.">
+<meta name="theme-color" content="#0F1106">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Il catalogo — Magic Bones">
+<meta property="og:description" content="Tutti i pezzi disponibili adesso. Ognuno esiste una volta sola.">
+<meta property="og:image" content="assets/img/posters/og-image.jpg">
+<meta property="og:locale" content="it_IT">
+
+<link rel="icon" href="assets/img/logo/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/img/logo/magic-bones-180.webp">
+
+<!-- caratteri ospitati nel sito (css/tokens.css): si caricano subito quelli della prima schermata -->
+<link rel="preload" href="assets/fonts/uncial-antiqua-normal-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/cormorant-garamond-normal-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/cinzel-normal-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/tokens.css?v=55">
+<link rel="stylesheet" href="css/base.css?v=55">
+<link rel="stylesheet" href="css/cart.css?v=55">
+<link rel="stylesheet" href="css/celtic.css?v=55">
+<link rel="stylesheet" href="css/celtic-pagine.css?v=55">
+
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body class="cel-page">
+
+<a class="skip-link" href="#pezzi">Vai ai pezzi</a>
+
+<header class="cel-topbar" id="topbar">
+  <div class="cel-topbar__inner">
+    <a class="cel-topbar__brand" href="index.html">
+      <span class="cel-topbar__sigil" data-knot="triquetra" aria-hidden="true"></span>
+      <span>Magic&nbsp;Bones</span>
+    </a>
+    <button class="cel-topbar__toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="siteNav">Menu</button>
+    <nav class="cel-topbar__nav" id="siteNav" aria-label="Il sito">
+      <a href="index.html#cammino">La storia</a>
+      <a href="index.html#vetrina">I pezzi</a>
+      <a href="catalogo.html" aria-current="page">Il catalogo</a>
+      <a href="index.html#contatti">Scrivimi</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- ==================== INTESTAZIONE ==================== -->
+  <section class="cel-cathead">
+    <div class="cel-cathead__crown" aria-hidden="true">
+      <div data-knot="ring" data-lobes="13" data-r="74" data-a="7" data-w="3.4"></div>
+      <div class="cel-cathead__ogham" data-knot="ogham" data-r="94" data-text="TESCHI DIPINTI · PICCOLE RELIQUIE · ROMA"></div>
+    </div>
+    <div class="wrap cel-cathead__inner">
+      <p class="cel-eyebrow reveal">Il catalogo</p>
+      <h1 class="cel-cathead__title reveal">Tutto quello<br>che ho adesso</h1>
+      <p class="cel-cathead__lede reveal">Li ho trovati nel bosco, puliti e dipinti uno per uno. Quando uno va via non torna, perché non ne rifaccio mai due uguali. Tocca una porta per entrare nel pezzo.</p>
+      <nav class="cel-filters reveal" id="filters" aria-label="Filtra per categoria">
+        <button class="cel-filter is-on" type="button" data-cat="tutti" aria-pressed="true">
+          <span class="cel-filter__rune" data-knot="triquetra" aria-hidden="true"></span>
+          <span>Tutti</span> <span class="cel-filter__n" data-count="tutti"></span>
+        </button>
+        <!-- le pietre delle categorie le aggiunge js/catalogo-cel.js dai dati -->
+      </nav>
+    </div>
+  </section>
+
+  <div class="knotband" aria-hidden="true"></div>
+
+  <!-- ==================== I PEZZI ====================
+       Le porte le costruisce js/catalogo-cel.js leggendo js/pezzi.js:
+       per aggiungere o cambiare un pezzo si tocca solo quel file. -->
+  <section class="cel-catalog" id="pezzi" aria-label="I pezzi disponibili">
+    <div class="wrap">
+      <div class="cel-frame">
+        <span class="cel-frame__corner cel-frame__corner--tl" data-knot="ring" data-lobes="4" data-r="44" data-a="22" data-w="6" data-frame="no" aria-hidden="true"></span>
+        <span class="cel-frame__corner cel-frame__corner--tr" data-knot="ring" data-lobes="4" data-r="44" data-a="22" data-w="6" data-frame="no" aria-hidden="true"></span>
+        <span class="cel-frame__corner cel-frame__corner--bl" data-knot="ring" data-lobes="4" data-r="44" data-a="22" data-w="6" data-frame="no" aria-hidden="true"></span>
+        <span class="cel-frame__corner cel-frame__corner--br" data-knot="ring" data-lobes="4" data-r="44" data-a="22" data-w="6" data-frame="no" aria-hidden="true"></span>
+        <span class="cel-frame__pillar cel-frame__pillar--l knotband knotband--v" aria-hidden="true"></span>
+        <span class="cel-frame__pillar cel-frame__pillar--r knotband knotband--v" aria-hidden="true"></span>
+
+        <div id="celCatalog"></div>
+        <p class="cel-empty" id="filtersEmpty" hidden>Qui non c'è ancora niente. Prova un'altra categoria.</p>
+        <noscript>
+          <p class="cel-empty">Per vedere i pezzi serve JavaScript. Scrivimi su WhatsApp al <a href="tel:+393283632440">+39 328 363 2440</a> e ti mando le foto.</p>
+        </noscript>
+      </div>
+
+      <!-- su commissione -->
+      <article class="cel-pact reveal">
+        <span class="cel-pact__seal" data-knot="ring" data-lobes="5" data-r="54" data-a="24" data-w="7" data-frame="no" aria-hidden="true"></span>
+        <div class="cel-pact__body">
+          <p class="cel-eyebrow">Su misura</p>
+          <h2 class="cel-pact__title">Non trovi il tuo?<br>Lo facciamo insieme.</h2>
+          <p class="cel-pact__p">Un animale, un simbolo, un colore, una dedica. Parto da un osso che ho trovato e decidiamo insieme, passo per passo. Dimmi cosa hai in testa.</p>
+          <a class="btn btn--wa" id="commissionCta" href="#" rel="noopener">Racconta la tua idea</a>
+        </div>
+      </article>
+
+      <p class="cel-note">I prezzi sono indicativi: essendo pezzi unici, misura e lavorazione cambiano da uno all'altro. Chiedimi pure.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="cel-footer">
+  <div class="knotband" aria-hidden="true"></div>
+  <div class="cel-footer__marquee" aria-hidden="true"><div class="footer__marquee-track" id="marqueeTrack"></div></div>
+  <div class="wrap cel-footer__inner">
+    <div class="cel-footer__seal">
+      <img src="assets/img/logo/magic-bones.webp" alt="Logo Magic Bones." width="110" height="110" loading="lazy" decoding="async">
+      <div class="cel-footer__ogham" data-knot="ogham" data-text="MAGIC BONES · ROMA" aria-hidden="true"></div>
+    </div>
+    <nav class="cel-footer__nav" aria-label="Il sito, in fondo">
+      <a href="index.html#cammino">La storia</a>
+      <a href="index.html#vetrina">I pezzi</a>
+      <a href="catalogo.html" aria-current="page">Il catalogo</a>
+      <a href="index.html#contatti">Scrivimi</a>
+    </nav>
+    <p class="cel-footer__meta">Magic&nbsp;Bones — Claudia Capitani · Roma<br>Ogni pezzo lo trovo, lo pulisco e lo dipingo io.</p>
+  </div>
+</footer>
+
+<button class="cartfab" id="cartFab" type="button" aria-expanded="false" aria-controls="cartPanel" hidden>
+  <span class="cartfab__sigil" data-knot="triquetra" aria-hidden="true"></span>
+  <span class="cartfab__label">La tua raccolta</span>
+  <span class="cartfab__badge" id="cartCount">0</span>
+</button>
+
+<div class="cart" id="cart" hidden>
+  <div class="cart__backdrop" id="cartBackdrop"></div>
+  <aside class="cart__panel" id="cartPanel" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
+    <header class="cart__head">
+      <h2 id="cartTitle">La tua raccolta</h2>
+      <button class="cart__close" id="cartClose" type="button" aria-label="Chiudi la raccolta">×</button>
+    </header>
+    <div class="cart__body" id="cartBody"></div>
+    <footer class="cart__foot">
+      <label class="cart__note-label" for="cartNote">Un messaggio per Claudia <span>(facoltativo)</span></label>
+      <textarea class="cart__note" id="cartNote" rows="2" placeholder="Es. vorrei una personalizzazione, o chiedo la spedizione a…"></textarea>
+      <p class="cart__total">Totale indicativo <strong id="cartTotal">€ 0</strong></p>
+      <a class="btn btn--wa cart__send" id="cartSend" href="#" rel="noopener">Invia su WhatsApp</a>
+      <button class="btn btn--ghost btn--sm cart__copy" id="cartCopy" type="button">Copia il messaggio</button>
+    </footer>
+  </aside>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="js/config.js?v=55"></script>
+<script src="data/pezzi.js"></script>
+<script src="js/pezzi.js?v=55"></script>
+<script src="js/catalogo-cel.js?v=55"></script>
+<script src="js/ui.js?v=55"></script>
+<script src="js/knots.js?v=55"></script>
+<script src="js/celtic.js?v=55"></script>
+<script src="js/cart.js?v=55"></script>
+</body>
+</html>

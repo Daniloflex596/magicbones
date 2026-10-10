@@ -1,0 +1,330 @@
+/* ==========================================================================
+   MAGIC BONES — sezioni della home: il cammino (film), la striscia video,
+   i contatti. La vetrina sta in celtic.css, barra e piè di pagina pure.
+   ========================================================================== */
+
+/* ================================================================ CAMMINO -- */
+.path{position:relative; z-index:2}
+.path__track{height:100svh}
+.js.has-film .path__track{height:560svh}          /* lo spazio per camminare */
+/* NIENTE margine negativo: la sezione successiva è opaca e, venendo dopo nel
+   documento, coprirebbe il blocco d'arrivo (testo tagliato a metà). */
+
+/* Il palco è alto 100lvh, NON svh: su telefono `svh` è l'altezza con le
+   barre del browser aperte — più bassa dello schermo pieno — e lascerebbe
+   bande vuote sopra e sotto il film. `lvh` è l'altezza grande e stabile. */
+.path__stage{
+  position:sticky; top:0; height:100vh; height:100lvh; overflow:hidden;
+  background:var(--forest-deep); isolation:isolate;
+}
+.path__poster,.path__film{position:absolute; inset:0}
+.path__poster img{width:100%; height:100%; object-fit:cover; object-position:center 50%}
+.path__film{opacity:0; transition:opacity 520ms var(--ease)}
+.path__film.is-on{opacity:1}
+.path__film video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 50%}
+/* Un velo leggero: il bosco al sole deve restare luminoso; il titolo ha la
+   sua fascia di carta e le frasi le loro ombre. */
+.path__scrim{
+  position:absolute; inset:0; pointer-events:none;
+  background:
+    radial-gradient(56% 34% at 50% 52%, rgba(24,16,6,.38) 0%, rgba(24,16,6,.14) 60%, transparent 80%),
+    linear-gradient(180deg, rgba(24,16,6,.42) 0%, rgba(24,16,6,.04) 26%, rgba(24,16,6,.04) 62%, rgba(24,16,6,.6) 100%),
+    radial-gradient(95% 70% at 50% 50%, transparent 55%, rgba(24,16,6,.38) 100%);
+}
+/* raccordo finale verso il colore della pagina */
+.path__landing{position:absolute; inset:0; pointer-events:none; opacity:0; background:var(--forest)}
+
+/* ---- titolo d'apertura ---- */
+.path__intro{
+  position:absolute; inset:0; z-index:5;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:calc(env(safe-area-inset-top) + 2rem) var(--gutter) calc(env(safe-area-inset-bottom) + 2rem);
+  will-change:opacity, transform;
+}
+.path__title{margin:0 0 1.6rem}
+/* La fascia di carta col nome, come sul biglietto da visita, scritta in
+   onciale e chiusa tra due filetti d'oro */
+.path__label{
+  display:inline-block; position:relative;
+  font-family:var(--disp); font-size:var(--fs-hero);
+  line-height:1; letter-spacing:.04em;
+  color:var(--brand-red);
+  background:linear-gradient(174deg, var(--paper) 0%, var(--paper-warm) 100%);
+  padding:.14em .3em .2em; rotate:-1.1deg;
+  box-shadow:0 24px 60px -24px rgba(0,0,0,.95), 0 2px 0 rgba(255,255,255,.25) inset,
+             0 0 0 1px rgba(235,201,127,.7), 0 0 0 6px rgba(19,18,10,.35), 0 0 0 7px rgba(235,201,127,.45);
+}
+.path__sub{
+  font-style:italic; font-size:clamp(1.2rem,1.9vw,1.55rem); color:var(--paper); max-width:34ch;
+  margin:0 auto 2.4rem; text-wrap:balance; line-height:1.45;
+  text-shadow:0 2px 10px rgba(11,13,5,.95), 0 0 30px rgba(11,13,5,.85);
+}
+
+/* ---- il richiamo luccicante: in fondo allo schermo, centrato ---- */
+.path__cue{
+  margin:0; display:flex; flex-direction:column; align-items:center; gap:.6rem;
+  position:absolute; left:0; right:0;
+  bottom:calc(env(safe-area-inset-bottom) + clamp(1.1rem, 3.5vh, 2.2rem));
+}
+.path__cue-text{
+  font-family:var(--caps); font-weight:600; font-size:clamp(.72rem,1vw,.82rem);
+  letter-spacing:.34em; text-transform:uppercase;
+  filter:drop-shadow(0 2px 10px rgba(11,13,5,.95));
+  background:linear-gradient(100deg,
+    var(--gold) 0%, var(--gold) 35%,
+    var(--amber-lit) 47%, #FFF6E0 51%, var(--amber-lit) 55%,
+    var(--gold) 68%, var(--gold) 100%);
+  background-size:280% 100%;
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  animation:shimmer 3.4s linear infinite;
+}
+@keyframes shimmer{from{background-position:180% 0} to{background-position:-80% 0}}
+.path__cue-arrow{
+  width:22px; height:34px; border:1.5px solid var(--gold); border-radius:999px; position:relative;
+}
+.path__cue-arrow::after{
+  content:''; position:absolute; left:50%; top:7px; translate:-50% 0;
+  width:3px; height:7px; border-radius:2px; background:var(--gold);
+  animation:cuedot 2s var(--ease) infinite;
+}
+@keyframes cuedot{0%,100%{transform:translateY(0);opacity:1} 50%{transform:translateY(11px);opacity:.35}}
+@media (prefers-reduced-motion: reduce){
+  .path__cue-text{animation:none; background:none; -webkit-text-fill-color:var(--gold); color:var(--gold)}
+  .path__cue-arrow::after{animation:none}
+}
+
+/* ---- LE TAPPE DELLA STORIA ----
+   Su schermo largo: due foto, una per lato, e il racconto in mezzo.
+   Su telefono: solo il racconto, centrato.
+   Opacità e movimento arrivano da js/path.js in modo CONTINUO (variabili
+   --a --ae --at --ab --p1 --p2): nessuna transizione CSS, che scatterebbe. */
+.path__notes{position:absolute; inset:0; z-index:6; pointer-events:none}
+.beat{
+  --a:0; --ae:0; --at:0; --ab:0; --p1:0; --p2:0; --drift:0px;
+  position:absolute; inset:0;
+}
+.beat__card{display:contents}
+
+/* --- le foto: archi elfici col doppio filetto d'oro --- */
+.beat__ph{
+  position:absolute; top:50%; margin:0;
+  width:min(19vw, 270px);
+  filter:drop-shadow(0 30px 40px rgba(0,0,0,.75));
+  will-change:opacity, transform;
+}
+.beat__ph img{
+  width:100%; height:auto; aspect-ratio:3/4; object-fit:cover; display:block;
+  -webkit-mask:var(--c-arch) center / 100% 100% no-repeat; mask:var(--c-arch) center / 100% 100% no-repeat;
+}
+.beat__ph::before,.beat__ph::after{
+  content:""; position:absolute; pointer-events:none; background:var(--c-arch-line) center / 100% 100% no-repeat;
+}
+.beat__ph::before{inset:-10px; filter:drop-shadow(0 0 6px rgba(235,201,127,.4))}
+.beat__ph::after{inset:-19px; opacity:.4}
+/* Altezza, misura, rotazione e rientro arrivano da js/path.js (hash per
+   indice): una sempre a sinistra e una a destra, ma mai nella stessa
+   identica posizione da una tappa all'altra. */
+.beat__ph--1{
+  left:calc(clamp(1.5rem, 4vw, 4.5rem) + var(--x1, 0vw));
+  width:calc(min(19vw, 270px) * var(--w1, 1));
+  opacity:var(--p1);
+  transform:translateY(calc(-50% + var(--y1, 0%) + var(--drift) + (1 - var(--p1)) * 26px))
+            rotate(calc(var(--r1, -2.6deg) * var(--p1) * .5))
+            scale(calc(.955 + .045 * var(--p1)));
+}
+.beat__ph--2{
+  right:calc(clamp(1.5rem, 4vw, 4.5rem) + var(--x2, 0vw));
+  width:calc(min(19vw, 270px) * var(--w2, 1));
+  opacity:var(--p2);
+  transform:translateY(calc(-50% + var(--y2, 0%) + var(--drift) + (1 - var(--p2)) * 32px))
+            rotate(calc(var(--r2, 2.6deg) * var(--p2) * .5))
+            scale(calc(.955 + .045 * var(--p2)));
+}
+
+/* --- il racconto scritto sullo schermo --- */
+.beat__text{
+  position:absolute; left:50%; top:50%; z-index:2;
+  width:min(600px, 44vw); text-align:center;
+  transform:translate(-50%, calc(-50% + var(--drift) * .45));
+}
+/* una pozza d'ombra morbida: le parole restano leggibili sul bosco */
+.beat__text::before{
+  content:''; position:absolute; inset:-70% -34%; z-index:-1; pointer-events:none;
+  opacity:var(--a);
+  background:radial-gradient(52% 44% at 50% 50%,
+    rgba(11,13,5,.86) 0%, rgba(11,13,5,.62) 46%, rgba(11,13,5,.22) 70%, transparent 84%);
+}
+.beat__eyebrow{
+  margin:0 0 1rem; opacity:var(--ae);
+  transform:translateY(calc((1 - var(--ae)) * 14px));
+  font-family:var(--caps); font-weight:600; font-size:clamp(.68rem,.9vw,.78rem);
+  letter-spacing:.34em; text-transform:uppercase; color:var(--fae);
+  text-shadow:0 2px 12px rgba(11,13,5,.95);
+}
+.beat__eyebrow::before{content:"✦"; margin-right:.8em; color:var(--gold); letter-spacing:0}
+.beat__title{
+  margin:0 0 1.1rem; opacity:var(--at);
+  transform:translateY(calc((1 - var(--at)) * 24px));
+  font-family:var(--disp); font-size:clamp(2.1rem, 4.2vw, 3.6rem);
+  line-height:1.04; color:var(--paper); text-wrap:balance;
+  text-shadow:0 3px 18px rgba(11,13,5,.95), 0 0 46px rgba(11,13,5,.85);
+}
+.beat__body{
+  margin:0 auto; max-width:42ch; opacity:var(--ab);
+  transform:translateY(calc((1 - var(--ab)) * 32px));
+  font-size:clamp(1.12rem,1.45vw,1.3rem); line-height:1.6; color:var(--mist); text-wrap:pretty;
+  text-shadow:0 2px 12px rgba(11,13,5,.95), 0 0 30px rgba(11,13,5,.8);
+}
+.beat__sign{
+  margin:1.1rem 0 0; opacity:var(--ab);
+  transform:translateY(calc((1 - var(--ab)) * 32px));
+  font-style:italic; font-size:1.5rem; line-height:1; color:var(--amber);
+  text-shadow:0 2px 12px rgba(11,13,5,.95);
+}
+.beat__sign::before{content:"— "; color:var(--gold)}
+
+/* ---- arrivo alla casa ---- */
+.path__arrival{
+  position:absolute; left:0; right:0; bottom:clamp(2.5rem, 12vh, 7rem); z-index:7;
+  text-align:center; padding-inline:var(--gutter);
+  opacity:0; pointer-events:none; will-change:opacity, transform;
+}
+.path__arrival.is-on{pointer-events:auto}
+.path__arrival-eyebrow{
+  margin:0 0 .6rem; font-family:var(--caps); font-weight:600; font-size:.74rem; letter-spacing:.34em;
+  text-transform:uppercase; color:var(--fae); text-shadow:0 2px 12px rgba(11,13,5,.95);
+}
+.path__arrival-eyebrow::before{content:"✦"; margin-right:.8em; color:var(--gold); letter-spacing:0}
+.path__arrival-title{
+  font-family:var(--disp); font-size:clamp(2.3rem,6vw,4rem);
+  line-height:1.02; margin:0 0 1.6rem;
+  background:linear-gradient(180deg, #FFF8E4 8%, var(--amber-lit) 52%, #C98A45 100%);
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 6px 24px rgba(0,0,0,.85));
+}
+
+/* ---- versione senza film ---- */
+.path__fallback{background:var(--forest); padding-block:var(--section-y)}
+.js.has-film .path__fallback{display:none}
+.path__fallback-list{list-style:none; margin:2rem 0 0; padding:0; display:grid; gap:2.2rem; counter-reset:tappa}
+.path__fallback-list li{counter-increment:tappa; padding-left:3.4rem; position:relative}
+.path__fallback-list li::before{
+  content:counter(tappa, upper-roman); position:absolute; left:0; top:.1rem;
+  width:2.4rem; height:2.4rem; display:grid; place-items:center; border-radius:50%;
+  border:1px solid rgba(235,201,127,.55); color:var(--gold); font-family:var(--disp); font-size:1rem;
+}
+.path__fallback-list h2{font-size:clamp(1.5rem,2.8vw,2.1rem); margin:0 0 .4rem; color:var(--paper)}
+.path__fallback-list p{margin:0; color:var(--mist)}
+
+/* ========================================================= STRISCIA VIDEO -- */
+.strip-sec{
+  overflow:hidden;
+  background:
+    radial-gradient(ellipse 50% 40% at 80% 20%, rgba(188,214,110,.06), transparent 70%),
+    var(--forest-deep);
+}
+.strip{
+  margin-top:clamp(2.2rem,4.5vw,3.2rem); padding-top:22px;
+  overflow:hidden; cursor:grab; touch-action:pan-y;
+  -webkit-user-select:none; user-select:none;
+  -webkit-mask-image:linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+  mask-image:linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+}
+.strip.is-dragging{cursor:grabbing}
+.strip__track{
+  list-style:none; margin:0; padding:0 0 22px; display:flex; gap:clamp(1.1rem,2vw,1.6rem);
+  width:max-content; will-change:transform;
+}
+.strip__card{flex:0 0 auto; width:clamp(180px, 21vw, 280px)}
+/* ogni video in una porta ad arco, col filetto d'oro */
+.strip__btn{
+  display:block; position:relative; width:100%; padding:0; cursor:pointer;
+  background:var(--forest-card); border:1px solid rgba(235,201,127,.45);
+  border-radius:50% 50% 14px 14px / 22% 22% 14px 14px; overflow:hidden; aspect-ratio:9/16;
+  box-shadow:0 0 0 5px var(--forest-deep), 0 0 0 6px rgba(235,201,127,.18), 0 26px 50px -30px #000;
+  transition:border-color var(--t-micro) var(--ease), transform var(--t-micro) var(--ease), box-shadow 400ms var(--ease);
+}
+.strip__btn:hover{border-color:var(--gold); transform:translateY(-4px); box-shadow:0 0 0 5px var(--forest-deep), 0 0 0 6px rgba(235,201,127,.4), 0 26px 50px -24px rgba(239,177,92,.35)}
+.strip__btn img,.strip__btn video{width:100%; height:100%; object-fit:cover; pointer-events:none}
+.strip__btn video{position:absolute; inset:0; z-index:2}
+/* Il simbolo di play serve solo finché il video non è partito. */
+.strip__play{
+  position:absolute; inset:0; z-index:3; display:grid; place-items:center;
+  transition:opacity var(--t-micro) var(--ease);
+}
+.strip__play::after{
+  content:''; width:52px; height:52px; border-radius:50%;
+  border:1.5px solid var(--gold); background:rgba(19,18,10,.5);
+  transition:opacity 420ms var(--ease);
+}
+.strip__play::before{
+  content:''; position:absolute; z-index:1; width:0; height:0; translate:3px 0;
+  border-left:15px solid var(--gold-lit); border-top:9px solid transparent; border-bottom:9px solid transparent;
+  transition:opacity 420ms var(--ease);
+}
+.strip__btn.has-video .strip__play::after,
+.strip__btn.has-video .strip__play::before{opacity:0}
+.strip__hint{margin:1.4rem auto 0; text-align:center}
+.strip__hint a{
+  font-family:var(--caps); font-weight:600; font-size:.76rem; letter-spacing:.22em; text-transform:uppercase;
+  color:var(--fae); text-decoration:none; border-bottom:1px solid rgba(188,214,110,.35); padding-bottom:.3rem;
+}
+.strip__hint a:hover{color:var(--gold-lit); border-bottom-color:var(--gold)}
+
+/* =============================================================== CONTATTI -- */
+.contact{
+  background:
+    radial-gradient(circle at 82% 30%, rgba(240,225,190,.08), transparent 30%),
+    radial-gradient(ellipse 50% 40% at 10% 90%, rgba(164,138,207,.07), transparent 70%),
+    var(--forest);
+}
+.contact__grid{display:grid; gap:clamp(2.5rem,6vw,5rem); align-items:center}
+@media (min-width:860px){ .contact__grid{grid-template-columns:1fr 1fr} }
+.contact .btn{margin-top:1.6rem}
+
+/* i contatti scritti su una pergamena, con un nodo a ogni angolo */
+.contact__card{
+  --k1:var(--brand-red); --k2:var(--brand-brown); --k3:var(--brand-red); --k-halo:var(--paper);
+  position:relative; padding:clamp(2.6rem, 5vw, 3.6rem) clamp(1.6rem, 4vw, 3rem);
+  color:var(--ink); border-radius:3px; rotate:-1deg;
+  background:var(--grain), radial-gradient(ellipse at center, #F2EAD6 40%, #DCCDA9 100%);
+  box-shadow:0 40px 70px -34px rgba(0,0,0,.95), inset 0 0 60px rgba(127,76,57,.25);
+}
+.contact__corner{position:absolute; width:64px; height:64px}
+.contact__corner--tl{top:-14px; left:-14px}
+.contact__corner--tr{top:-14px; right:-14px}
+.contact__corner--bl{bottom:-14px; left:-14px}
+.contact__corner--br{bottom:-14px; right:-14px}
+.contact__list{list-style:none; margin:0; padding:0; display:grid; gap:1rem}
+.contact__list li{display:grid; grid-template-columns:7.5rem minmax(0,1fr); gap:1rem; align-items:baseline; padding-bottom:1rem; border-bottom:1px solid rgba(90,70,52,.25); font-size:1.18rem; overflow-wrap:anywhere}
+.contact__list li:last-child{border-bottom:0; padding-bottom:0}
+.contact__list span{font-family:var(--caps); font-weight:600; font-size:.7rem; letter-spacing:.22em; text-transform:uppercase; color:var(--brand-red)}
+.contact__list a{color:var(--ink); text-decoration-color:rgba(166,64,47,.5); text-underline-offset:3px}
+.contact__list a:hover{color:var(--brand-red)}
+@media (max-width:860px){ .contact__list li{grid-template-columns:1fr; gap:.2rem} }
+
+/* ============ TELEFONO E SCHERMI STRETTI ============ */
+@media (max-width:900px){
+  /* SOLO LE SCRITTE: niente foto — il film resta visibile per intero e la
+     storia gli scorre sopra, centrata, con la sua pozza d'ombra. */
+  .beat__card{display:contents}
+  .beat__ph--1,.beat__ph--2{display:none}
+
+  .beat__text{
+    position:absolute; left:50%; top:50%; width:min(88vw, 360px);
+    text-align:center;
+    transform:translate(-50%, calc(-50% + var(--drift) * .5));
+  }
+  .beat__text::before{
+    display:block; inset:-46% -20%;
+    background:radial-gradient(58% 50% at 50% 50%,
+      rgba(11,13,5,.82) 0%, rgba(11,13,5,.55) 50%, rgba(11,13,5,.18) 72%, transparent 86%);
+  }
+  .beat__eyebrow{font-size:.64rem; margin-bottom:.7rem}
+  .beat__title{font-size:clamp(1.9rem, 8vw, 2.5rem); margin-bottom:.8rem}
+  .beat__body{font-size:1.1rem; line-height:1.55; max-width:36ch}
+  .beat__sign{font-size:1.35rem; margin-top:.8rem}
+
+  /* il richiamo un po' più su: non deve toccare la barra del browser */
+  .path__cue{bottom:calc(env(safe-area-inset-bottom) + 3.4rem)}
+}
