@@ -6,6 +6,9 @@
 name = "magicbones"
 main = "worker.js"
 compatibility_date = "2025-09-01"
+# le variabili messe a mano nel pannello di Cloudflare non vengono cancellate
+# dalle pubblicazioni automatiche (senza questo, a ogni commit sparivano)
+keep_vars = true
 
 [assets]
 directory = "./site"
