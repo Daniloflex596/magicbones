@@ -40,21 +40,6 @@
     window.addEventListener('load', function () { requestAnimationFrame(goHash); setTimeout(goHash, 450); });
   }
 
-  /* ------------------------------------------- menu (su telefono a tendina) -- */
-  var bar = document.getElementById('topbar');
-  var toggle = document.getElementById('navToggle');
-  if (bar && toggle) {
-    var closeMenu = function () { bar.classList.remove('is-menu'); toggle.setAttribute('aria-expanded', 'false'); };
-    toggle.addEventListener('click', function () {
-      var open = bar.classList.toggle('is-menu');
-      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-    });
-    bar.querySelectorAll('.cel-topbar__nav a').forEach(function (a) { a.addEventListener('click', closeMenu); });
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && bar.classList.contains('is-menu')) { closeMenu(); toggle.focus(); }
-    });
-  }
-
   /* ------------------------------------------------------------ lanterna -- */
   if (finePointer) {
     document.querySelectorAll('[data-lantern]').forEach(function (el) {

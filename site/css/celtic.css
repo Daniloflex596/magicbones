@@ -58,35 +58,46 @@
 .cel-topbar__nav a:hover{color:var(--gold-lit)}
 .cel-topbar__nav a:hover::after,.cel-topbar__nav a[aria-current="page"]::after,.cel-topbar__nav a.is-here::after{transform:scaleX(1)}
 .cel-topbar__nav a[aria-current="page"],.cel-topbar__nav a.is-here{color:var(--gold-lit)}
+/* "Il catalogo": il bottone che si accende, oro pieno con un alone che
+   pulsa piano come una lucciola. L'alone è un livello a parte e si anima
+   solo con opacità e scala (lavoro della scheda grafica, niente ridisegni). */
 .cel-topbar__nav a[href$="catalogo.html"]{
-  padding:.62rem 1.15rem; border-radius:999px; color:var(--gold-lit);
-  border:1px solid rgba(235,201,127,.6); transition:background var(--t-micro), box-shadow var(--t-micro);
+  display:inline-flex; align-items:center; gap:.55em; min-height:44px; padding:.6rem 1.2rem;
+  border-radius:999px; color:#2A1C08; font-weight:700; letter-spacing:.16em;
+  background:linear-gradient(180deg, #FFF6D8 0%, #F3D48F 45%, #D9A85A 100%);
+  border:1px solid rgba(255,246,222,.95);
+  box-shadow:0 0 0 1px rgba(235,201,127,.45), 0 0 16px rgba(247,207,140,.55), inset 0 1px 0 rgba(255,255,255,.7);
+  text-shadow:0 1px 0 rgba(255,246,222,.6);
+  transition:transform 200ms var(--ease-out), filter 200ms var(--ease-out);
 }
-.cel-topbar__nav a[href$="catalogo.html"]::after{display:none}
+.cel-topbar__nav a[href$="catalogo.html"]::before{
+  content:""; position:absolute; inset:0; z-index:-1; border-radius:inherit; pointer-events:none;
+  box-shadow:0 0 18px 5px rgba(247,207,140,.65), 0 0 38px 12px rgba(188,214,110,.32);
+  opacity:.45; transform:scale(.97);
+  animation:cel-lucciola 2.4s ease-in-out infinite;
+}
+.cel-topbar__nav a[href$="catalogo.html"]::after{
+  content:"✦"; position:static; display:inline; height:auto; background:none; transform:none;
+  font-size:.95em; letter-spacing:0; color:#8A4E14;
+}
 .cel-topbar__nav a[href$="catalogo.html"]:hover,
-.cel-topbar__nav a[href$="catalogo.html"][aria-current="page"],
-.cel-topbar__nav a[href$="catalogo.html"].is-here{background:rgba(235,201,127,.14); box-shadow:0 0 24px -6px rgba(235,201,127,.5)}
-.cel-topbar__toggle{
-  display:none; cursor:pointer; min-height:42px; padding:.5rem 1rem; border-radius:999px;
-  font-family:var(--caps); font-weight:600; font-size:.7rem; letter-spacing:.18em; text-transform:uppercase;
-  color:var(--gold-lit); background:transparent; border:1px solid rgba(235,201,127,.6);
+.cel-topbar__nav a[href$="catalogo.html"]:focus-visible{color:#2A1C08; filter:brightness(1.07); transform:translateY(-1px)}
+.cel-topbar__nav a[href$="catalogo.html"]:active{transform:scale(.97)}
+/* nella pagina del catalogo è già acceso: niente pulsazione */
+.cel-topbar__nav a[href$="catalogo.html"][aria-current="page"]::before{animation:none; opacity:.8; transform:none}
+@keyframes cel-lucciola{
+  0%,100%{opacity:.4; transform:scale(.97)}
+  50%{opacity:1; transform:scale(1.03)}
 }
+@media (prefers-reduced-motion: reduce){
+  .cel-topbar__nav a[href$="catalogo.html"]::before{animation:none; opacity:.75; transform:none}
+}
+/* telefono: in alto a destra SOLO il bottone del catalogo (le altre voci
+   restano nel piè di pagina) */
 @media (max-width:760px){
-  .cel-topbar__toggle{display:inline-flex; align-items:center}
-  .cel-topbar__nav{
-    position:absolute; top:100%; right:var(--gutter); left:var(--gutter);
-    flex-direction:column; align-items:stretch; gap:0; padding:.6rem 1.2rem 1rem;
-    background:linear-gradient(180deg, rgba(19,18,10,.98), rgba(22,26,15,.98));
-    border:1px solid rgba(235,201,127,.3); border-top:0; border-radius:0 0 18px 18px;
-    box-shadow:0 30px 50px -30px #000;
-    opacity:0; visibility:hidden; transform:translateY(-6px);
-    transition:opacity 260ms var(--ease), transform 260ms var(--ease), visibility 0s 260ms;
-  }
-  .cel-topbar.is-menu .cel-topbar__nav{opacity:1; visibility:visible; transform:none; transition:opacity 260ms var(--ease), transform 260ms var(--ease)}
-  .cel-topbar__nav a{padding:.95rem .2rem; border-bottom:1px solid rgba(235,201,127,.12)}
-  .cel-topbar__nav a:last-child{border-bottom:0}
-  .cel-topbar__nav a::after{display:none}
-  .cel-topbar__nav a[href$="catalogo.html"]{margin:.6rem 0; text-align:center}
+  .cel-topbar__nav{gap:0; margin-right:6px}
+  .cel-topbar__nav a:not([href$="catalogo.html"]){display:none}
+  .cel-topbar__nav a[href$="catalogo.html"]{font-size:.7rem; padding:.55rem 1.05rem}
 }
 @media (max-width:480px){
   .cel-topbar__brand{font-size:1.08rem; gap:.5rem}
@@ -170,7 +181,6 @@
 }
 .cel-host__ritratto::before{inset:-12px; opacity:.9; filter:drop-shadow(0 0 6px rgba(235,201,127,.35))}
 .cel-host__ritratto::after{inset:-22px; opacity:.35}
-.cel-host__firma{margin-top:1.3rem; font-style:italic; font-size:1.15em; color:var(--c-gold-lit)}
 @media (max-width:700px){
   .cel-host__in{grid-template-columns:minmax(0, 1fr); justify-items:center; text-align:center; gap:2.6rem}
   .cel-host__ritratto{width:min(58vw, 240px)}
