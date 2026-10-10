@@ -30,17 +30,75 @@
   if (reduce || !('IntersectionObserver' in window)) {
     revealables.forEach(function (el) { el.classList.add('is-in'); });
   } else {
-    var revObs = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (!e.isIntersecting) return;
-        var el = e.target;
+    /* La dissolvenza solo per chi ENTRA PIANO dal basso. Un blocco che compare
+       già dentro lo schermo (scorrimento veloce, salto, risalita da sotto)
+       si mostra subito: prima restava nero per quasi un secondo, e scorrendo
+       veloce su telefono si vedevano schermate intere vuote. */
+    var inCorso = [];                      // blocchi che si stanno dissolvendo adesso
+    var mostra = function (el, subito) {
+      if (el.classList.contains('is-in')) return;
+      if (subito) {
+        el.style.transition = 'none';
+      } else {
         var idx = el.parentElement ? Array.prototype.indexOf.call(el.parentElement.children, el) : 0;
         el.style.transitionDelay = Math.min(idx, 4) * 70 + 'ms';
-        el.classList.add('is-in');
-        revObs.unobserve(el);
+        inCorso.push(el);
+        setTimeout(function () { var k = inCorso.indexOf(el); if (k > -1) inCorso.splice(k, 1); }, 900);
+      }
+      el.classList.add('is-in');
+    };
+    var revObs = new IntersectionObserver(function (entries) {
+      var h = window.innerHeight || 800;
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        mostra(e.target, e.boundingClientRect.top < h * 0.8);
+        revObs.unobserve(e.target);
       });
-    }, { rootMargin: '0px 0px 0px 0px', threshold: 0 });
+    }, { rootMargin: '0px 0px 12% 0px', threshold: 0 });
     revealables.forEach(function (el) { revObs.observe(el); });
+
+    /* RETE DI SICUREZZA ISTANTANEA. WebKit (Safari e Chrome su iPhone) avvisa
+       l'osservatore in ritardo — misurato fino a ~0,6 s dopo un salto — e
+       intanto i blocchi restavano neri. Qui le posizioni si misurano una
+       volta (e di nuovo quando la pagina cambia misura) e a ogni scorrimento
+       basta un confronto con scrollY: nessuna lettura del layout nel frame. */
+    var posti = [];
+    var misuraPosti = function () {
+      var y = window.scrollY;
+      posti = [];
+      revealables.forEach(function (el) {
+        if (el.classList.contains('is-in')) return;
+        var b = el.getBoundingClientRect();
+        posti.push([el, b.top + y, b.bottom + y]);
+      });
+    };
+    var attesa = false, ultimoY = window.scrollY, ultimoT = 0;
+    var controlla = function () {
+      attesa = false;
+      var y = window.scrollY, h = window.innerHeight || 800, ora = Date.now();
+      // scorrendo VELOCE niente dissolvenze, nemmeno quelle già partite: un
+      // blocco a metà dissolvenza in mezzo allo schermo sembra un buco nero.
+      // Si dissolve solo chi scorre con calma, quando l'effetto si vede.
+      var veloce = ultimoT && Math.abs(y - ultimoY) / Math.max(16, ora - ultimoT) > 1.5;   // > 1500 px/s
+      ultimoY = y; ultimoT = ora;
+      if (veloce) while (inCorso.length) inCorso.pop().style.transition = 'none';
+      for (var i = posti.length - 1; i >= 0; i--) {
+        var p = posti[i];
+        if (p[1] < y + h * 1.12 && p[2] > y - h * 0.12) {
+          mostra(p[0], veloce || p[1] - y < h * 0.8);
+          revObs.unobserve(p[0]);
+          posti.splice(i, 1);
+        }
+      }
+    };
+    window.addEventListener('scroll', function () {
+      if (!attesa && posti.length) { attesa = true; requestAnimationFrame(controlla); }
+    }, { passive: true });
+    var rimisura = function () { misuraPosti(); controlla(); };
+    rimisura();
+    window.addEventListener('load', rimisura);
+    window.addEventListener('resize', function () { clearTimeout(rimisura.t); rimisura.t = setTimeout(rimisura, 200); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(rimisura);
   }
 
   /* ------------------------------------------------------------- topbar -- */

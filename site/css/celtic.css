@@ -156,6 +156,28 @@
 .cel-lede{margin-top:1.2rem; max-width:36rem; font-style:italic; font-size:clamp(1.2rem, .8vw + 1rem, 1.45rem); color:var(--c-mist)}
 
 /* ==========================================================================
+   CLAUDIA — subito dopo "Benvenuto a casa mia": ritratto piccolo nella porta
+   ad arco dei pezzi + la frase con cui comincia la sua storia
+   ========================================================================== */
+.section.cel-host{padding-block:clamp(3.5rem, 8vw, 6rem)}
+.cel-host__in{
+  display:grid; grid-template-columns:auto minmax(0, 34rem); justify-content:center;
+  align-items:center; gap:clamp(2.2rem, 5vw, 4.5rem);
+}
+.cel-host__ritratto{position:relative; margin:0; width:clamp(200px, 22vw, 290px)}
+.cel-host__ritratto::before,.cel-host__ritratto::after{
+  content:""; position:absolute; pointer-events:none; background:var(--c-arch-line) center / 100% 100% no-repeat;
+}
+.cel-host__ritratto::before{inset:-12px; opacity:.9; filter:drop-shadow(0 0 6px rgba(235,201,127,.35))}
+.cel-host__ritratto::after{inset:-22px; opacity:.35}
+.cel-host__firma{margin-top:1.3rem; font-style:italic; font-size:1.15em; color:var(--c-gold-lit)}
+@media (max-width:700px){
+  .cel-host__in{grid-template-columns:minmax(0, 1fr); justify-items:center; text-align:center; gap:2.6rem}
+  .cel-host__ritratto{width:min(58vw, 240px)}
+  .cel-host .cel-lede{margin-inline:auto}
+}
+
+/* ==========================================================================
    IL SENTIERO DEI PEZZI
    ========================================================================== */
 .cel-path{position:relative; margin-top:clamp(3.5rem, 7vw, 6rem)}

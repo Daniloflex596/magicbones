@@ -64,8 +64,8 @@
 
   /* ---------------------------------------------------------- stato -- */
   var progress = 0, shown = 0;
-  var geom = { top: 0, run: 1 };
-  var running = false, visible = true, lastT = 0;
+  var geom = { top: 0, run: 1, vh: 1 };
+  var running = false, lastT = 0, scrollY0 = 0, fuori = false;
   var notes = [];
   var flies = null;
 
@@ -161,10 +161,12 @@
   function measure() {
     var r = track.getBoundingClientRect();
     geom.top = r.top + window.scrollY;
-    geom.run = Math.max(1, track.offsetHeight - vpH());
+    geom.vh = vpH();
+    geom.run = Math.max(1, track.offsetHeight - geom.vh);
   }
   function readScroll() {
-    var p = (window.scrollY - geom.top) / geom.run;
+    scrollY0 = window.scrollY;
+    var p = (scrollY0 - geom.top) / geom.run;
     progress = p < 0 ? 0 : (p > 1 ? 1 : p);
   }
 
@@ -352,6 +354,16 @@
     // leggerla nel gestore di scroll — dopo le scritture di stile del frame
     // prima — forzava un reflow dell'intera pagina (visto nel trace).
     readScroll();
+    /* Il film è sullo schermo? Lo si calcola qui dalla posizione, all'istante.
+       Prima lo diceva un IntersectionObserver, ma WebKit (Safari e Chrome su
+       iPhone) lo avvisa in ritardo: misurato 578 ms dopo un salto, e intanto
+       il film restava congelato sull'arrivo. */
+    var dentro = scrollY0 > geom.top - geom.vh && scrollY0 < geom.top + geom.run + geom.vh;
+    if (!dentro) { fuori = true; running = false; lastT = 0; return; }
+    if (fuori) {
+      // si rientra: subito il punto giusto, non l'ultima scena vista
+      fuori = false; shown = progress; nitido = 1;
+    }
     // mai 0: due frame con lo stesso orario darebbero una velocità infinita
     var dt = lastT ? Math.min(Math.max((now - lastT) / 1000, 0.001), 0.25) : 0.016;
     lastT = now;
@@ -365,6 +377,15 @@
          LINEARE (~70 ms; misurato: 0,08 s di ritardo). */
     var s = 1 - Math.exp(-(onPhone ? 14 : 10) * dt);
     var prima = shown;
+    /* TETTO AL RITARDO: l'inerzia segue il dito, non un salto. Senza tetto,
+       un salto lungo (tocco sulla barra per tornare su, colpo di dito, link
+       del menu) faceva riavvolgere tutto il film davanti agli occhi, con le
+       tappe e "Benvenuto a casa mia" che lampeggiavano (visto in WebKit
+       risalendo dal fondo). 0,06 di film è oltre il ritardo di un colpo di
+       dito vero: lo scorrimento normale non lo tocca mai. */
+    var RITARDO = 0.06;
+    if (progress - shown > RITARDO) shown = progress - RITARDO;
+    else if (shown - progress > RITARDO) shown = progress + RITARDO;
     shown += (progress - shown) * s;
     // velocità in immagini al secondo: da 4 in su dissolvenza piena (si legge
     // come mosso), da ferma immagine pura; la soglia si raggiunge con calma
@@ -379,7 +400,7 @@
     requestAnimationFrame(loop);
   }
   function kick() {
-    if (!visible || document.hidden || running) return;
+    if (document.hidden || running) return;
     running = true; lastT = 0;
     requestAnimationFrame(loop);
   }
@@ -409,12 +430,6 @@
   document.addEventListener('visibilitychange', function () {
     if (document.hidden) running = false; else kick();
   });
-  if ('IntersectionObserver' in window) {
-    new IntersectionObserver(function (en) {
-      visible = en[0].isIntersecting;
-      if (visible) kick(); else running = false;
-    }, { threshold: 0 }).observe(stage);
-  }
 
   // Se l'utente accende reduced-motion a pagina aperta: smonta tutto.
   function onPref() {
