@@ -45,7 +45,7 @@ Variabili (Settings → Variables and Secrets, tipo **Secret**):
 ## Lavorarci in locale
 
 ```bash
-npm test                              # 37 prove: dati, accesso, GitHub, funzioni
+npm test                              # 38 prove: dati, accesso, GitHub, funzioni
 python strumenti/server.py 8899 rete  # il sito, anche dal telefono sulla stessa Wi-Fi
 node strumenti/prova-bottega.mjs      # l'app completa con un finto GitHub (PIN 123456)
 # il motore vero di Cloudflare, collegato al finto GitHub (porta 8792):
