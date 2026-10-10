@@ -24,13 +24,16 @@ window.MB = {
     fireflies: true
   },
 
-  /* IL CAMMINO — una scena unica e continua da 10s.
-     `srcMobile` è girata nativamente in verticale: finché c'è, il film parte
-     anche su telefono (mai un ritaglio del 16:9). */
+  /* IL CAMMINO — una scena unica e continua (10 s di bosco).
+     Non è un video ma una SEQUENZA DI IMMAGINI disegnata su una tela: su
+     iPhone (Safari e Chrome) il video guidato dallo scroll mostrava solo 3
+     immagini; le immagini vanno uguali su ogni browser. Le ricava dai video
+     strumenti/film.py (che stampa il numero da mettere qui). Il telefono ha
+     la sua sequenza verticale 9:16: mai un ritaglio del 16:9. */
   film: {
-    src:       'assets/video/bosco.mp4',        // orizzontale 16:9, 10 s (PC)
-    srcMobile: 'assets/video/bosco-9x16.mp4',   // verticale 9:16, 10 s (telefono)
-    dur: 10
+    versione: 1,   // +1 ogni volta che rigeneri le immagini: chi è già passato le riscarica
+    computer: { cartella: 'assets/film/computer/', n: 120 },   // 1280×720
+    telefono: { cartella: 'assets/film/telefono/', n: 120 }    // 540×960
   },
 
   /* LA MIA STORIA, tappa per tappa lungo il sentiero.

@@ -9,6 +9,10 @@
   Cache-Control: public, max-age=31536000, immutable
 /assets/fonts/*
   Cache-Control: public, max-age=31536000, immutable
+# le immagini del film: l'indirizzo porta la versione (film.versione in
+# js/config.js), quindi possono restare in memoria per sempre
+/assets/film/*
+  Cache-Control: public, max-age=31536000, immutable
 
 # foto e video: una settimana (se ne rimpiazzi uno tenendo lo stesso nome,
 # chi è già passato dal sito lo vede aggiornato entro 7 giorni)

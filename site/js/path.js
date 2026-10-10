@@ -7,11 +7,11 @@
    - damping frame-rate-independent 1-exp(-λ·dt), dt clampato
    - scheduler event-driven: si ferma a convergenza, in tab nascosta, offscreen
    - geometria cacheata: nessun getBoundingClientRect nel loop
-   Robustezza (dallo scrub-engine di scroll-world):
-   - streaming con richieste Range (parte subito); Blob solo se il server
-     non le supporta (sempre seekable, ma aspetta il file intero)
-   - seek coalescing: mai una nuova seek mentre il decoder sta cercando
-   - poster finché un frame vero non è dipinto + priming al primo gesto (iOS)
+   Il film NON è un video: è una sequenza di immagini disegnata su una tela.
+   Su iPhone (Safari e Chrome, stesso motore) un video "saltato" dallo scroll
+   mostrava solo 3 immagini (provato su iPhone 17 Pro Max): le immagini vanno
+   uguali su ogni browser, anche col risparmio energetico, e il film si muove
+   dopo le prime invece che dopo l'intero file (vedi "la sequenza").
    ========================================================================== */
 (function () {
   'use strict';
@@ -38,15 +38,16 @@
   var conn     = navigator.connection || {};
   var lowMem   = (navigator.deviceMemory || 8) <= 2;
 
-  var SRC = onPhone ? (CFG.film.srcMobile || CFG.film.src) : CFG.film.src;
-  var DUR = CFG.film.dur || 10;
+  // il telefono ha la sua sequenza verticale 9:16: mai un ritaglio del 16:9
+  var SEQ = CFG.film && (onPhone ? CFG.film.telefono : CFG.film.computer);
+  var N = SEQ ? SEQ.n : 0;
 
   function filmAllowed() {
     if (!CFG.flags.pathFilm) return false;
     if (mqReduce.matches) return false;
     if (conn.saveData) return false;
     if (lowMem) return false;
-    if (onPhone && !CFG.film.srcMobile) return false;   // mai un crop del 16:9
+    if (!SEQ || N < 2) return false;
     return true;
   }
 
@@ -62,10 +63,9 @@
   if (fallback) fallback.hidden = true;
 
   /* ---------------------------------------------------------- stato -- */
-  var video = null, ready = false, blobUrl = null;
   var progress = 0, shown = 0;
   var geom = { top: 0, run: 1 };
-  var running = false, visible = true, lastT = 0, primed = false;
+  var running = false, visible = true, lastT = 0;
   var notes = [];
   var flies = null;
 
@@ -168,156 +168,92 @@
     progress = p < 0 ? 0 : (p > 1 ? 1 : p);
   }
 
-  /* ------------------------------------------------------ caricamento --
-     Con la barra di avanzamento nel richiamo: su una linea lenta il film
-     impiega qualche secondo ad arrivare, e la differenza fra "sta caricando
-     il bosco… 43%" e un'immagine ferma è la differenza fra attendere e
-     credere che il sito sia rotto. */
-  var cueText = cue ? cue.querySelector('.path__cue-text') : null;
-  var cueMsg = cueText ? cueText.textContent : '';
-  function progresso(pct) {
-    if (!cueText) return;
-    cueText.textContent = pct === null ? cueMsg : ('Sto caricando il bosco… ' + pct + '%');
-  }
-  function scarica(url) {
-    return fetch(url).then(function (r) {
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      var totale = +r.headers.get('Content-Length') || 0;
-      if (!r.body || !totale) return r.blob();
-      var reader = r.body.getReader(), ricevuti = 0, parti = [];
-      function passo() {
-        return reader.read().then(function (x) {
-          if (x.done) return new Blob(parti);
-          parti.push(x.value); ricevuti += x.value.length;
-          progresso(Math.min(99, Math.round(ricevuti / totale * 100)));
-          return passo();
-        });
-      }
-      return passo();
-    });
-  }
-  /* STREAMING PRIMA DI TUTTO. Netlify e Cloudflare consegnano il video "a
-     pezzi" (richieste Range): il browser dipinge il primo fotogramma appena
-     arriva l'inizio del file e scarica il resto mentre si cammina. Prima il
-     film aspettava SEMPRE il file intero come Blob: misurato su 4G, restava
-     fermo ~25 s — chi scorreva vedeva solo una foto e il sito "non
-     funzionava". Il Blob resta come riserva per i server che non conoscono
-     le richieste Range (es. `python -m http.server`): lì senza Blob ogni
-     seek ricadrebbe sul fotogramma 0. */
-  function supportaRange(url) {
-    return fetch(url, { headers: { Range: 'bytes=0-0' }, cache: 'no-store' })
-      .then(function (r) {
-        if (r.body && r.body.cancel) r.body.cancel();
-        return r.status === 206;
-      })
-      .catch(function () { return false; });
-  }
-  function monta(url) {
-    var v = document.createElement('video');
-    v.muted = true; v.playsInline = true; v.preload = 'auto';
-    v.setAttribute('muted', ''); v.setAttribute('playsinline', '');
-    v.src = url;
-    v.addEventListener('loadedmetadata', function () {
-      ready = true;
-      apply(true);
-    });
-    v.addEventListener('loadeddata', function () { prime(v); });
-    // ogni seek completata ridà un colpo al loop: se nel frattempo lo
-    // scroll è andato avanti, il fotogramma giusto arriva subito dopo
-    v.addEventListener('seeked', function () { kick(); });
-    film.appendChild(v);
-    video = v;
-  }
-  function load() {
-    supportaRange(SRC).then(function (aPezzi) {
-      if (aPezzi) { monta(SRC); return; }
-      return scarica(SRC).then(function (blob) {
-        progresso(null);
-        blobUrl = URL.createObjectURL(blob);
-        monta(blobUrl);
-      });
-    }).catch(function () {
-      // Media non disponibile: resta il poster, la pagina è comunque completa.
-      progresso(null);
-      film.classList.remove('is-on');
-    });
-  }
+  /* ------------------------------------------------------ la sequenza --
+     Si carica a PASSATE: la prima e l'ultima immagine, poi una ogni 16, ogni
+     8, 4, 2, tutte. Con le prime 6 il film già si muove, e si fa sempre più
+     fine mentre arriva il resto. Fra le due immagini già arrivate più vicine
+     alla posizione c'è una dissolvenza proporzionale: anche con le immagini
+     ancora rade il movimento resta continuo, mai uno scatto.
+     La dissolvenza però vale solo IN MOVIMENTO: a metà fra due immagini il
+     bosco si sdoppia (visto: tronchi col doppio contorno), cosa che scorrendo
+     si legge come "mosso" ma da fermi no. Rallentando, l'immagine si posa
+     dolcemente su quella pura più vicina (vedi `nitido` nel loop).
+     La tela ha la misura delle immagini; ad adattarla allo schermo ci pensa
+     il CSS (object-fit: cover), come faceva col video. */
+  var tela = document.createElement('canvas');
+  tela.setAttribute('aria-hidden', 'true');
+  var ctx = tela.getContext('2d', { alpha: false });
+  film.appendChild(tela);
 
-  /* Il vizio di iOS Safari (documentato nella skill scroll-world): un video
-     muto che non è MAI stato riprodotto non dipinge i fotogrammi delle seek —
-     il poster resta lì, fermo, e il film sembra "tolto". La riproduzione muta
-     inline è permessa anche senza gesto: qui si avvia davvero, si lascia
-     girare finché il decoder non ha dipinto (primo `timeupdate`), e solo
-     allora si mette in pausa e si mostra il film. Il gesto dell'utente resta
-     come seconda rete di sicurezza. */
-  var primeOk = false;
-  function prime(v) {
-    if (primeOk) return;
-    function fatto() {
-      if (primeOk) return;
-      primeOk = true;
-      v.removeEventListener('timeupdate', fatto);
-      try { v.pause(); } catch (e) {}
-      film.classList.add('is-on');       // il film appare solo quando dipinge
-      apply(true);
-      if (!onPhone) prewarm(v);          // scalda il decoder mentre si è fermi
+  var quadri = new Array(N);               // le immagini pronte (scaricate e decodificate)
+  var acceso = false, spento = false, disegnato = -1;
+  var nitido = 1;                          // 1 = da fermi (immagine pura), 0 = in corsa (dissolvenza piena)
+  var ordine = [];
+  (function () {
+    var visto = {};
+    function metti(i) { if (i >= 0 && i < N && !visto[i]) { visto[i] = 1; ordine.push(i); } }
+    metti(0); metti(N - 1);
+    [16, 8, 4, 2, 1].forEach(function (p) { for (var i = 0; i < N; i += p) metti(i); });
+  })();
+  function nome(i) { return SEQ.cartella + ('00' + i).slice(-3) + '.webp?v=' + (CFG.film.versione || 1); }
+
+  var PARALLELE = 4, prossimo = 0;
+  function caricaUna() {
+    if (spento || prossimo >= ordine.length) return;
+    var i = ordine[prossimo++];
+    var im = new Image();
+    im.decoding = 'async';
+    im.onload = function () {
+      // decodificata PRIMA di disegnarla: il primo disegno non costa uno scatto
+      var pronta = function () { if (spento) return; quadri[i] = im; arrivata(); caricaUna(); };
+      if (im.decode) im.decode().then(pronta, pronta); else pronta();
+    };
+    im.onerror = caricaUna;                // un'immagine persa non ferma le altre
+    im.src = nome(i);
+  }
+  function arrivata() {
+    if (!acceso) {
+      if (!quadri[0]) return;
+      acceso = true;
+      tela.width = quadri[0].naturalWidth;
+      tela.height = quadri[0].naturalHeight;
+      disegna(true);
+      film.classList.add('is-on');         // la tela appare solo quando ha dipinto
+      return;
     }
-    v.addEventListener('timeupdate', fatto);
-    setTimeout(fatto, 900);              // rete di sicurezza se timeupdate tarda
-    try {
-      var p = v.play();
-      if (p && p.catch) p.catch(function () {});
-    } catch (e) {}
+    disegna(true);                         // un'immagine in più: il film si affina
   }
+  function load() { for (var k = 0; k < PARALLELE; k++) caricaUna(); }
 
-  /* PRE-WARM del decoder (immersive-web-engine §2, adattato dal 3D al video).
-     La prima seek su un punto mai visitato costa: il decoder deve raggiungere
-     il keyframe e decodificare. Se capita al primo scroll, si sente come uno
-     scatto proprio nel momento che conta. Qui si visitano cinque punti lungo
-     tutto il clip mentre l'utente è ancora fermo sul titolo, e si torna a 0.
-     Si interrompe appena l'utente tocca lo scroll: il suo gesto ha priorità. */
-  var warmAbort = false, warmed = false;
-  function prewarm(v) {
-    if (warmed || warmAbort) return;
-    warmed = true;
-    var pts = [0.15, 0.38, 0.6, 0.82, 0.97], i = 0;
-    function step() {
-      if (warmAbort || i >= pts.length) {
-        if (!warmAbort) { try { v.currentTime = 0; } catch (e) {} }
-        return;
-      }
-      var t = pts[i++] * DUR;
-      var done = function () { v.removeEventListener('seeked', done); step(); };
-      v.addEventListener('seeked', done);
-      try { v.currentTime = t; } catch (e) { v.removeEventListener('seeked', done); step(); }
+  // le due immagini già arrivate più vicine a x: una prima, una dopo
+  function vicine(x) {
+    var a = Math.floor(x), b = Math.ceil(x);
+    while (a > 0 && !quadri[a]) a--;
+    while (b < N - 1 && !quadri[b]) b++;
+    if (!quadri[b]) b = a;
+    return [a, b];
+  }
+  function disegna(forza) {
+    if (!acceso) return;
+    var x = (shown < 0 ? 0 : shown > 1 ? 1 : shown) * (N - 1);
+    var ab = vicine(x), a = ab[0], b = ab[1];
+    var w = b === a ? 0 : (x - a) / (b - a);
+    w += ((w < 0.5 ? 0 : 1) - w) * nitido;  // fermandosi: verso l'immagine pura più vicina
+    var k = Math.round(w * 32);              // sotto 1/32 di dissolvenza non si vede differenza
+    var q = (a * N + b) * 33 + k;
+    if (!forza && q === disegnato) return;
+    disegnato = q;
+    ctx.globalAlpha = 1;
+    ctx.drawImage(quadri[k === 32 ? b : a], 0, 0, tela.width, tela.height);
+    if (k > 0 && k < 32) {
+      ctx.globalAlpha = w;
+      ctx.drawImage(quadri[b], 0, 0, tela.width, tela.height);
+      ctx.globalAlpha = 1;
     }
-    step();
   }
-  function primeAll() { if (primed) return; primed = true; if (video) prime(video); }
 
-  /* ------------------------------------------------------------ frame -- */
-  /* CAMBIO DI PARADIGMA sulla seek (diagnosi misurata):
-     chiedere una seek a OGNI frame di scroll (60+/s) intasa il decoder — il
-     filmato ha solo 24 fotogrammi al secondo, quindi 2 richieste su 3 non
-     possono nemmeno produrre un'immagine diversa. Qui il tempo si aggancia
-     al reticolo dei fotogrammi REALI: si chiede una seek solo quando cambia
-     il fotogramma, e sempre esattamente sul suo istante. Misurato: i picchi
-     oltre i 20ms spariscono del tutto. */
-  var FPS = 24;
-  var lastFrame = -1;
   function apply(force) {
-    if (video && ready && !video.seeking) {
-      var t = Math.max(0, Math.min(DUR - 0.05, shown * DUR));
-      var fr = Math.min(Math.round(t * FPS), Math.floor((DUR - 0.05) * FPS));
-      // auto-riparazione: se il tempo reale del video non corrisponde al
-      // fotogramma che crediamo di mostrare (il priming lo fa avanzare, una
-      // seek può fallire in silenzio), si richiede comunque
-      var fuoriPosto = Math.abs(video.currentTime - fr / FPS) > 0.09;
-      if (force || fr !== lastFrame || fuoriPosto) {
-        lastFrame = fr;
-        try { video.currentTime = fr / FPS + 0.0001; } catch (e) {}
-      }
-    }
+    disegna(force);
     updateUI();
   }
 
@@ -404,7 +340,8 @@
     // leggerla nel gestore di scroll — dopo le scritture di stile del frame
     // prima — forzava un reflow dell'intera pagina (visto nel trace).
     readScroll();
-    var dt = lastT ? Math.min((now - lastT) / 1000, 0.25) : 0.016;
+    // mai 0: due frame con lo stesso orario darebbero una velocità infinita
+    var dt = lastT ? Math.min(Math.max((now - lastT) / 1000, 0.001), 0.25) : 0.016;
     lastT = now;
     /* Due pesature diverse (playbook §8.3):
        — ROTELLINA (desktop): input a scatti discreti → un'inerzia corta
@@ -415,9 +352,15 @@
        — DITO (telefono): manipolazione diretta → il video segue QUASI
          LINEARE (~70 ms; misurato: 0,08 s di ritardo). */
     var s = 1 - Math.exp(-(onPhone ? 14 : 10) * dt);
+    var prima = shown;
     shown += (progress - shown) * s;
-    if (Math.abs(progress - shown) < 0.0003) {
-      shown = progress; apply(false);
+    // velocità in immagini al secondo: da 4 in su dissolvenza piena (si legge
+    // come mosso), da ferma immagine pura; la soglia si raggiunge con calma
+    var v = Math.abs(shown - prima) * (N - 1) / dt;
+    var meta = v >= 4 ? 0 : 1 - v / 4;
+    nitido += (meta - nitido) * (1 - Math.exp(-10 * dt));
+    if (Math.abs(progress - shown) < 0.0003 && nitido > 0.99) {
+      shown = progress; nitido = 1; apply(false);
       running = false; lastT = 0; return;
     }
     apply(false);
@@ -432,7 +375,7 @@
   /* ----------------------------------------------------------- eventi -- */
   // il gestore di scroll NON legge la posizione (lo fa il loop a inizio
   // frame): qui si segnala soltanto che c'è del lavoro da fare
-  window.addEventListener('scroll', function () { warmAbort = true; kick(); }, { passive: true });
+  window.addEventListener('scroll', kick, { passive: true });
 
   // RESIZE SOLO SU CAMBI VERI (immersive-web-engine §3): il collasso della
   // barra indirizzi emette un `resize` che cambia solo l'altezza, e di poco.
@@ -454,9 +397,6 @@
   document.addEventListener('visibilitychange', function () {
     if (document.hidden) running = false; else kick();
   });
-  ['pointerdown', 'touchstart', 'keydown', 'wheel'].forEach(function (ev) {
-    window.addEventListener(ev, primeAll, { once: true, passive: true });
-  });
   if ('IntersectionObserver' in window) {
     new IntersectionObserver(function (en) {
       visible = en[0].isIntersecting;
@@ -469,11 +409,8 @@
     if (!mqReduce.matches) return;
     running = false;
     film.classList.remove('is-on');
-    if (video) {
-      try { video.pause(); video.removeAttribute('src'); video.load(); } catch (e) {}
-      video.remove(); video = null;
-    }
-    if (blobUrl) { URL.revokeObjectURL(blobUrl); blobUrl = null; }
+    spento = true;                       // niente più immagini da scaricare
+    tela.remove();
     document.documentElement.classList.remove('has-film');
     document.documentElement.classList.add('no-film');
     if (fallback) fallback.hidden = false;
@@ -486,10 +423,6 @@
   }
   if (mqReduce.addEventListener) mqReduce.addEventListener('change', onPref);
   else if (mqReduce.addListener) mqReduce.addListener(onPref);
-
-  window.addEventListener('pagehide', function () {
-    if (blobUrl) URL.revokeObjectURL(blobUrl);
-  });
 
   /* -------------------------------------------------------------- go -- */
   measure(); readScroll(); shown = progress;
