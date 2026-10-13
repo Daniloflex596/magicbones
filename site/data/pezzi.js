@@ -2,7 +2,7 @@
    se non sai cosa fai — è JSON puro tra le due righe. */
 window.MB_DATI = {
  "versione": 1,
- "aggiornato": "2026-10-13T09:18:26.184Z",
+ "aggiornato": "2026-10-13T09:21:21.089Z",
  "categorie": [
   {
    "id": "teschi",
@@ -1071,6 +1071,33 @@ window.MB_DATI = {
    ],
    "thumb": "assets/img/pezzi/2026-10/595e574f5eac28010f9b-mini.jpg",
    "aggiornato": "2026-10-13T09:18:26.184Z"
+  },
+  {
+   "id": "testa-di-serpente",
+   "creato": "2026-10-13T09:21:21.089Z",
+   "nome": "testa di serpente",
+   "prezzo": 25,
+   "cat": "cornicette",
+   "unita": "pezzo unico",
+   "descrizione": "cornicerta con rosa rossa essiccata e muta di serpente precisamente la parte della testa",
+   "foto": [
+    {
+     "src": "assets/img/pezzi/2026-10/ce35ac181d9be08149ca.jpg",
+     "porta": "assets/img/pezzi/2026-10/ce35ac181d9be08149ca-600.jpg",
+     "alt": "testa di serpente: cornicerta con rosa rossa essiccata e muta di serpente precisamente la parte della testa",
+     "w": 900,
+     "h": 1200
+    },
+    {
+     "src": "assets/img/pezzi/2026-10/91ff35cc18776238359f.jpg",
+     "porta": "assets/img/pezzi/2026-10/91ff35cc18776238359f-600.jpg",
+     "alt": "testa di serpente, un'altra vista.",
+     "w": 900,
+     "h": 1200
+    }
+   ],
+   "thumb": "assets/img/pezzi/2026-10/ce35ac181d9be08149ca-mini.jpg",
+   "aggiornato": "2026-10-13T09:21:21.089Z"
   }
  ]
 };
