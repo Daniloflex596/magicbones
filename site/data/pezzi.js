@@ -2,7 +2,7 @@
    se non sai cosa fai — è JSON puro tra le due righe. */
 window.MB_DATI = {
  "versione": 1,
- "aggiornato": "2026-10-10T13:53:51.684Z",
+ "aggiornato": "2026-10-13T09:18:26.184Z",
  "categorie": [
   {
    "id": "teschi",
@@ -23,6 +23,10 @@ window.MB_DATI = {
   {
    "id": "cornicette",
    "nome": "Cornicette"
+  },
+  {
+   "id": "campane-di-vetro",
+   "nome": "campane di vetro"
   }
  ],
  "pezzi": [
@@ -1039,6 +1043,34 @@ window.MB_DATI = {
      "h": 1200
     }
    ]
+  },
+  {
+   "id": "ampolla-lupo",
+   "creato": "2026-10-13T09:18:26.184Z",
+   "nome": "ampolla lupo",
+   "prezzo": 30,
+   "cat": "campane-di-vetro",
+   "unita": "pezzo unico",
+   "citazione": "gotico romantico",
+   "descrizione": "campana di vetro con vertebra di lupo con pezzo grezzo di cassiterite nera",
+   "foto": [
+    {
+     "src": "assets/img/pezzi/2026-10/595e574f5eac28010f9b.jpg",
+     "porta": "assets/img/pezzi/2026-10/595e574f5eac28010f9b-600.jpg",
+     "alt": "ampolla lupo: campana di vetro con vertebra di lupo con pezzo grezzo di cassiterite nera",
+     "w": 900,
+     "h": 1200
+    },
+    {
+     "src": "assets/img/pezzi/2026-10/1e692504919a140b3cbc.jpg",
+     "porta": "assets/img/pezzi/2026-10/1e692504919a140b3cbc-600.jpg",
+     "alt": "ampolla lupo, un'altra vista.",
+     "w": 900,
+     "h": 1200
+    }
+   ],
+   "thumb": "assets/img/pezzi/2026-10/595e574f5eac28010f9b-mini.jpg",
+   "aggiornato": "2026-10-13T09:18:26.184Z"
   }
  ]
 };
