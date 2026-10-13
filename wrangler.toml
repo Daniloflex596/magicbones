@@ -16,7 +16,7 @@ binding = "ASSETS"
 # pagina "Non trovata" vera (site/404.html), con codice 404
 not_found_handling = "404-page"
 # queste richieste passano dal codice (worker.js) prima dei file statici
-run_worker_first = ["/api/*", "/data/pezzi.js", "/assets/img/pezzi/*", "/assets/video/*", "/assets/reel/*"]
+run_worker_first = ["/api/*", "/data/pezzi.js", "/assets/img/pezzi/*", "/assets/video/*", "/assets/reel/*", "/catalogo.html", "/pezzo.html"]
 
 [vars]
 # (Cloudflare non accetta nomi che iniziano con GITHUB_)

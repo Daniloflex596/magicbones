@@ -7,6 +7,10 @@
 //       nessuna ripubblicazione (misurato: la ripubblicazione automatica da
 //       GitHub su Cloudflare non partiva). Se GitHub non risponde si serve la
 //       copia che il sito ha già: il sito non si rompe mai.
+//   · catalogo.html, pezzo.html  il deposito dei file statici risponderebbe
+//       con un rinvio (307) all'indirizzo senza .html: un viaggio di rete in
+//       più a ogni cambio di pagina (sul telefono 100-300 ms). Qui la pagina
+//       si consegna subito.
 //   · i video            per consegnarli "a pezzi" (richieste Range, 206): è
 //       quello che fa partire subito il film d'apertura (su 4G: 3-6 s invece
 //       di 25 s). Il deposito dei file statici non risponde a pezzi (e non
@@ -14,6 +18,7 @@
 import { gestisci } from './lib/api.js';
 
 const VIDEO = /^\/assets\/(video|reel)\//;
+const PAGINE = /^\/(catalogo|pezzo)\.html$/;
 const DATI = '/data/pezzi.js';
 const FOTO_APP = /^\/assets\/img\/pezzi\/[\w./-]+\.(webp|jpg)$/;
 const RESPIRO_DATI = 20 * 1000;          // per 20 s il catalogo si riusa senza richiederlo a GitHub
@@ -26,6 +31,11 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     if (url.pathname.startsWith('/api/')) return gestisci(request, env);
+    if (PAGINE.test(url.pathname) && (request.method === 'GET' || request.method === 'HEAD')) {
+      const senza = new URL(url);
+      senza.pathname = url.pathname.replace(/\.html$/, '');
+      return env.ASSETS.fetch(new Request(senza, request));
+    }
     if (request.method === 'GET') {
       if (url.pathname === DATI) return catalogo(env);
       if (FOTO_APP.test(url.pathname)) return fotoApp(request, env, url.pathname);

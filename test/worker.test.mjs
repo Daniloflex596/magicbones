@@ -103,3 +103,21 @@ test('le richieste /api/ vanno all\'app (senza tessera: 401)', async () => {
   const r = await chiedi({ ...ENV(), PIN_BOTTEGA: '1', SEGRETO: 'x'.repeat(20) }, '/api/pezzi');
   assert.equal(r.status, 401);
 });
+
+test('catalogo.html e pezzo.html si consegnano subito, senza il rinvio (307) all\'indirizzo senza .html', async () => {
+  // il deposito dei file statici di Cloudflare risponde a /x.html con un
+  // rinvio a /x: un viaggio di rete in più a ogni cambio di pagina
+  const env = { ...ENV_BASE, ASSETS: { fetch: async (req) => {
+    const u = new URL(req.url);
+    if (u.pathname.endsWith('.html')) return new Response(null, { status: 307, headers: { Location: u.pathname.replace(/\.html$/, '') + u.search } });
+    if (u.pathname === '/catalogo') return new Response('<h1>catalogo</h1>', { headers: { 'Content-Type': 'text/html' } });
+    if (u.pathname === '/pezzo') return new Response('pezzo ' + u.search, { headers: { 'Content-Type': 'text/html' } });
+    return new Response('non trovato', { status: 404 });
+  } } };
+  const c = await chiedi(env, '/catalogo.html');
+  assert.equal(c.status, 200);
+  assert.equal(await c.text(), '<h1>catalogo</h1>');
+  const p = await chiedi(env, '/pezzo.html?id=volpe');
+  assert.equal(p.status, 200);
+  assert.equal(await p.text(), 'pezzo ?id=volpe');
+});
