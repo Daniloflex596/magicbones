@@ -80,6 +80,7 @@ a{color:var(--rosso)}
 .foto__aggiungi span{font-size:2rem; line-height:1; color:var(--rosso)}
 .foto__aggiungi input{position:absolute; width:1px; height:1px; opacity:0}
 .foto__nota{color:var(--tenue); font-size:.9rem; margin:.5rem 0 0}
+.foto__attesa{grid-column:1 / -1; margin:0; padding:8px 12px; border-radius:10px; background:var(--giallo-chiaro); color:var(--giallo); font-size:.92rem; font-weight:600}
 
 .campo{display:block; margin:0 0 18px; padding:0; border:0; min-width:0}
 .campo > span,.campo > legend{display:block; margin-bottom:6px; font-weight:600; padding:0}

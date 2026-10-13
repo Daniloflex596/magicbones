@@ -6,7 +6,7 @@ import { creaGithub, FILE_DATI } from '../lib/github.js';
 import { leggiDati, segnaVenduto } from '../lib/dati.js';
 import { creaFintoGithub } from './finto-github.mjs';
 
-const DATI = readFileSync(new URL('../site/data/pezzi.js', import.meta.url), 'utf8');
+const DATI = readFileSync(new URL('./dati-prova.js', import.meta.url), 'utf8');
 const ORA = '2026-10-10T12:00:00.000Z';
 
 function prepara() {

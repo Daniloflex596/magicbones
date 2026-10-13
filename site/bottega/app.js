@@ -88,6 +88,10 @@
       img.src = url;   // il browser la raddrizza da solo (orientamento EXIF)
     });
   }
+  // Su iPhone Safari tiene in memoria le tele finché non passa a pulire, e
+  // oltre un certo totale smette di disegnare ("Non riesco a preparare la
+  // foto" dopo qualche pezzo). Azzerarne la misura le libera subito.
+  function libera(c) { if (c && c.getContext) { c.width = 0; c.height = 0; } }
   // rimpicciolisce a metà per volta: molto più nitido che in un colpo solo
   function scala(sorg, sx, sy, sw, sh, w, h) {
     var cur = sorg, cx = sx, cy = sy, cw = sw, ch = sh;
@@ -96,11 +100,13 @@
       t.width = Math.round(cw / 2); t.height = Math.round(ch / 2);
       var tx = t.getContext('2d'); tx.imageSmoothingQuality = 'high';
       tx.drawImage(cur, cx, cy, cw, ch, 0, 0, t.width, t.height);
+      if (cur !== sorg) libera(cur);        // il passaggio di prima non serve più
       cur = t; cx = 0; cy = 0; cw = t.width; ch = t.height;
     }
     var c = document.createElement('canvas'); c.width = w; c.height = h;
     var x = c.getContext('2d'); x.imageSmoothingQuality = 'high';
     x.drawImage(cur, cx, cy, cw, ch, 0, 0, w, h);
+    if (cur !== sorg) libera(cur);
     return c;
   }
   function misura(iw, ih, latoCorto) {
@@ -126,21 +132,34 @@
       r.readAsDataURL(blob);
     });
   }
+  /* Dall'originale (12-48 milioni di punti) si ricava UNA volta la grande
+     (lato corto 900); la porta (600) e la mini (240×240) vengono da quella,
+     non di nuovo dall'originale: tre volte meno memoria e meno tempo. Ogni
+     tela si libera appena la sua foto è pronta. */
   function preparaFoto(file) {
     return formato().then(function (fmt) {
       return apriImmagine(file).then(function (o) {
         var iw = o.img.naturalWidth, ih = o.img.naturalHeight;
-        var g = misura(iw, ih, 900), p = misura(iw, ih, 600);
-        var lato = Math.min(iw, ih);
+        if (!iw || !ih) { URL.revokeObjectURL(o.url); throw new Error('Questa foto non si apre: provane un\'altra'); }
+        var g = misura(iw, ih, 900);
         var cg = scala(o.img, 0, 0, iw, ih, g.w, g.h);
-        var cp = scala(o.img, 0, 0, iw, ih, p.w, p.h);
-        var cm = scala(o.img, (iw - lato) / 2, (ih - lato) / 2, lato, lato, 240, 240);
         URL.revokeObjectURL(o.url);
-        return Promise.all([aBlob(cg, fmt), aBlob(cp, fmt), aBlob(cm, fmt)]).then(function (b) {
-          return impronta(b[0]).then(function (h) {
-            return { grande: b[0], porta: b[1], mini: b[2], w: g.w, h: g.h, ext: fmt, hash: h };
-          });
-        });
+        o.img.removeAttribute('src');        // l'originale decodificato non serve più
+        var p = misura(g.w, g.h, 600), lato = Math.min(g.w, g.h);
+        var b = {};
+        return aBlob(cg, fmt).then(function (x) {
+          b.grande = x;
+          var cp = scala(cg, 0, 0, g.w, g.h, p.w, p.h);
+          return aBlob(cp, fmt).then(function (y) { libera(cp); b.porta = y; });
+        }).then(function () {
+          var cm = scala(cg, (g.w - lato) / 2, (g.h - lato) / 2, lato, lato, 240, 240);
+          libera(cg);
+          return aBlob(cm, fmt).then(function (z) { libera(cm); b.mini = z; });
+        }).then(function () {
+          return impronta(b.grande);
+        }).then(function (h) {
+          return { grande: b.grande, porta: b.porta, mini: b.mini, w: g.w, h: g.h, ext: fmt, hash: h };
+        }, function (err) { libera(cg); throw err; });
       });
     });
   }
@@ -179,16 +198,11 @@
   }
 
   /* ------------------------------------------------------------ elenco -- */
-  function vistaElenco() {
-    modulo = null;
-    var d = stato.dati;
-    var tutti = d.pezzi.slice().reverse();   // i più recenti in alto
-    var inVendita = tutti.filter(function (p) { return !p.venduto; });
-    var venduti = tutti.filter(function (p) { return p.venduto; });
-    var lista = stato.filtro === 'venduti' ? venduti : inVendita;
+  function htmlLista() {
+    var tutti = stato.dati.pezzi.slice().reverse();   // i più recenti in alto
+    var lista = tutti.filter(function (p) { return stato.filtro === 'venduti' ? p.venduto : !p.venduto; });
     var q = stato.cerca.trim().toLowerCase();
     if (q) lista = lista.filter(function (p) { return (p.nome + ' ' + categoria(p.cat)).toLowerCase().indexOf(q) >= 0; });
-
     var righe = lista.map(function (p) {
       return '<button class="riga" type="button" data-apri="' + esc(p.id) + '">' +
         '<img src="/' + esc(p.thumb) + '" alt="" loading="lazy" onerror="this.outerHTML=\'<span class=vuota></span>\'">' +
@@ -197,27 +211,35 @@
         (p.venduto ? '<span class="bollino bollino--venduto">Venduto</span>' : '') +
         '</button>';
     }).join('');
+    return '<h2>' + (stato.filtro === 'venduti' ? 'Venduti' : 'In vendita sul sito') + '</h2>' +
+      (righe || '<p class="vuoto">' + (q ? 'Nessun pezzo trovato.' : (stato.filtro === 'venduti' ? 'Ancora nessun pezzo venduto.' : 'Nessun pezzo in vendita.')) + '</p>');
+  }
+
+  function vistaElenco() {
+    modulo = null;
+    var d = stato.dati;
+    var inVendita = d.pezzi.filter(function (p) { return !p.venduto; }).length;
+    var venduti = d.pezzi.length - inVendita;
 
     app.innerHTML =
       '<header class="testa"><span class="testa__titolo"><small>Magic Bones</small>Bottega</span>' +
         '<a href="/catalogo.html" target="_blank" rel="noopener">Vedi il sito</a></header>' +
       '<section class="pagina">' +
         '<div class="schede" role="group" aria-label="Quali pezzi">' +
-          '<button type="button" data-filtro="vendita" aria-pressed="' + (stato.filtro !== 'venduti') + '">In vendita (' + inVendita.length + ')</button>' +
-          '<button type="button" data-filtro="venduti" aria-pressed="' + (stato.filtro === 'venduti') + '">Venduti (' + venduti.length + ')</button>' +
+          '<button type="button" data-filtro="vendita" aria-pressed="' + (stato.filtro !== 'venduti') + '">In vendita (' + inVendita + ')</button>' +
+          '<button type="button" data-filtro="venduti" aria-pressed="' + (stato.filtro === 'venduti') + '">Venduti (' + venduti + ')</button>' +
         '</div>' +
         '<input class="cerca" id="cerca" type="search" placeholder="Cerca un pezzo…" value="' + esc(stato.cerca) + '" aria-label="Cerca un pezzo">' +
-        '<h2>' + (stato.filtro === 'venduti' ? 'Venduti' : 'In vendita sul sito') + '</h2>' +
-        (righe || '<p class="vuoto">' + (q ? 'Nessun pezzo trovato.' : (stato.filtro === 'venduti' ? 'Ancora nessun pezzo venduto.' : 'Nessun pezzo in vendita.')) + '</p>') +
+        '<div id="lista">' + htmlLista() + '</div>' +
       '</section>' +
       '<nav class="piede"><button class="btn btn--primario" type="button" data-azione="nuovo">+ Nuovo pezzo</button></nav>';
 
+    // scrivendo nella ricerca cambia SOLO la lista: il campo resta quello,
+    // e la tastiera del telefono non si chiude a ogni lettera
     var cerca = document.getElementById('cerca');
     cerca.addEventListener('input', function () {
       stato.cerca = cerca.value;
-      var pos = cerca.selectionStart;
-      vistaElenco();
-      var c2 = document.getElementById('cerca'); c2.focus(); c2.setSelectionRange(pos, pos);
+      document.getElementById('lista').innerHTML = htmlLista();
     });
   }
 
@@ -243,9 +265,8 @@
     };
   }
 
-  function vistaScheda() {
-    var m = modulo;
-    var cats = stato.dati.categorie;
+  function htmlFoto(m) {
+    var daFare = m.foto.filter(function (f) { return f.tipo === 'nuova' && f.stato === 'preparo'; }).length;
     var foto = m.foto.map(function (f, i) {
       var st = f.tipo === 'nuova' && f.stato !== 'pronta'
         ? '<span class="foto__stato' + (f.stato === 'errore' ? ' foto__stato--errore' : '') + '">' + esc(f.stato === 'errore' ? f.errore : 'Preparo la foto…') + '</span>' : '';
@@ -261,6 +282,23 @@
     }).join('');
     var aggiungi = m.foto.length < MAX_FOTO
       ? '<label class="foto__aggiungi"><span>+</span>Aggiungi foto<input type="file" id="nuoveFoto" accept="image/*" multiple></label>' : '';
+    return foto + aggiungi + (daFare ? '<p class="foto__attesa" role="status">Preparo ' + (daFare === 1 ? 'la foto' : 'le foto (' + daFare + ')') + '… intanto puoi scrivere.</p>' : '');
+  }
+
+  // le foto cambiano (pronte, spostate, tolte): si ridisegna SOLO il loro
+  // riquadro. Ridisegnare tutta la scheda toglieva il campo in cui Claudia
+  // stava scrivendo: su iPhone si chiudeva la tastiera e si perdevano lettere.
+  function ridisegnaFoto() {
+    var box = app.querySelector('#scheda .foto');
+    if (!box) return vistaScheda();
+    box.innerHTML = htmlFoto(modulo);
+    if (!modulo.errori.some(function (e) { return /foto/i.test(e); })) box.closest('.campo').classList.remove('campo--errore');
+    ricontrolla(false);
+  }
+
+  function vistaScheda() {
+    var m = modulo;
+    var cats = stato.dati.categorie;
 
     var chips = cats.map(function (c) {
       return '<label class="scelta"><input type="radio" name="cat" value="' + esc(c.id) + '"' + (!m.campi.usaNuova && m.campi.cat === c.id ? ' checked' : '') + '><span>' + esc(c.nome) + '</span></label>';
@@ -279,7 +317,7 @@
         (m.venduto ? '<div class="stato-pezzo"><span class="bollino bollino--venduto">Venduto — non è sul sito</span></div>' : '') +
         err +
         '<fieldset class="campo' + (haErr('foto') ? ' campo--errore' : '') + '"><legend>Foto * <i>(la prima è la copertina)</i></legend>' +
-          '<div class="foto">' + foto + aggiungi + '</div>' +
+          '<div class="foto">' + htmlFoto(m) + '</div>' +
           '<p class="foto__nota">Scatta o scegli dalla galleria. Con ★ scegli la copertina, con ← → l\'ordine. Massimo ' + MAX_FOTO + ' foto.</p>' +
         '</fieldset>' +
         '<label class="campo' + (haErr('nome') ? ' campo--errore' : '') + '"><span>Nome del pezzo *</span>' +
@@ -305,9 +343,6 @@
           '</div>' : '') +
       '</form>' +
       '<nav class="piede"><button class="btn btn--primario" type="button" data-azione="pubblica">' + (m.id ? 'Salva le modifiche' : 'Pubblica sul sito') + '</button></nav>';
-
-    var input = document.getElementById('nuoveFoto');
-    if (input) input.addEventListener('change', function () { aggiungiFoto(input.files); input.value = ''; });
   }
 
   function htmlErrori(e) {
@@ -351,8 +386,7 @@
     var nuove = lista.map(function (file) { return { tipo: 'nuova', stato: 'preparo', file: file }; });
     m.foto = m.foto.concat(nuove);
     m.sporco = true;
-    ricontrolla(true);
-    vistaScheda();
+    ridisegnaFoto();
     // una alla volta: su iPhone le foto da 12-48 MP aperte insieme finiscono la memoria
     nuove.reduce(function (catena, f) {
       return catena.then(function () {
@@ -361,7 +395,7 @@
           f.anteprima = URL.createObjectURL(pronta.porta);
         }, function (err) {
           f.stato = 'errore'; f.errore = err.message; f.file = null;
-        }).then(function () { if (modulo === m) { ricontrolla(true); vistaScheda(); } });
+        }).then(function () { if (modulo === m) ridisegnaFoto(); });
       });
     }, Promise.resolve());
   }
@@ -375,8 +409,7 @@
     else if (azione === 'su' && i > 0) f.splice(i - 1, 0, f.splice(i, 1)[0]);
     else if (azione === 'giu' && i < f.length - 1) f.splice(i + 1, 0, f.splice(i, 1)[0]);
     modulo.sporco = true;
-    ricontrolla(true);
-    vistaScheda();
+    ridisegnaFoto();
   }
 
   function controlla() {
@@ -478,7 +511,7 @@
         '<div class="fatto__segno" aria-hidden="true">✓</div>' +
         '<h1>' + esc(titolo) + '</h1>' +
         '<p>' + esc(esito.nome || '') + '</p>' +
-        '<p class="fatto__online" id="online">Il sito si sta aggiornando: ci vuole circa un minuto…</p>' +
+        '<p class="fatto__online" id="online">Il sito si sta aggiornando: ci vogliono pochi secondi…</p>' +
         '<a class="btn btn--largo" id="vediSito" href="/pezzo.html?id=' + encodeURIComponent(esito.id) + '" target="_blank" rel="noopener">Guardalo sul sito</a>' +
         '<p></p>' +
         '<button class="btn btn--primario btn--largo" type="button" data-azione="nuovo">+ Aggiungi un altro pezzo</button>' +
@@ -505,7 +538,7 @@
         el.textContent = 'Ci sta mettendo più del solito: è tutto salvato, comparirà sul sito tra poco.';
         return;
       }
-      tOnline = setTimeout(function () { controllaOnline(aggiornato, inizio); }, 6000);
+      tOnline = setTimeout(function () { controllaOnline(aggiornato, inizio); }, 4000);
     });
   }
 
@@ -558,7 +591,11 @@
     else if (a === 'rimetti') cambiaVendita(false);
   });
   app.addEventListener('input', function (e) { if (e.target.closest('#scheda')) leggiCampo(e.target); });
-  app.addEventListener('change', function (e) { if (e.target.closest('#scheda') && e.target.type !== 'file') leggiCampo(e.target); });
+  app.addEventListener('change', function (e) {
+    // le foto scelte: l'elenco dei file si legge subito, prima di ridisegnare
+    if (e.target.id === 'nuoveFoto') { var files = e.target.files; aggiungiFoto(files); e.target.value = ''; return; }
+    if (e.target.closest('#scheda') && e.target.type !== 'file') leggiCampo(e.target);
+  });
 
   /* -------------------------------------------------------------- avvio -- */
   app.innerHTML = '<p class="vuoto">Apro la bottega…</p>';

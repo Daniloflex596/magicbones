@@ -7,7 +7,7 @@ import {
   leggiDati, scriviDati, slug, validaPezzo, applicaPezzo, segnaVenduto, fotoOrfane
 } from '../lib/dati.js';
 
-const VERO = readFileSync(new URL('../site/data/pezzi.js', import.meta.url), 'utf8');
+const VERO = readFileSync(new URL('./dati-prova.js', import.meta.url), 'utf8');
 const ORA = '2026-10-10T12:00:00.000Z';
 
 function base() {
@@ -27,6 +27,22 @@ test('il file vero si legge e si riscrive senza perdere niente', () => {
   const d = leggiDati(VERO);
   assert.equal(d.pezzi.length, 31);
   assert.equal(d.categorie.length, 5);
+  assert.deepEqual(leggiDati(scriviDati(d)), d);
+});
+
+// I test qui sopra usano una copia fissa (dati-prova.js): il catalogo vero lo
+// cambia Claudia dall'app ogni giorno. Su quello si controlla solo che sia sano.
+test('il catalogo vero (site/data/pezzi.js) è sano', () => {
+  const d = leggiDati(readFileSync(new URL('../site/data/pezzi.js', import.meta.url), 'utf8'));
+  const cats = new Set(d.categorie.map(c => c.id));
+  const ids = new Set();
+  for (const p of d.pezzi) {
+    assert.ok(!ids.has(p.id), 'id ripetuto: ' + p.id); ids.add(p.id);
+    assert.ok(cats.has(p.cat), p.id + ': categoria inesistente ' + p.cat);
+    assert.ok(p.prezzo > 0, p.id + ': prezzo');
+    assert.ok(Array.isArray(p.foto) && p.foto.length > 0 && p.foto.every(f => f.src && f.w > 0 && f.h > 0), p.id + ': foto');
+    assert.ok(p.thumb, p.id + ': miniatura');
+  }
   assert.deepEqual(leggiDati(scriviDati(d)), d);
 });
 

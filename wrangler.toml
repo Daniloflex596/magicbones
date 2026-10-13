@@ -22,3 +22,8 @@ run_worker_first = ["/api/*", "/data/pezzi.js", "/assets/img/pezzi/*", "/assets/
 # (Cloudflare non accetta nomi che iniziano con GITHUB_)
 ARCHIVIO_GITHUB = "Daniloflex596/magicbones"
 RAMO_GITHUB = "main"
+
+# registri delle chiamate (Workers Logs, pannello Cloudflare → magicbones →
+# Logs): se l'app di Claudia dà un errore, lì si vede quale e quando
+[observability]
+enabled = true
