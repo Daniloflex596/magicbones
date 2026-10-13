@@ -2,7 +2,7 @@
    se non sai cosa fai — è JSON puro tra le due righe. */
 window.MB_DATI = {
  "versione": 1,
- "aggiornato": "2026-10-13T09:21:21.089Z",
+ "aggiornato": "2026-10-13T09:29:46.136Z",
  "categorie": [
   {
    "id": "teschi",
@@ -1098,6 +1098,41 @@ window.MB_DATI = {
    ],
    "thumb": "assets/img/pezzi/2026-10/ce35ac181d9be08149ca-mini.jpg",
    "aggiornato": "2026-10-13T09:21:21.089Z"
+  },
+  {
+   "id": "cavalluccio-marino",
+   "creato": "2026-10-13T09:29:46.136Z",
+   "nome": "cavalluccio marino",
+   "prezzo": 35,
+   "cat": "campane-di-vetro",
+   "unita": "pezzo unico",
+   "citazione": "intenzionata alla trasformazione di se stesse e alla spensieratezza",
+   "descrizione": "ampolla di vetro con cavalluccio marino e fiori secchi",
+   "foto": [
+    {
+     "src": "assets/img/pezzi/2026-10/b931149b5de9359914b7.jpg",
+     "porta": "assets/img/pezzi/2026-10/b931149b5de9359914b7-600.jpg",
+     "alt": "cavalluccio marino: ampolla di vetro con cavalluccio marino e fiori secchi",
+     "w": 900,
+     "h": 1200
+    },
+    {
+     "src": "assets/img/pezzi/2026-10/4491e638e842bb52809a.jpg",
+     "porta": "assets/img/pezzi/2026-10/4491e638e842bb52809a-600.jpg",
+     "alt": "cavalluccio marino, un'altra vista.",
+     "w": 900,
+     "h": 1200
+    },
+    {
+     "src": "assets/img/pezzi/2026-10/34553625b33b42ed3b87.jpg",
+     "porta": "assets/img/pezzi/2026-10/34553625b33b42ed3b87-600.jpg",
+     "alt": "cavalluccio marino, un'altra vista.",
+     "w": 900,
+     "h": 1200
+    }
+   ],
+   "thumb": "assets/img/pezzi/2026-10/b931149b5de9359914b7-mini.jpg",
+   "aggiornato": "2026-10-13T09:29:46.136Z"
   }
  ]
 };
