@@ -96,7 +96,7 @@
   var ogh = feature && feature.querySelector('.cel-medallion__ogham');
 
   /* -------------------------------------------------------------- tralcio -- */
-  var H = 0, clipRect = null, tip = null, marks = [];
+  var H = 0, tenda = null, dentro = null, tip = null, marks = [], ultimoY = -1;
   var P = 170, A = 13, W = 80, CX = 40;
   function x(sign, y) { return CX + sign * A * Math.sin(Math.PI * 2 * y / P); }
   function trace(sign, y0, y1) {
@@ -127,15 +127,25 @@
       leaves += 'M' + f(bx) + ' ' + f(y) + 'Q' + f(bx + side * 14) + ' ' + f(y - 18) + ' ' + f(lx) + ' ' + f(ly) +
                 'Q' + f(bx + side * 8) + ' ' + f(y + 2) + ' ' + f(bx) + ' ' + f(y) + 'Z';
     }
-    vine.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" aria-hidden="true" focusable="false">' +
-      '<defs><clipPath id="celVineClip"><rect x="0" y="0" width="' + W + '" height="0"/></clipPath>' +
-      '<linearGradient id="celVineG" x1="0" y1="0" x2="0" y2="' + H + '" gradientUnits="userSpaceOnUse">' +
-      '<stop offset="0" stop-color="#BCD66E"/><stop offset=".5" stop-color="#EBC97F"/><stop offset="1" stop-color="#EFB15C"/></linearGradient></defs>' +
-      '<g class="v-ghost">' + rib(trace(1, 0, H)) + rib(trace(-1, 0, H)) + '</g>' +
-      '<g clip-path="url(#celVineClip)"><g>' + g + '</g><path class="v-leaf" d="' + leaves + '"/></g>' +
-      '<circle class="v-tip" r="5" cx="' + CX + '" cy="0"/></svg>';
-    clipRect = vine.querySelector('#celVineClip rect');
+    /* Il tralcio "cresce" senza ridisegnarsi: è disegnato intero una volta,
+       dentro una tenda che scorre (due spostamenti opposti, lavoro della
+       scheda grafica). Prima a ogni fotogramma si ritagliava il disegno:
+       un SVG alto migliaia di pixel ridisegnato mentre si scorre. */
+    var svg = function (cls, corpo) {
+      return '<svg class="' + cls + '" viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" aria-hidden="true" focusable="false">' + corpo + '</svg>';
+    };
+    vine.innerHTML =
+      svg('v-sotto', '<g class="v-ghost">' + rib(trace(1, 0, H)) + rib(trace(-1, 0, H)) + '</g>') +
+      '<div class="v-tenda" style="height:' + H + 'px"><div class="v-dentro">' +
+        svg('v-vivo', '<defs><linearGradient id="celVineG" x1="0" y1="0" x2="0" y2="' + H + '" gradientUnits="userSpaceOnUse">' +
+          '<stop offset="0" stop-color="#BCD66E"/><stop offset=".5" stop-color="#EBC97F"/><stop offset="1" stop-color="#EFB15C"/></linearGradient></defs>' +
+          '<g>' + g + '</g><path class="v-leaf" d="' + leaves + '"/>') +
+      '</div></div>' +
+      '<span class="v-tip" style="left:' + (CX - 5) + 'px"></span>';
+    tenda = vine.querySelector('.v-tenda');
+    dentro = vine.querySelector('.v-dentro');
     tip = vine.querySelector('.v-tip');
+    ultimoY = -1;
 
     // dove stanno i sigilli lungo il tralcio (misurato una volta, non a ogni frame)
     marks = stops.map(function (s) {
@@ -147,10 +157,13 @@
   }
 
   function set(p) {
-    if (!clipRect) return;
-    var y = H * p;
-    clipRect.setAttribute('height', f(y));
-    tip.setAttribute('cy', f(y));
+    if (!tenda) return;
+    var y = Math.round(H * p);
+    if (y === ultimoY) return;
+    ultimoY = y;
+    tenda.style.transform = 'translate3d(0,' + (y - H) + 'px,0)';
+    dentro.style.transform = 'translate3d(0,' + (H - y) + 'px,0)';
+    tip.style.transform = 'translate3d(0,' + y + 'px,0)';
     tip.style.opacity = p > .002 && p < .998 ? 1 : 0;
     for (var i = 0; i < marks.length; i++) marks[i].el.classList.toggle('is-lit', y >= marks[i].y - 6);
   }

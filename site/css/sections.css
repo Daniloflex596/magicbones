@@ -6,15 +6,18 @@
 /* ================================================================ CAMMINO -- */
 .path{position:relative; z-index:2}
 .path__track{height:100svh}
-.js.has-film .path__track{height:560svh}          /* lo spazio per camminare */
+.js.has-film .path__track{height:300svh}          /* tre fermate: titolo, storia, casa (js/path.js) */
 /* NIENTE margine negativo: la sezione successiva è opaca e, venendo dopo nel
    documento, coprirebbe il blocco d'arrivo (testo tagliato a metà). */
 
-/* Il palco è alto 100lvh, NON svh: su telefono `svh` è l'altezza con le
-   barre del browser aperte — più bassa dello schermo pieno — e lascerebbe
-   bande vuote sopra e sotto il film. `lvh` è l'altezza grande e stabile. */
+/* Il palco è alto quanto lo schermo VISIBILE (dvh). Nel cammino la pagina
+   non scorre col dito (js/path.js guida il film a fermate), quindi le barre
+   del browser restano ferme e l'altezza non cambia mentre si cammina; e il
+   titolo, la storia e "Entra" non finiscono mai sotto la barra di Safari.
+   Quando le barre si chiudono (più giù, nel sito) il palco si allunga da
+   solo: risalendo non restano bande vuote. */
 .path__stage{
-  position:sticky; top:0; height:100vh; height:100lvh; overflow:hidden;
+  position:sticky; top:0; height:100vh; height:100dvh; overflow:hidden;
   background:var(--forest-deep); isolation:isolate;
 }
 .path__poster,.path__film{position:absolute; inset:0}
@@ -62,8 +65,8 @@
 
 /* ---- il richiamo luccicante: in fondo allo schermo, centrato ---- */
 .path__cue{
-  margin:0; display:flex; flex-direction:column; align-items:center; gap:.6rem;
-  position:absolute; left:0; right:0;
+  margin:0; display:flex; flex-direction:column; align-items:center; gap:.6rem; cursor:pointer;
+  position:absolute; left:0; right:0; width:max-content; margin-inline:auto; padding:.6rem 1rem;
   bottom:calc(env(safe-area-inset-bottom) + clamp(1.1rem, 3.5vh, 2.2rem));
 }
 .path__cue-text{
@@ -109,7 +112,11 @@
 .beat__ph{
   position:absolute; top:50%; margin:0;
   width:min(19vw, 270px);
-  filter:drop-shadow(0 30px 40px rgba(0,0,0,.75));
+  /* l'ombra ha la forma dell'arco ed è un'ombra normale, disegnata una
+     volta: con filter:drop-shadow la sfocatura si rifaceva a ogni
+     fotogramma mentre la foto si muove (misurato) */
+  border-radius:50% 50% 12px 12px / 30% 30% 12px 12px;
+  box-shadow:0 34px 46px -14px rgba(0,0,0,.8);
   will-change:opacity, transform;
 }
 .beat__ph img{
@@ -150,10 +157,11 @@
 /* una pozza d'ombra morbida: le parole restano leggibili sul bosco */
 .beat__text::before{
   content:''; position:absolute; inset:-70% -34%; z-index:-1; pointer-events:none;
-  opacity:var(--a);
+  opacity:var(--a); will-change:opacity;
   background:radial-gradient(52% 44% at 50% 50%,
     rgba(11,13,5,.86) 0%, rgba(11,13,5,.62) 46%, rgba(11,13,5,.22) 70%, transparent 84%);
 }
+.beat__eyebrow,.beat__title,.beat__body,.beat__sign{will-change:opacity, transform}
 .beat__eyebrow{
   margin:0 0 1rem; opacity:var(--ae);
   transform:translateY(calc((1 - var(--ae)) * 14px));
@@ -223,19 +231,23 @@
     radial-gradient(ellipse 50% 40% at 80% 20%, rgba(188,214,110,.06), transparent 70%),
     var(--forest-deep);
 }
+/* Una fila che si scorre col dito, con lo scorrimento del browser (fluido
+   come il resto della pagina) e l'aggancio a ogni porta. Niente maschera
+   sui bordi: su una fila che scorre costringe a ridisegnarla a ogni passo. */
 .strip{
-  margin-top:clamp(2.2rem,4.5vw,3.2rem); padding-top:22px;
-  overflow:hidden; cursor:grab; touch-action:pan-y;
-  -webkit-user-select:none; user-select:none;
-  -webkit-mask-image:linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
-  mask-image:linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+  margin-top:clamp(2.2rem,4.5vw,3.2rem); padding:22px 0 0;
+  overflow-x:auto; overflow-y:hidden; overscroll-behavior-x:contain;
+  scroll-snap-type:x mandatory; scroll-padding-inline:var(--gutter);
+  scrollbar-width:none; cursor:grab; -webkit-user-select:none; user-select:none;
 }
-.strip.is-dragging{cursor:grabbing}
+.strip::-webkit-scrollbar{display:none}
+.strip.is-dragging{cursor:grabbing; scroll-snap-type:none}
 .strip__track{
-  list-style:none; margin:0; padding:0 0 22px; display:flex; gap:clamp(1.1rem,2vw,1.6rem);
-  width:max-content; will-change:transform;
+  list-style:none; margin:0 auto; padding:0 var(--gutter) 22px; display:flex; gap:clamp(1rem,2vw,1.6rem);
+  width:max-content;
 }
-.strip__card{flex:0 0 auto; width:clamp(180px, 21vw, 280px)}
+.strip__card{flex:0 0 auto; width:clamp(200px, 21vw, 280px); scroll-snap-align:center}
+@media (max-width:700px){ .strip__card{width:min(62vw, 260px)} }
 /* ogni video in una porta ad arco, col filetto d'oro */
 .strip__btn{
   display:block; position:relative; width:100%; padding:0; cursor:pointer;
@@ -246,7 +258,10 @@
 }
 .strip__btn:hover{border-color:var(--gold); transform:translateY(-4px); box-shadow:0 0 0 5px var(--forest-deep), 0 0 0 6px rgba(235,201,127,.4), 0 26px 50px -24px rgba(239,177,92,.35)}
 .strip__btn img,.strip__btn video{width:100%; height:100%; object-fit:cover; pointer-events:none}
-.strip__btn video{position:absolute; inset:0; z-index:2}
+/* il video compare solo quando suona davvero: prima resta la copertina
+   (niente riquadro nero mentre si scarica) */
+.strip__btn video{position:absolute; inset:0; z-index:2; opacity:0; transition:opacity 400ms var(--ease)}
+.strip__btn.has-video video{opacity:1}
 /* Il simbolo di play serve solo finché il video non è partito. */
 .strip__play{
   position:absolute; inset:0; z-index:3; display:grid; place-items:center;
@@ -305,26 +320,33 @@
 
 /* ============ TELEFONO E SCHERMI STRETTI ============ */
 @media (max-width:900px){
-  /* SOLO LE SCRITTE: niente foto — il film resta visibile per intero e la
-     storia gli scorre sopra, centrata, con la sua pozza d'ombra. */
-  .beat__card{display:contents}
-  .beat__ph--1,.beat__ph--2{display:none}
-
-  .beat__text{
-    position:absolute; left:50%; top:50%; width:min(88vw, 360px);
-    text-align:center;
+  /* UN FOGLIO SOLO: la foto ad arco sopra e il racconto sotto, al centro
+     dello schermo. La seconda foto vive solo sugli schermi larghi. */
+  .beat__card{
+    position:absolute; left:50%; top:50%; width:min(88vw, 370px);
+    display:flex; flex-direction:column; align-items:center; gap:clamp(.9rem, 2.4svh, 1.4rem);
     transform:translate(-50%, calc(-50% + var(--drift) * .5));
   }
-  .beat__text::before{
-    display:block; inset:-46% -20%;
-    background:radial-gradient(58% 50% at 50% 50%,
-      rgba(11,13,5,.82) 0%, rgba(11,13,5,.55) 50%, rgba(11,13,5,.18) 72%, transparent 86%);
+  .beat__ph--2{display:none}
+  .beat__ph--1{
+    position:relative; top:auto; left:auto; flex:none;
+    width:min(48vw, 210px, 27svh);
+    transform:translateY(calc((1 - var(--p1)) * 22px)) rotate(calc(-2deg * var(--p1))) scale(calc(.955 + .045 * var(--p1)));
   }
-  .beat__eyebrow{font-size:.64rem; margin-bottom:.7rem}
-  .beat__title{font-size:clamp(1.9rem, 8vw, 2.5rem); margin-bottom:.8rem}
-  .beat__body{font-size:1.1rem; line-height:1.55; max-width:36ch}
-  .beat__sign{font-size:1.35rem; margin-top:.8rem}
+  .beat__ph::before{inset:-7px}
+  .beat__ph::after{inset:-13px}
+
+  .beat__text{position:relative; left:auto; top:auto; width:100%; text-align:center; transform:none}
+  .beat__text::before{
+    display:block; inset:-34% -16%;
+    background:radial-gradient(58% 50% at 50% 50%,
+      rgba(11,13,5,.84) 0%, rgba(11,13,5,.58) 50%, rgba(11,13,5,.2) 72%, transparent 86%);
+  }
+  .beat__eyebrow{font-size:.64rem; margin-bottom:.6rem}
+  .beat__title{font-size:clamp(1.9rem, 8vw, 2.5rem); margin-bottom:.7rem}
+  .beat__body{font-size:1.06rem; line-height:1.5; max-width:34ch}
+  .beat__sign{font-size:1.3rem; margin-top:.7rem}
 
   /* il richiamo un po' più su: non deve toccare la barra del browser */
-  .path__cue{bottom:calc(env(safe-area-inset-bottom) + 3.4rem)}
+  .path__cue{bottom:calc(env(safe-area-inset-bottom) + 1.4rem)}
 }

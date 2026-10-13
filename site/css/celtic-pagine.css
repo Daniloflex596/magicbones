@@ -19,75 +19,59 @@ body.cel-page{
 .cel-page main{position:relative; z-index:2}
 
 /* ============================================================ CATALOGO == */
-.cel-cathead{position:relative; overflow:hidden; isolation:isolate; text-align:center; padding:clamp(4.5rem, 10vw, 7.5rem) 0 clamp(3.5rem, 7vw, 5rem)}
-.cel-cathead__crown{
-  position:absolute; left:50%; top:50%; z-index:-1; pointer-events:none;
-  width:min(84vh, 110vw); aspect-ratio:1; transform:translate(-50%,-50%); opacity:.28;
+/* LA STRISCIA IN ALTO: il nome della pagina e le categorie, e basta. Prima
+   c'erano una corona intrecciata, un titolo enorme e un paragrafo: mezzo
+   schermo prima del primo pezzo. */
+.cel-cathead{
+  position:relative; z-index:3;
+  border-bottom:1px solid rgba(235,201,127,.22);
+  background:linear-gradient(180deg, rgba(11,13,5,.55), rgba(11,13,5,.2));
 }
-.cel-cathead__crown > div{position:absolute; inset:0}
-.cel-cathead__ogham{color:var(--c-fae); opacity:.8}
+.cel-cathead__inner{position:relative; display:flex; align-items:center; gap:.8rem 2rem; min-height:68px; padding-block:.7rem}
 .cel-cathead__title{
-  margin-top:.8rem; font-family:var(--c-disp); font-weight:400; letter-spacing:normal; line-height:.98;
-  font-size:clamp(2.6rem, 7.5vw, 6rem);
-  background:linear-gradient(180deg, #FFF8E4 8%, #F4D59A 50%, #C98A45 100%);
-  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
-  filter:drop-shadow(0 0 24px rgba(239,177,92,.35)) drop-shadow(0 4px 2px rgba(0,0,0,.6));
+  flex:none; margin:0; font-family:var(--c-disp); font-weight:400; letter-spacing:normal;
+  font-size:1.55rem; line-height:1; color:var(--c-gold-lit);
 }
-.cel-cathead__lede{margin:1.2rem auto 0; max-width:36rem; font-style:italic; font-size:clamp(1.15rem, .8vw + 1rem, 1.4rem)}
-/* sul telefono la corona grande stava dietro al testo, tagliata ai lati:
-   qui diventa un piccolo sigillo sopra il titolo, e la testata si accorcia */
-@media (max-width:760px){
-  .cel-cathead{padding:1.9rem 0 1.2rem}
-  .cel-cathead__crown{position:relative; left:auto; top:auto; z-index:0; transform:none; width:104px; margin:0 auto .3rem; opacity:.7}
-  .cel-cathead__title{margin-top:.45rem; font-size:2.4rem}
-  .cel-cathead__lede{margin-top:.75rem; font-size:1.08rem; line-height:1.5}
-  .cel-catalog{padding-top:2.4rem}
+/* le categorie: sempre UNA riga; se non ci stanno si scorre di lato col
+   dito (il margine automatico le allinea a destra quando c'è posto, e non
+   taglia mai l'inizio quando non c'è) */
+.cel-filters{
+  flex:1; min-width:0; display:flex; flex-wrap:nowrap; gap:.5rem; padding-block:.15rem;
+  overflow-x:auto; overflow-y:hidden; overscroll-behavior-x:contain; scrollbar-width:none;
 }
-
-/* pietre runiche */
-.cel-filters{display:flex; flex-wrap:wrap; justify-content:center; gap:.9rem 1.1rem; margin-top:2.6rem}
+.cel-filters::-webkit-scrollbar{display:none}
+.cel-filters > :first-child{margin-left:auto}
 .cel-filter{
-  display:inline-flex; align-items:center; gap:.7rem; cursor:pointer; min-height:54px;
-  padding:.6rem 1.3rem .6rem .75rem; color:var(--c-paper);
-  font-family:var(--c-caps); font-weight:600; font-size:.72rem; letter-spacing:.16em; text-transform:uppercase;
-  border:1px solid rgba(235,201,127,.22);
-  border-radius:44% 56% 40% 60% / 62% 50% 50% 38%;
-  background:var(--grain), linear-gradient(100deg, #151C17 0%, #283129 58%, #445046 100%);
-  box-shadow:inset -10px -8px 16px rgba(0,0,0,.5), inset 6px 4px 10px rgba(255,255,255,.04), 0 12px 24px -14px #000;
-  transition:transform var(--t-micro) var(--ease), border-color 300ms, box-shadow 400ms var(--ease-out), color 300ms;
+  flex:none; display:inline-flex; align-items:center; gap:.45rem; min-height:40px; padding:.3rem .95rem; cursor:pointer;
+  border-radius:999px; border:1px solid rgba(235,201,127,.3); background:rgba(255,255,255,.03); color:var(--c-paper);
+  font-family:var(--c-caps); font-weight:600; font-size:.66rem; letter-spacing:.14em; text-transform:uppercase; white-space:nowrap;
+  transition:border-color 200ms, background-color 200ms, color 200ms;
 }
-.cel-filter:hover{transform:translateY(-3px); border-color:rgba(235,201,127,.5)}
-.cel-filter__rune{width:28px; height:28px; flex:none; color:var(--c-fae); opacity:.3; transition:opacity 400ms, filter 400ms}
-.cel-filter__rune .sym-svg path{stroke-width:5}
-.cel-filter__n{
-  display:grid; place-items:center; min-width:24px; height:24px; padding:0 .35rem; border-radius:999px;
-  font-family:var(--c-body); font-size:.9rem; letter-spacing:0; color:var(--c-mist-dim); border:1px solid rgba(235,201,127,.25);
-}
-.cel-filter.is-on{color:var(--c-gold-lit); border-color:rgba(235,201,127,.8); box-shadow:inset -10px -8px 16px rgba(0,0,0,.5), 0 0 0 4px rgba(188,214,110,.08), 0 0 34px -6px rgba(188,214,110,.45)}
-.cel-filter.is-on .cel-filter__rune{opacity:1; filter:drop-shadow(0 0 5px var(--c-fae)) drop-shadow(0 0 12px var(--c-fae))}
-.cel-filter.is-on .cel-filter__n{color:#1B1408; background:var(--c-gold); border-color:var(--c-gold)}
-/* sul computer: due file da tre pietre invece di cinque più una sola */
-@media (min-width:761px){ .cel-filters{max-width:46rem; margin-inline:auto} }
-/* sul telefono le pietre stanno in una fila sola che si scorre col dito:
-   impilate (una per riga) spingevano i pezzi mezzo schermo più in giù */
-@media (max-width:760px){
-  .cel-filters{
-    flex-wrap:nowrap; justify-content:flex-start; gap:.65rem; overflow-x:auto; overscroll-behavior-x:contain;
-    margin:1.1rem calc(-1 * var(--gutter)) 0; padding:.9rem var(--gutter) 1.1rem;
-    scroll-snap-type:x proximity; scroll-padding-inline:var(--gutter); scrollbar-width:none;
-    -webkit-mask-image:linear-gradient(90deg, transparent 0, #000 var(--gutter), #000 calc(100% - var(--gutter)), transparent 100%);
-            mask-image:linear-gradient(90deg, transparent 0, #000 var(--gutter), #000 calc(100% - var(--gutter)), transparent 100%);
+.cel-filter:hover{border-color:rgba(235,201,127,.65)}
+.cel-filter__n{font-family:var(--c-body); font-size:.9rem; letter-spacing:0; color:var(--c-mist-dim)}
+.cel-filter.is-on{color:#1B1408; border-color:#FAEFC8; background:linear-gradient(180deg, #FAEFC8 0%, #EBC57E 55%, #D29A55 100%)}
+.cel-filter.is-on .cel-filter__n{color:#6A4618}
+/* dove la fila può non starci: una sfumatura ferma sul bordo destro invita
+   a scorrere. Niente maschera sulla fila: su Android faceva sparire pezzi
+   di bottoni (visto) e la costringeva a ridisegnarsi mentre scorre. */
+@media (max-width:1180px){
+  .cel-cathead__inner::after{
+    content:""; position:absolute; top:0; bottom:0; right:0; width:28px; pointer-events:none;
+    background:linear-gradient(90deg, rgba(15,17,6,0), var(--c-bg));
   }
-  .cel-filters::-webkit-scrollbar{display:none}
-  .cel-filter{flex:none; scroll-snap-align:start; min-height:48px; gap:.55rem; padding:.5rem 1rem .5rem .6rem; font-size:.68rem; letter-spacing:.13em}
-  .cel-filter:hover{transform:none}
-  .cel-filter__rune{width:24px; height:24px}
-  /* bagliore più raccolto: quello largo veniva tagliato dai bordi della fila */
-  .cel-filter.is-on{box-shadow:inset -10px -8px 16px rgba(0,0,0,.5), 0 0 0 3px rgba(188,214,110,.08), 0 0 14px -4px rgba(188,214,110,.5)}
+}
+/* sul telefono: solo le categorie, a tutta larghezza (il nome della pagina
+   c'è già, acceso, nella barra in alto) */
+@media (max-width:760px){
+  .cel-cathead__inner{width:100%; min-height:0; padding:0}
+  .cel-cathead__title{position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap}
+  .cel-filters{gap:.45rem; padding:.65rem var(--gutter); scroll-padding-inline:var(--gutter); scroll-snap-type:x proximity}
+  .cel-filter{min-height:44px; scroll-snap-align:start}
+  .cel-catalog{padding-top:2rem}
 }
 
 /* la cornice del codice: doppio filetto, nodi agli angoli, colonne a treccia */
-.cel-catalog{padding:clamp(3.5rem, 7vw, 5.5rem) 0 clamp(4rem, 8vw, 6rem)}
+.cel-catalog{padding:clamp(2.4rem, 4vw, 3.4rem) 0 clamp(4rem, 8vw, 6rem)}
 .cel-frame{
   position:relative; padding:clamp(2.4rem, 5vw, 4rem) clamp(1rem, 5vw, 4.5rem);
   border:1px solid rgba(235,201,127,.32); border-radius:30px;
@@ -140,7 +124,8 @@ body.cel-page{
 @media (max-width:420px){ .cel-doors{grid-template-columns:repeat(2, minmax(0, 1fr)); gap:2.2rem .9rem} }
 .cel-doors__item{margin:0}
 .cel-doors__item.is-summoned{animation:summon 700ms var(--ease-out) var(--summon, 0ms) both}
-@keyframes summon{from{opacity:0; transform:translateY(16px) scale(.94); filter:blur(6px)} to{opacity:1; transform:none; filter:none}}
+/* solo opacità e movimento: la sfocatura animata ridisegnava ogni porta a ogni fotogramma */
+@keyframes summon{from{opacity:0; transform:translateY(16px) scale(.94)} to{opacity:1; transform:none}}
 
 .cel-door{
   position:relative; display:flex; flex-direction:column; align-items:center; text-align:center;

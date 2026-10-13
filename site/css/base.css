@@ -26,13 +26,21 @@ body{
   overscroll-behavior-y:none;     /* in fondo la pagina si ferma: niente rimbalzo nel vuoto */
   -webkit-font-smoothing:antialiased;
 }
-body::after{
-  content:''; position:fixed; inset:0; z-index:1; pointer-events:none;
-  background-image:var(--grain); opacity:.55;
-}
+/* (la grana fissa a tutto schermo non c'è più: stava sotto le sezioni,
+   quindi non si vedeva, ma era uno strato in più da comporre a ogni
+   fotogramma dello scorrimento) */
 ::selection{background:rgba(188,214,110,.35); color:#fff}
 
 img,video{max-width:100%; height:auto; display:block}
+
+/* ANIMAZIONI FERME FUORI DALLO SCHERMO (js/ui.js, js/path.js): le
+   animazioni infinite — la scritta che luccica, la casetta col fumo e le
+   lucciole, la scritta che scorre in fondo — continuavano a girare anche
+   quando non si vedevano, e quelle che non sono solo movimento costringevano
+   il telefono a ricalcolare e ridisegnare a ogni fotogramma dello
+   scorrimento (misurato con la traccia di Chrome). */
+.anim-fuori,.anim-fuori *,.anim-fuori *::before,.anim-fuori *::after,
+.anim-ferma,.anim-ferma *,.anim-ferma *::before,.anim-ferma *::after{animation-play-state:paused !important}
 h1,h2,h3,h4{font-family:var(--disp); font-weight:400; line-height:1.04; margin:0; letter-spacing:normal}
 p{margin:0 0 1em}
 a{color:inherit}

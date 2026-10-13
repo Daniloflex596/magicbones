@@ -23,11 +23,11 @@
 <link rel="preload" href="assets/fonts/uncial-antiqua-normal-400-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/cormorant-garamond-normal-400-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/cinzel-normal-400-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/tokens.css?v=60">
-<link rel="stylesheet" href="css/base.css?v=60">
-<link rel="stylesheet" href="css/sections.css?v=60">
-<link rel="stylesheet" href="css/cart.css?v=60">
-<link rel="stylesheet" href="css/celtic.css?v=60">
+<link rel="stylesheet" href="css/tokens.css?v=61">
+<link rel="stylesheet" href="css/base.css?v=61">
+<link rel="stylesheet" href="css/sections.css?v=61">
+<link rel="stylesheet" href="css/cart.css?v=61">
+<link rel="stylesheet" href="css/celtic.css?v=61">
 
 <script>document.documentElement.classList.add('js');</script>
 </head>
@@ -82,7 +82,7 @@
           </p>
         </div>
 
-        <!-- I post-it della storia: uno per tappa, montati da js/path.js -->
+        <!-- La storia a metà sentiero: montata da js/path.js (js/config.js → storia) -->
         <div class="path__notes" id="pathNotes" aria-hidden="true"></div>
 
         <!-- Arrivo alla casa -->
@@ -111,7 +111,7 @@
 
   <!-- ==================== CLAUDIA — chi ti apre la porta ====================
        Subito dopo "Benvenuto a casa mia": il ritratto piccolo, nella stessa
-       porta ad arco dei pezzi, e la frase con cui comincia la sua storia. -->
+       porta ad arco dei pezzi, e il seguito della storia del cammino. -->
   <div class="knotband" aria-hidden="true"></div>
   <section class="section cel cel-host" id="claudia" aria-labelledby="claudia-h">
     <div class="wrap cel-host__in">
@@ -119,9 +119,9 @@
         <span class="cel-arch"><img src="assets/img/story/claudia-cervo.webp" alt="Claudia, in un prato al sole, tiene davanti al viso un cranio di cervo con le corna e una piuma." width="480" height="640" loading="lazy" decoding="async"></span>
       </figure>
       <div class="cel-host__testo reveal">
-        <p class="cel-eyebrow">Sono Claudia</p>
-        <h2 class="cel-h2" id="claudia-h">Non cerco.<br>Trovo.</h2>
-        <p class="cel-lede">Cammino fuori Roma, dove il sentiero si chiude. Un cranio tra le felci, una vertebra sbiancata dalla pioggia: raccolgo quello che il bosco ha già lasciato andare.</p>
+        <p class="cel-eyebrow">Chi ti apre la porta</p>
+        <h2 class="cel-h2" id="claudia-h">Mi chiamo<br>Claudia</h2>
+        <p class="cel-lede">Turchesi cuciti uno a uno, mandala tracciati senza matita, fiori secchi, piccole teche: comincio la sera e alzo la testa che è mattina. Mi trovi ai mercatini di Roma, o spedisco in tutta Italia — e le cose su misura le facciamo insieme.</p>
       </div>
     </div>
   </section>
@@ -236,31 +236,31 @@
     <div class="wrap">
       <p class="eyebrow reveal">Dal banco di lavoro</p>
       <h2 class="h2 reveal" id="banco-h">Come nasce un pezzo</h2>
-      <p class="lede reveal">Ore di lavoro ridotte a pochi secondi. Trascina pure, con calma.</p>
+      <p class="lede reveal">Ore di lavoro ridotte a pochi secondi. Scorri la fila e guardale tutte.</p>
     </div>
 
     <div class="strip" id="strip" aria-label="Video dal laboratorio">
       <ul class="strip__track" id="stripTrack">
         <li class="strip__card">
-          <button class="strip__btn" type="button" data-video="assets/reel/reel-DPXQYzLDQjg.mp4" aria-label="Il banco ai mercatini — riproduci il video">
+          <button class="strip__btn" type="button" data-video="assets/reel/reel-DPXQYzLDQjg.mp4?v=2" aria-label="Il banco ai mercatini — riproduci il video">
             <img src="assets/reel/DPXQYzLDQjg.webp" alt="" width="440" height="782" loading="lazy" decoding="async">
             <span class="strip__play" aria-hidden="true"></span>
           </button>
         </li>
         <li class="strip__card">
-          <button class="strip__btn" type="button" data-video="assets/reel/reel-DJuUiwdNTuT.mp4" aria-label="Un teschio dall'inizio — riproduci il video">
+          <button class="strip__btn" type="button" data-video="assets/reel/reel-DJuUiwdNTuT.mp4?v=2" aria-label="Un teschio dall'inizio — riproduci il video">
             <img src="assets/reel/DJuUiwdNTuT.webp" alt="" width="440" height="782" loading="lazy" decoding="async">
             <span class="strip__play" aria-hidden="true"></span>
           </button>
         </li>
         <li class="strip__card">
-          <button class="strip__btn" type="button" data-video="assets/reel/reel-DHEC4sKN9aZ.mp4" aria-label="Dettagli a mano libera — riproduci il video">
+          <button class="strip__btn" type="button" data-video="assets/reel/reel-DHEC4sKN9aZ.mp4?v=2" aria-label="Dettagli a mano libera — riproduci il video">
             <img src="assets/reel/DHEC4sKN9aZ.webp" alt="" width="440" height="782" loading="lazy" decoding="async">
             <span class="strip__play" aria-hidden="true"></span>
           </button>
         </li>
         <li class="strip__card">
-          <button class="strip__btn" type="button" data-video="assets/reel/reel-DFXqaRvt1uS.mp4" aria-label="Pezzi finiti — riproduci il video">
+          <button class="strip__btn" type="button" data-video="assets/reel/reel-DFXqaRvt1uS.mp4?v=2" aria-label="Pezzi finiti — riproduci il video">
             <img src="assets/reel/DFXqaRvt1uS.webp" alt="" width="440" height="782" loading="lazy" decoding="async">
             <span class="strip__play" aria-hidden="true"></span>
           </button>
@@ -357,12 +357,12 @@
 }
 </script>
 
-<script src="js/config.js?v=60"></script>
-<script src="js/ui.js?v=60"></script>
-<script src="js/knots.js?v=60"></script>
-<script src="js/celtic.js?v=60"></script>
-<script src="js/cart.js?v=60"></script>
-<script src="js/strip.js?v=60"></script>
-<script src="js/path.js?v=60"></script>
+<script src="js/config.js?v=61"></script>
+<script src="js/ui.js?v=61"></script>
+<script src="js/knots.js?v=61"></script>
+<script src="js/celtic.js?v=61"></script>
+<script src="js/cart.js?v=61"></script>
+<script src="js/strip.js?v=61"></script>
+<script src="js/path.js?v=61"></script>
 </body>
 </html>

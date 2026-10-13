@@ -37,8 +37,10 @@
    ========================================================================== */
 .cel-topbar{
   position:sticky; top:0; z-index:80;
-  background:linear-gradient(180deg, rgba(19,18,10,.94), rgba(19,18,10,.78));
-  backdrop-filter:blur(10px) saturate(1.2); -webkit-backdrop-filter:blur(10px) saturate(1.2);
+  /* sfondo pieno, niente sfocatura di quello che c'è dietro: con la barra
+     sempre sopra la pagina, sul telefono la sfocatura andava ricalcolata a
+     ogni fotogramma dello scorrimento */
+  background:linear-gradient(180deg, #13120A, rgba(19,18,10,.96));
   border-bottom:1px solid rgba(235,201,127,.22);
 }
 .cel-topbar__inner{width:min(100% - var(--gutter) * 2, var(--wrap)); margin-inline:auto; display:flex; align-items:center; justify-content:space-between; gap:1rem; min-height:64px}
@@ -202,7 +204,16 @@
 .cel-vine .v-ghost .v-body{stroke:var(--c-fae); opacity:.10}
 .cel-vine .v-ghost .v-halo,.cel-vine .v-ghost .v-line{display:none}
 .cel-vine .v-leaf{fill:var(--c-fae-dim); opacity:.85}
-.cel-vine .v-tip{fill:#FFF6DE; filter:drop-shadow(0 0 6px var(--c-fae)) drop-shadow(0 0 16px var(--c-amber)); transition:opacity .3s}
+/* la tenda che fa crescere il tralcio (js/celtic.js): solo spostamenti */
+.cel-vine .v-sotto{position:absolute; top:0; left:0}
+.cel-vine .v-tenda{position:absolute; top:0; left:0; width:80px; overflow:hidden; transform:translate3d(0,-100%,0); will-change:transform}
+.cel-vine .v-dentro{transform:translate3d(0,100%,0); will-change:transform}
+/* la punta luminosa: un cerchio con un alone normale (niente filtri da rifare a ogni passo) */
+.cel-vine .v-tip{
+  position:absolute; top:-5px; width:10px; height:10px; border-radius:50%; background:#FFF6DE; opacity:0;
+  box-shadow:0 0 6px 2px rgba(188,214,110,.75), 0 0 16px 6px rgba(239,177,92,.45);
+  will-change:transform; transition:opacity .3s;
+}
 
 .cel-stops{list-style:none; margin:0; padding:0; display:grid; gap:clamp(5rem, 13vw, 11rem)}
 .cel-stop{display:grid; grid-template-columns:minmax(0,1fr) 128px minmax(0,1fr); align-items:center; position:relative; scroll-margin-top:90px}

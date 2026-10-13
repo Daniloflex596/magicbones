@@ -1,5 +1,5 @@
 /* ==========================================================================
-   MAGIC BONES — UI: reveal, topbar, player dei video, marquee, toast, lucciole
+   MAGIC BONES — UI: reveal, topbar, marquee, toast, lucciole
    Nessun loop autonomo se non quelli dichiarati (marquee, lucciole), tutti
    spenti in reduced-motion e fuori dal viewport.
    ========================================================================== */
@@ -116,78 +116,16 @@
     }
   }
 
-  /* -------------------------------------------------- video della striscia -- */
-  // Partono da soli, muti e in loop: la striscia si vede viva.
-  // Si montano solo quando la sezione entra in vista e si fermano quando esce
-  // o quando la scheda si allontana dal centro (niente decoder sprecati).
-  var stripVideos = [];
+  /* I video della striscia li gestisce js/strip.js (solo home). */
 
-  function mountStripVideo(btn) {
-    if (btn.querySelector('video')) return;
-    var v = document.createElement('video');
-    v.src = btn.getAttribute('data-video');
-    v.muted = true; v.loop = true; v.playsInline = true; v.preload = 'metadata';
-    v.setAttribute('muted', ''); v.setAttribute('playsinline', '');
-    v.addEventListener('loadeddata', function () { btn.classList.add('has-video'); });
-    v.addEventListener('error', function () { v.remove(); });
-    btn.appendChild(v);
-    stripVideos.push(v);
-    var p = v.play();
-    if (p && p.catch) p.catch(function () {});
+  /* ------------------------------------- animazioni ferme fuori schermo -- */
+  // vedi .anim-fuori in css/base.css
+  if ('IntersectionObserver' in window) {
+    var fuoriObs = new IntersectionObserver(function (voci) {
+      voci.forEach(function (e) { e.target.classList.toggle('anim-fuori', !e.isIntersecting); });
+    }, { rootMargin: '80px 0px' });
+    document.querySelectorAll('.path__cue, .cel-cottage, .cel-footer__marquee, .cel-topbar').forEach(function (el) { fuoriObs.observe(el); });
   }
-
-  // Il nastro è più largo dello schermo: suonano SOLO le schede davvero
-  // inquadrate. Con una decina di cloni fuori campo, tenerli tutti in
-  // riproduzione manderebbe in affanno i decoder e farebbe scattare lo scorrimento.
-  var sectionOn = false;
-  function refreshStripPlayback() {
-    var w = window.innerWidth;
-    stripVideos.forEach(function (v) {
-      var r = v.getBoundingClientRect();
-      var inFrame = r.right > -120 && r.left < w + 120;
-      var vuoi = sectionOn && inFrame && !document.hidden;
-      if (vuoi && v.paused) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
-      else if (!vuoi && !v.paused) { try { v.pause(); } catch (e) {} }
-    });
-  }
-  function stripPlayAll(on) { sectionOn = on; refreshStripPlayback(); }
-  // lo scorrimento orizzontale cambia chi è inquadrato: si ricontrolla di rado
-  var refreshTimer = null;
-  window.MB.stripTick = function () {
-    if (refreshTimer) return;
-    refreshTimer = setTimeout(function () { refreshTimer = null; refreshStripPlayback(); }, 500);
-  };
-
-  var stripSec = document.getElementById('banco');
-  if (stripSec) {
-    if (reduce) {
-      // Con reduced-motion niente riproduzione automatica: restano le copertine
-      // e il click monta e avvia il video richiesto.
-      document.querySelectorAll('.strip__btn').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          var v = btn.querySelector('video');
-          if (!v) { mountStripVideo(btn); return; }
-          if (v.paused) v.play(); else v.pause();
-        });
-      });
-    } else if ('IntersectionObserver' in window) {
-      var mounted = false;
-      new IntersectionObserver(function (en) {
-        if (en[0].isIntersecting) {
-          if (!mounted) {
-            mounted = true;
-            // gli originali e i loro cloni: tutti quelli presenti ora
-            document.querySelectorAll('.strip__btn').forEach(mountStripVideo);
-          }
-          stripPlayAll(true);
-        } else { stripPlayAll(false); }
-      }, { threshold: 0, rootMargin: '200px 0px' }).observe(stripSec);
-    } else {
-      document.querySelectorAll('.strip__btn').forEach(mountStripVideo);
-    }
-  }
-  document.addEventListener('visibilitychange', function () { if (document.hidden) stripPlayAll(false); });
-  window.MB.stripMount = mountStripVideo;   // per i cloni creati dopo
 
   /* ------------------------------------------------------------ marquee -- */
   var track = document.getElementById('marqueeTrack');

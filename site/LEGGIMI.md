@@ -35,30 +35,22 @@ Non aprire i file con doppio clic: il film e la casetta si caricano via
 
 ## Le cose che cambierai più spesso
 
-### 1. Il video d'apertura (PC e telefono) — `js/config.js`
-Ora: `assets/video/bosco.mp4` (16:9, PC) e `bosco-9x16.mp4` (9:16, telefono),
-10 secondi, il cammino nel bosco dorato fino alla casetta. Per cambiarli
-metti i due file in `assets/video/` e aggiorna:
-```js
-film: { src: 'assets/video/bosco.mp4',          // orizzontale 16:9 (PC)
-        srcMobile: 'assets/video/bosco-9x16.mp4', // verticale 9:16 (telefono)
-        dur: 10 }        // dur = durata REALE in secondi
-```
-Rifai anche le immagini ferme (`assets/img/posters/bosco-start*.webp`,
-`bosco-end*.webp`, `og-image.jpg`): si vedono prima che il video parta,
-quando le animazioni sono disattivate e quando il sito viene condiviso.
-I video di prima sono in `../archivio/video-precedenti/`.
-Ricetta di codifica (fluidità nello scrub):
-```bash
-# PC (usata per bosco.mp4: 1280x720, circa 7 MB)
-ffmpeg -i sorgente.mp4 -vf "unsharp=5:5:0.4:5:5:0.0" -an \
-  -c:v libx264 -preset slow -crf 27 -pix_fmt yuv420p \
-  -g 8 -keyint_min 8 -sc_threshold 0 -movflags +faststart bosco.mp4
-# telefono (GOP più corto: i decoder dei telefoni cercano più in fretta)
-ffmpeg -i sorgente-verticale.mp4 -vf "unsharp=5:5:0.4:5:5:0.0" -an \
-  -c:v libx264 -preset slow -crf 30 -pix_fmt yuv420p \
-  -g 4 -keyint_min 4 -sc_threshold 0 -movflags +faststart bosco-9x16.mp4
-```
+### 1. Il cammino d'apertura — `js/config.js` e `js/path.js`
+È corto e GUIDATO, a fermate (`fermate: [0, 0.5, 1]`): il titolo sul bosco →
+a metà sentiero la storia con le foto → la casa ("Benvenuto a casa mia").
+Ogni gesto (rotella, trackpad, strisciata, frecce) è un passo: il film va da
+solo alla fermata dopo, sempre con lo stesso movimento; il gesto dopo la
+casa entra nel sito. Nel cammino la pagina non scorre col dito: il palco è
+appiccicato allo schermo e si anima solo il film.
+
+Il film NON è un video: 120 immagini WebP per formato in
+`assets/film/computer/` (1280×720) e `assets/film/telefono/` (540×960),
+disegnate su una tela. Il film ne usa una su due (`film.*.usa: 60`): ognuna
+si decodifica UNA volta appena arriva (ImageBitmap) e resta pronta, perché
+disegnarle dalla `<img>` faceva ridecodificare a Chrome ogni immagine sul
+thread principale (misurato: il film andava a scatti sui telefoni).
+Nuovi video → `python strumenti/film.py a16x9.mp4 b9x16.mp4`, poi in
+`js/config.js` → `film` aggiorna `n` e `versione +1`.
 
 ### 2. Colori e font — `css/tokens.css` (UN SOLO FILE)
 Tutto il sito legge colori e caratteri da lì: `--forest` (fondo verde-bruno),
@@ -89,25 +81,36 @@ perché è un racconto: se cambi nome o prezzo di quei quattro pezzi, cambialo
 anche lì.
 
 ### 4. La storia nel bosco — `js/config.js`, blocco `storia`
-Ogni tappa compare sopra il film, con due foto ad arco ai lati:
+Una scena sola, alla fermata di metà sentiero (`at: 0.5`). Su computer due
+foto ad arco ai lati e il racconto al centro; su telefono la prima foto
+sopra e il racconto sotto:
 ```js
-{ at: 0.24,          // dove lungo il cammino (0 = partenza, 1 = casa)
-  side: 'right', tilt: 2.0,
+{ at: 0.5,
   foto: 'assets/img/story/ossa-erba.webp', alt: '…',
-  extra: [ { foto: '…', alt: '…' } ],     // la seconda foto
-  eyebrow: 'Il ritrovamento', title: 'Non cerco. Trovo.', text: '…',
+  extra: [ { foto: '…', alt: '…' } ],     // la seconda foto (solo computer)
+  eyebrow: 'La mia storia', title: 'Non cerco. Trovo.', text: '…',
   sign: 'Claudia' }
 ```
-Tieni i valori di `at` distanziati di almeno **0,13**. La stessa storia va
-tenuta allineata nella versione senza JavaScript, in fondo a `index.html`
-(`.path__fallback-list`).
+Il seguito del racconto è nella sezione `#claudia` subito dopo l'arrivo.
+La storia completa resta nella versione senza JavaScript, in fondo al
+cammino in `index.html` (`.path__fallback-list`).
 
 ### 5. WhatsApp — `js/config.js`
 `whatsapp: '393283632440'` — da lì derivano tutti i pulsanti.
 
 ### 6. Dopo aver modificato CSS o JS
-In cima alle pagine i file hanno un `?v=44`: alza il numero (`?v=45`…) quando
+In cima alle pagine i file hanno un `?v=61`: alza il numero (`?v=62`…) quando
 pubblichi, così i browser non usano la versione vecchia dalla cache.
+
+### 6b. Fluidità sul telefono: le regole misurate
+- Niente `backdrop-filter`, `filter` animati o maschere su cose che si
+  muovono o scorrono: si rifanno a ogni fotogramma (ombre "normali" sì).
+- Le animazioni infinite si fermano fuori dallo schermo (`.anim-fuori` in
+  `css/base.css`, gestita da `js/ui.js`).
+- Ascoltatori che possono bloccare lo scorrimento (rotella/dito non
+  passivi) solo dove servono e solo finché servono (`js/path.js` → ascolta).
+- I video della striscia: 4 in tutto, si scaricano quando arrivano in vista
+  e suona solo quello inquadrato (`js/strip.js`).
 
 ---
 

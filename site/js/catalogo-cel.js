@@ -2,8 +2,8 @@
    MAGIC BONES — catalogo celtico
    Costruisce le porte dai dati di js/pezzi.js: una porta ad arco per pezzo,
    solo foto, nome e prezzo. Cliccando si entra nella pagina del pezzo.
-   Filtri a pietre runiche: la scelta resta nell'URL (?cat=teschi), così un
-   filtro si può mandare a qualcuno.
+   Filtri nella striscia in alto: la scelta resta nell'URL (?cat=teschi), così
+   un filtro si può mandare a qualcuno.
    Gira PRIMA di ui.js / knots.js / cart.js: le porte ci sono già quando quei
    moduli cercano .reveal e [data-knot].
    ========================================================================== */
@@ -56,20 +56,13 @@
   root.innerHTML = html;
 
   /* ------------------------------------------------- filtri dai dati -- */
-  // Una pietra per ogni categoria con pezzi in vendita, nell'ordine dei dati:
+  // Un bottone per ogni categoria con pezzi in vendita, nell'ordine dei dati:
   // una categoria nuova creata da Claudia nell'app compare da sola.
-  var RUNE = [
-    'data-knot="triskele"', 'data-knot="spiral"', 'data-knot="tree"',
-    'data-knot="ring" data-lobes="4" data-r="44" data-a="22" data-w="6" data-frame="no"',
-    'data-knot="ring" data-lobes="6" data-r="44" data-a="18" data-w="6" data-frame="no"',
-    'data-knot="triquetra"'
-  ];
   var barra = document.getElementById('filters');
   if (barra) {
-    Object.keys(cats).filter(function (k) { return counts[k] > 0; }).forEach(function (key, i) {
+    Object.keys(cats).filter(function (k) { return counts[k] > 0; }).forEach(function (key) {
       barra.insertAdjacentHTML('beforeend',
         '<button class="cel-filter" type="button" data-cat="' + esc(key) + '" aria-pressed="false">' +
-          '<span class="cel-filter__rune" ' + RUNE[i % RUNE.length] + ' aria-hidden="true"></span>' +
           '<span>' + esc(cats[key].nome) + '</span> <span class="cel-filter__n" data-count="' + esc(key) + '"></span>' +
         '</button>');
     });
@@ -99,7 +92,7 @@
       var on = b.getAttribute('data-cat') === cat;
       b.classList.toggle('is-on', on);
       b.setAttribute('aria-pressed', on ? 'true' : 'false');
-      // sul telefono la fila di pietre scorre: porta al centro quella accesa
+      // sul telefono la fila delle categorie scorre: porta al centro quella accesa
       if (on && bar.scrollWidth > bar.clientWidth) {
         var dx = b.getBoundingClientRect().left - bar.getBoundingClientRect().left;
         bar.scrollTo({ left: bar.scrollLeft + dx - (bar.clientWidth - b.offsetWidth) / 2, behavior: push && !reduce.matches ? 'smooth' : 'auto' });

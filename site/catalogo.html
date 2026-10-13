@@ -20,11 +20,11 @@
 <link rel="preload" href="assets/fonts/uncial-antiqua-normal-400-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/cormorant-garamond-normal-400-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/cinzel-normal-400-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/tokens.css?v=60">
-<link rel="stylesheet" href="css/base.css?v=60">
-<link rel="stylesheet" href="css/cart.css?v=60">
-<link rel="stylesheet" href="css/celtic.css?v=60">
-<link rel="stylesheet" href="css/celtic-pagine.css?v=60">
+<link rel="stylesheet" href="css/tokens.css?v=61">
+<link rel="stylesheet" href="css/base.css?v=61">
+<link rel="stylesheet" href="css/cart.css?v=61">
+<link rel="stylesheet" href="css/celtic.css?v=61">
+<link rel="stylesheet" href="css/celtic-pagine.css?v=61">
 
 <script>document.documentElement.classList.add('js');</script>
 </head>
@@ -49,27 +49,21 @@
 
 <main>
 
-  <!-- ==================== INTESTAZIONE ==================== -->
-  <section class="cel-cathead">
-    <div class="cel-cathead__crown" aria-hidden="true">
-      <div data-knot="ring" data-lobes="13" data-r="74" data-a="7" data-w="3.4"></div>
-      <div class="cel-cathead__ogham" data-knot="ogham" data-r="94" data-text="TESCHI DIPINTI · PICCOLE RELIQUIE · ROMA"></div>
-    </div>
+  <!-- ==================== LA STRISCIA IN ALTO ====================
+       Solo il nome della pagina e le categorie, in una fascia sottile: i
+       pezzi cominciano subito sotto. Le categorie le aggiunge
+       js/catalogo-cel.js dai dati (una categoria nuova creata da Claudia
+       nell'app compare da sola). -->
+  <section class="cel-cathead" aria-labelledby="catalogo-h">
     <div class="wrap cel-cathead__inner">
-      <p class="cel-eyebrow reveal">Il catalogo</p>
-      <h1 class="cel-cathead__title reveal">Tutto quello<br>che ho adesso</h1>
-      <p class="cel-cathead__lede reveal">Li ho trovati nel bosco, puliti e dipinti uno per uno. Quando uno va via non torna, perché non ne rifaccio mai due uguali. Tocca una porta per entrare nel pezzo.</p>
-      <nav class="cel-filters reveal" id="filters" aria-label="Filtra per categoria">
+      <h1 class="cel-cathead__title" id="catalogo-h">Il catalogo</h1>
+      <nav class="cel-filters" id="filters" aria-label="Filtra per categoria">
         <button class="cel-filter is-on" type="button" data-cat="tutti" aria-pressed="true">
-          <span class="cel-filter__rune" data-knot="triquetra" aria-hidden="true"></span>
           <span>Tutti</span> <span class="cel-filter__n" data-count="tutti"></span>
         </button>
-        <!-- le pietre delle categorie le aggiunge js/catalogo-cel.js dai dati -->
       </nav>
     </div>
   </section>
-
-  <div class="knotband" aria-hidden="true"></div>
 
   <!-- ==================== I PEZZI ====================
        Le porte le costruisce js/catalogo-cel.js leggendo js/pezzi.js:
@@ -152,13 +146,13 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="js/config.js?v=60"></script>
+<script src="js/config.js?v=61"></script>
 <script src="data/pezzi.js"></script>
-<script src="js/pezzi.js?v=60"></script>
-<script src="js/catalogo-cel.js?v=60"></script>
-<script src="js/ui.js?v=60"></script>
-<script src="js/knots.js?v=60"></script>
-<script src="js/celtic.js?v=60"></script>
-<script src="js/cart.js?v=60"></script>
+<script src="js/pezzi.js?v=61"></script>
+<script src="js/catalogo-cel.js?v=61"></script>
+<script src="js/ui.js?v=61"></script>
+<script src="js/knots.js?v=61"></script>
+<script src="js/celtic.js?v=61"></script>
+<script src="js/cart.js?v=61"></script>
 </body>
 </html>

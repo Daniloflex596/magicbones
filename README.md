@@ -25,6 +25,9 @@ Sito online: **https://magicbones.antoniocioffi.workers.dev** · app: `/bottega/
    ramo main** (memoria di 20 s): il pezzo è online in ~10-20 s, senza
    ripubblicare niente. Se GitHub non risponde, il sito usa l'ultima copia.
 
+Se qualcosa va storto dall'app: Cloudflare → Workers → `magicbones` → Logs
+(ogni errore dell'API è registrato con la chiamata e il motivo).
+
 Ogni modifica di Claudia è un commit ("Bottega: nuovo pezzo «…»"): si può
 sempre vedere chi ha cambiato cosa e tornare indietro (`git revert`).
 
@@ -60,7 +63,7 @@ scade l'app dice "Qualcosa non ha funzionato" → rigenerarlo e rimetterlo.
 ## Lavorarci in locale
 
 ```bash
-npm test                              # 45 prove: dati, accesso, GitHub, funzioni
+npm test                              # 46 prove: dati (su una copia fissa, test/dati-prova.js), accesso, GitHub, funzioni
 python strumenti/server.py 8899 rete  # il sito, anche dal telefono sulla stessa Wi-Fi
 node strumenti/prova-bottega.mjs      # l'app completa con un finto GitHub (PIN 123456)
 # il motore vero di Cloudflare, collegato al finto GitHub (porta 8792):
